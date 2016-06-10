@@ -1,0 +1,39 @@
+Paradigm,Mouse,Behavior,E-phy,YokedTo,Conflict,APA
+Training + Conflict,15-142A,Good,NG,15-142B,Conflict,Trained
+Training + Training,15-142C,Good,NG,15-142D,NoConflict,Trained
+Yoked + Conflict,15-142B,Good,NG,15-142A,Conflict,Yoked
+Yoked + Training,15--142D,Good,NG,15-142C,NoConflict,Yoked
+Training + Conflict,15-140A,Good,No,15-140B,Conflict,Trained
+Training + Conflict,15-141A,Bad,No,15-141B,Conflict,Trained
+Training + Training,15-140C,Good,No,15-140D,NoConflict,Trained
+Training + Training,15-141C,Bad,No,15-141D,NoConflict,Trained
+Yoked + Conflict,15-140B,Good,No,15-140A,Conflict,Yoked
+Yoked + Conflict,15-141B,Bad,No,15-141A,Conflict,Yoked
+Yoked + Training,15-140D,Good,No,15-140C,NoConflict,Yoked
+Yoked + Training,15-141D,Bad,No,15-141C,NoConflict,Yoked
+No Training,15-147,Cage,Yes,NA,Control,Control
+No Training,15-148,Cage,Yes,NA,Control,Control
+Training + Conflict,15-143A,Good,Yes,15-143B,Conflict,Trained
+Training + Conflict,15-144A,Good,Yes,15-144B,Conflict,Trained
+Training + Conflict,15-145A,Good,Yes,15-145B,Conflict,Trained
+Training + Conflict,15-146A,Good,Yes,15-146B,Conflict,Trained
+Training + Conflict,15-147A,OK,Yes,15-147B,Conflict,Trained
+Training + Conflict,15-148A,Good,Yes,15-148B,Conflict,Trained
+Training + Training,15-148C,OK,Yes,15-148D,NoConflict,Trained
+Training + Training,15-143C,Good,Yes,15-143D,NoConflict,Trained
+Training + Training,15-144C,Good,Yes,15-144D,NoConflict,Trained
+Training + Training,15-145C,Bad,Yes,15-145D,NoConflict,Trained
+Training + Training,15-146C,Good,Yes,15-146D,NoConflict,Trained
+Training + Training,15-147C,Good,Yes,15-147D,NoConflict,Trained
+Yoked + Conflict,15-143B,Good,Yes,15-143A,Conflict,Yoked
+Yoked + Conflict,15-144B,Good,Yes,15-144A,Conflict,Yoked
+Yoked + Conflict,15-145B,Good,Yes,15-145A,Conflict,Yoked
+Yoked + Conflict,15-146B,Good,Yes,15-146A,Conflict,Yoked
+Yoked + Conflict,15-147B,OK,Yes,15-147A,Conflict,Yoked
+Yoked + Conflict,15-148B,Good,Yes,15-148A,Conflict,Yoked
+Yoked + Training,15-148D,OK,Yes,15-148C,NoConflict,Yoked
+Yoked + Training,15-143D,Good,Yes,15-143C,NoConflict,Yoked
+Yoked + Training,15-144D,Good,Yes,15-144C,NoConflict,Yoked
+Yoked + Training,15-145D,Bad,Yes,15-145C,NoConflict,Yoked
+Yoked + Training,15-146D,Good,Yes,15-146C,NoConflict,Yoked
+Yoked + Training,15-147D,Good,Yes,15-147C,NoConflict,Yoked

@@ -3,41 +3,42 @@ library("tidyr")
 library("dplyr")
 library("reshape2")
 
-setwd("C:/Users/RMH/Dropbox/BehavEphyRNAseq/RNAseqSamples")
+setwd("~/Github/BehavEphyRNAseq/RNAseqSamples")
 punches<-read.csv("punches_060915.csv", header=TRUE)
-summary(punches)
+str(punches)
+animals<-read.csv("animals_maddy.csv", header=TRUE)
+str(animals)
+CA1toDGphotos <- read.csv("CA1toDGphotos.csv", header=TRUE, sep=",")
 
-#mice: make new datset with just "Mouse" "Date" "RNAisolationdate" "Slice.collector", "location" , order by date
-#CA1toDG: make a wide dataset that counts number of punches, delete irrlevant columns, order by date
-punches %>%
-  select(Mouse, Slice, Punch, notes.mouse, photos, Date, RNAisolationdate, Slice.collector) %>%
-  group_by(Mouse, Punch, notes.mouse, photos, Date, Slice.collector) %>%
-  summarize(num.slice=length(Slice)) %>% 
-  as.data.frame()->mice
-CA1toDG<-spread(mice, Punch, num.slice)
-CA1toDG[is.na(CA1toDG)]<-0
-CA1toDG$"CA1?" <- NULL
-CA1toDG$"other" <- NULL
-CA1toDG$"Pr" <- NULL
-#ordering both by date
-CA1toDG <- CA1toDG[order(as.Date(CA1toDG$Date, format="%m/%d/%Y")),]
-mice <- mice[order(as.Date(mice$Date, format="%m/%d/%Y")),]
-#write to file
-write.csv(mice, file="mice.csv")
-write.csv(CA1toDG, file="CA1toDG.csv")
+#combine mine and maddy's notes
+all <- full_join(animals, punches)
+CA1toDGphotos <- full_join(animals, CA1toDGphotos)
+
+#group and count number of animals
+animals_good <- animals %>% 
+  group_by(Paradigm, Behavior, E.phy) %>%
+  filter(Behavior == 'Good', E.phy == 'Yes')%>%
+  tally()
+head(animals_good)
+
+#group and count number of punches for "good" animals
+num_punches <- all %>%
+  select(Mouse, Paradigm, APA, Conflict, Behavior, E.phy, Slice, Punch) %>%
+  filter(Punch %in% c("DG", "CA1", "CA2", "CA3", "CA4" )) %>%
+  filter(Behavior == 'Good', E.phy == 'Yes') %>%
+  group_by(Punch, Paradigm) %>%
+  summarize(num_punches=length(Slice)) 
+num_punches <- spread(num_punches, Punch, num_punches) 
+
+#show punch location for "good" animals
+location <- CA1toDGphotos %>%
+  select(Mouse, Paradigm, Behavior, E.phy, L1, L2, L3, L4) %>%
+  filter(Behavior == 'Good', E.phy == 'Yes', L1 > 1)
 
 
-## Some summary figures to look at all samples
-counts <- table(punches$Slice)
-barplot(counts, main="Total Slices", 
-        xlab="Number of Slices per mouse")
-counts <- table(punches$Punch)
-barplot(counts, main="Total Slices", 
-        xlab="Number of Regions per mouse")
-counts <- table(punches$Mouse)
-barplot(counts, main="Total Slices", 
-        xlab="Mouse")
-counts <- table(punches$Slice, punches$Punch)
-barplot(counts, main="Regions per Slice",
-        xlab="Region", 
-        legend = rownames(counts))
+
+write.csv(animals_good, "animals_good.csv", row.names=FALSE)
+write.csv(num_punches, "num_punches.csv", row.names=FALSE)
+write.csv(all, "all.csv", row.names=FALSE)
+write.csv(location, "location.csv", row.names=FALSE)
+
