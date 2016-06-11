@@ -1,0 +1,243 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x6d0b6ae0, pid=6752, tid=6212
+#
+# JRE version: 6.0_20-b02
+# Java VM: Java HotSpot(TM) Client VM (16.3-b01 mixed mode windows-x86 )
+# Problematic frame:
+# C  [awt.dll+0xb6ae0]
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x28edf800):  JavaThread "AWT-Windows" daemon [_thread_in_native, id=6212, stack(0x2a480000,0x2a4d0000)]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x00000000
+
+Registers:
+EAX=0x2a4cf8f8, EBX=0x29f0cfc0, ECX=0x00000012, EDX=0x000000c0
+ESP=0x2a4cf8e0, EBP=0x75051430, ESI=0x00000000, EDI=0x000000c0
+EIP=0x6d0b6ae0, EFLAGS=0x00010206
+
+Top of Stack: (sp=0x2a4cf8e0)
+0x2a4cf8e0:   2a4cf8f8 00001000 00000000 291cf528
+0x2a4cf8f0:   00000001 2a4cf8e8 2a4cf8ec 6d0ae4bd
+0x2a4cf900:   00000000 00000000 291cf528 6d0ae58a
+0x2a4cf910:   00000000 291cf528 00000001 6d0ae68e
+0x2a4cf920:   291cf528 6d0637c2 026378b0 00000000
+0x2a4cf930:   6d0b05c0 00000001 6d102f50 6d102938
+0x2a4cf940:   026378b0 6d0b19e2 6d102f48 6d0b1bc9
+0x2a4cf950:   6d09a453 00000000 00001844 00000000 
+
+Instructions: (pc=0x6d0b6ae0)
+0x6d0b6ad0:   05 00 20 00 00 50 c1 e2 05 8d 44 24 14 50 8b fa
+0x6d0b6ae0:   8b 16 57 c1 e1 05 51 56 ff 52 2c 85 c0 0f 8c 93 
+
+
+Stack: [0x2a480000,0x2a4d0000],  sp=0x2a4cf8e0,  free space=13e2a4cf248k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [awt.dll+0xb6ae0]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  sun.awt.windows.WToolkit.eventLoop()V+0
+j  sun.awt.windows.WToolkit.run()V+77
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x28fecc00 JavaThread "Thread-2" daemon [_thread_in_native, id=6292, stack(0x297f0000,0x29840000)]
+  0x28ff0400 JavaThread "Thread-9" daemon [_thread_in_native, id=3796, stack(0x2ef10000,0x2ef60000)]
+  0x28ff1000 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=5956, stack(0x2edf0000,0x2ee40000)]
+  0x28ff0c00 JavaThread "AWT-Shutdown" [_thread_blocked, id=6700, stack(0x2ed60000,0x2edb0000)]
+  0x28fee000 JavaThread "pool-3-thread-2" [_thread_blocked, id=6392, stack(0x2ecd0000,0x2ed20000)]
+  0x28fee400 JavaThread "pool-3-thread-1" [_thread_blocked, id=7084, stack(0x2ec40000,0x2ec90000)]
+  0x28fec000 JavaThread "derby.rawStoreDaemon" daemon [_thread_blocked, id=2632, stack(0x2ebb0000,0x2ec00000)]
+  0x28feec00 JavaThread "Timer-0" daemon [_thread_blocked, id=3008, stack(0x2e700000,0x2e750000)]
+  0x28fef800 JavaThread "derby.antiGC" daemon [_thread_blocked, id=7020, stack(0x2a610000,0x2a660000)]
+  0x28fed400 JavaThread "TimerQueue" daemon [_thread_blocked, id=7088, stack(0x30670000,0x306c0000)]
+=>0x28edf800 JavaThread "AWT-Windows" daemon [_thread_in_native, id=6212, stack(0x2a480000,0x2a4d0000)]
+  0x28f29400 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=376, stack(0x2a360000,0x2a3b0000)]
+  0x2895e400 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=2780, stack(0x28d20000,0x28d70000)]
+  0x28958c00 JavaThread "CompilerThread0" daemon [_thread_blocked, id=1600, stack(0x28c90000,0x28ce0000)]
+  0x28957c00 JavaThread "Attach Listener" daemon [_thread_blocked, id=5452, stack(0x28c00000,0x28c50000)]
+  0x28955000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=5212, stack(0x28b70000,0x28bc0000)]
+  0x02623800 JavaThread "Finalizer" daemon [_thread_blocked, id=4900, stack(0x288e0000,0x28930000)]
+  0x02622000 JavaThread "Reference Handler" daemon [_thread_blocked, id=3812, stack(0x28850000,0x288a0000)]
+  0x0271f000 JavaThread "main" [_thread_blocked, id=5904, stack(0x00310000,0x00360000)]
+
+Other Threads:
+  0x0261a800 VMThread [stack: 0x00530000,0x00580000] [id=6928]
+  0x28972000 WatcherThread [stack: 0x28db0000,0x28e00000] [id=4812]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ def new generation   total 70016K, used 5361K [0x04720000, 0x09310000, 0x0f1c0000)
+  eden space 62272K,   8% used [0x04720000, 0x04c5c7c8, 0x083f0000)
+  from space 7744K,   0% used [0x08b80000, 0x08b80000, 0x09310000)
+  to   space 7744K,   0% used [0x083f0000, 0x083f0000, 0x08b80000)
+ tenured generation   total 155432K, used 64759K [0x0f1c0000, 0x1898a000, 0x24720000)
+   the space 155432K,  41% used [0x0f1c0000, 0x130fdec0, 0x130fe000, 0x1898a000)
+ compacting perm gen  total 48384K, used 48181K [0x24720000, 0x27660000, 0x28720000)
+   the space 48384K,  99% used [0x24720000, 0x2762d750, 0x2762d800, 0x27660000)
+No shared spaces configured.
+
+Dynamic libraries:
+0x00400000 - 0x00424000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\javaw.exe
+0x77670000 - 0x777f0000 	C:\Windows\SysWOW64\ntdll.dll
+0x75040000 - 0x75150000 	C:\Windows\syswow64\kernel32.dll
+0x76310000 - 0x76357000 	C:\Windows\syswow64\KERNELBASE.dll
+0x771c0000 - 0x77261000 	C:\Windows\syswow64\ADVAPI32.dll
+0x764d0000 - 0x7657c000 	C:\Windows\syswow64\msvcrt.dll
+0x76830000 - 0x76849000 	C:\Windows\SysWOW64\sechost.dll
+0x76220000 - 0x76310000 	C:\Windows\syswow64\RPCRT4.dll
+0x74fe0000 - 0x75040000 	C:\Windows\syswow64\SspiCli.dll
+0x74fd0000 - 0x74fdc000 	C:\Windows\syswow64\CRYPTBASE.dll
+0x75290000 - 0x75390000 	C:\Windows\syswow64\USER32.dll
+0x76440000 - 0x764d0000 	C:\Windows\syswow64\GDI32.dll
+0x76d50000 - 0x76d5a000 	C:\Windows\syswow64\LPK.dll
+0x76360000 - 0x763fd000 	C:\Windows\syswow64\USP10.dll
+0x747a0000 - 0x747ec000 	C:\Windows\system32\apphelp.dll
+0x57670000 - 0x576fd000 	C:\Windows\AppPatch\AcLayers.dll
+0x75390000 - 0x75fdb000 	C:\Windows\syswow64\SHELL32.dll
+0x75220000 - 0x75277000 	C:\Windows\syswow64\SHLWAPI.dll
+0x76590000 - 0x766ec000 	C:\Windows\syswow64\ole32.dll
+0x75fe0000 - 0x7606f000 	C:\Windows\syswow64\OLEAUT32.dll
+0x77040000 - 0x77057000 	C:\Windows\syswow64\USERENV.dll
+0x76580000 - 0x7658b000 	C:\Windows\syswow64\profapi.dll
+0x72760000 - 0x727b1000 	C:\Windows\system32\WINSPOOL.DRV
+0x73130000 - 0x73142000 	C:\Windows\system32\MPR.dll
+0x57450000 - 0x57669000 	C:\Windows\AppPatch\AcGenral.DLL
+0x72ee0000 - 0x72f60000 	C:\Windows\system32\UxTheme.dll
+0x723f0000 - 0x72422000 	C:\Windows\system32\WINMM.dll
+0x74830000 - 0x7483f000 	C:\Windows\system32\samcli.dll
+0x749b0000 - 0x749c4000 	C:\Windows\system32\MSACM32.dll
+0x73580000 - 0x73589000 	C:\Windows\system32\VERSION.dll
+0x74c30000 - 0x74c33000 	C:\Windows\system32\sfc.dll
+0x74c20000 - 0x74c2d000 	C:\Windows\system32\sfc_os.DLL
+0x72e60000 - 0x72e73000 	C:\Windows\system32\dwmapi.dll
+0x769b0000 - 0x76b4d000 	C:\Windows\syswow64\SETUPAPI.dll
+0x767f0000 - 0x76817000 	C:\Windows\syswow64\CFGMGR32.dll
+0x77060000 - 0x77072000 	C:\Windows\syswow64\DEVOBJ.dll
+0x76850000 - 0x7699a000 	C:\Windows\syswow64\urlmon.dll
+0x76d40000 - 0x76d44000 	C:\Windows\syswow64\api-ms-win-downlevel-ole32-l1-1-0.dll
+0x77020000 - 0x77024000 	C:\Windows\syswow64\api-ms-win-downlevel-shlwapi-l1-1-0.dll
+0x769a0000 - 0x769a5000 	C:\Windows\syswow64\api-ms-win-downlevel-advapi32-l1-1-0.dll
+0x77030000 - 0x77034000 	C:\Windows\syswow64\api-ms-win-downlevel-user32-l1-1-0.dll
+0x76d60000 - 0x76d64000 	C:\Windows\syswow64\api-ms-win-downlevel-version-l1-1-0.dll
+0x766f0000 - 0x766f3000 	C:\Windows\syswow64\api-ms-win-downlevel-normaliz-l1-1-0.dll
+0x76820000 - 0x76823000 	C:\Windows\syswow64\normaliz.DLL
+0x76d70000 - 0x76fa2000 	C:\Windows\syswow64\iertutil.dll
+0x76b50000 - 0x76d34000 	C:\Windows\syswow64\WININET.dll
+0x571f0000 - 0x57449000 	C:\Windows\AppPatch\AcXtrnal.DLL
+0x72860000 - 0x72866000 	C:\Windows\system32\SHUNIMPL.DLL
+0x72850000 - 0x7285d000 	C:\Windows\system32\SortServer2003Compat.dll
+0x76fb0000 - 0x77010000 	C:\Windows\system32\IMM32.DLL
+0x75150000 - 0x7521c000 	C:\Windows\syswow64\MSCTF.dll
+0x7c340000 - 0x7c396000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\msvcr71.dll
+0x6d800000 - 0x6da97000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\client\jvm.dll
+0x6d7b0000 - 0x6d7bc000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\verify.dll
+0x6d330000 - 0x6d34f000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\java.dll
+0x6d290000 - 0x6d298000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\hpi.dll
+0x77010000 - 0x77015000 	C:\Windows\syswow64\PSAPI.DLL
+0x6d7f0000 - 0x6d7ff000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\zip.dll
+0x73550000 - 0x73567000 	C:\Windows\system32\CRYPTSP.dll
+0x73510000 - 0x7354b000 	C:\Windows\system32\rsaenh.dll
+0x6d610000 - 0x6d623000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\net.dll
+0x76400000 - 0x76435000 	C:\Windows\syswow64\WS2_32.dll
+0x75280000 - 0x75286000 	C:\Windows\syswow64\NSI.dll
+0x738e0000 - 0x7391c000 	C:\Windows\system32\mswsock.dll
+0x738c0000 - 0x738c6000 	C:\Windows\System32\wship6.dll
+0x74170000 - 0x74180000 	C:\Windows\system32\NLAapi.dll
+0x684a0000 - 0x684b0000 	C:\Windows\system32\napinsp.dll
+0x68480000 - 0x68492000 	C:\Windows\system32\pnrpnsp.dll
+0x73470000 - 0x734b4000 	C:\Windows\system32\DNSAPI.dll
+0x68410000 - 0x68418000 	C:\Windows\System32\winrnr.dll
+0x00360000 - 0x00379000 	C:\Applied Biosystems\StepOne Software v2.3\bonjour\mdnsNSP.dll
+0x73930000 - 0x7394c000 	C:\Windows\system32\Iphlpapi.DLL
+0x73920000 - 0x73927000 	C:\Windows\system32\WINNSI.DLL
+0x738d0000 - 0x738d5000 	C:\Windows\System32\wshtcpip.dll
+0x74070000 - 0x74076000 	C:\Windows\system32\rasadhlp.dll
+0x73cd0000 - 0x73d08000 	C:\Windows\System32\fwpuclnt.dll
+0x6d630000 - 0x6d639000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\nio.dll
+0x72000000 - 0x72012000 	C:\Applied Biosystems\StepOne Software v2.3\eclipse\plugins\org.eclipse.equinox.launcher.win32.win32.x86_1.0.3.R33x_v20080118\eclipse_1023.dll
+0x72f90000 - 0x7312e000 	C:\Windows\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.18837_none_41e855142bd5705d\COMCTL32.dll
+0x6d000000 - 0x6d14a000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\awt.dll
+0x6d230000 - 0x6d284000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\fontmanager.dll
+0x72430000 - 0x725f3000 	C:\Windows\system32\d3d9.dll
+0x72ea0000 - 0x72ea6000 	C:\Windows\system32\d3d8thk.dll
+0x6dca0000 - 0x6dd4a000 	C:\Windows\system32\aticfx32.dll
+0x72e90000 - 0x72e9b000 	C:\Windows\system32\atiu9pag.dll
+0x6bfb0000 - 0x6c3ce000 	C:\Windows\system32\atiumdag.dll
+0x6c3f0000 - 0x6c7e6000 	C:\Windows\system32\atiumdva.dll
+0x770e0000 - 0x77163000 	C:\Windows\syswow64\CLBCatQ.DLL
+0x741b0000 - 0x742a5000 	C:\Windows\system32\propsys.dll
+0x726f0000 - 0x72711000 	C:\Windows\system32\ntmarta.dll
+0x77170000 - 0x771b5000 	C:\Windows\syswow64\WLDAP32.dll
+0x643e0000 - 0x64578000 	C:\Windows\system32\NetworkExplorer.dll
+0x73170000 - 0x7319f000 	C:\Windows\System32\shdocvw.dll
+0x6d490000 - 0x6d49a000 	C:\Windows\system32\slc.dll
+0x74840000 - 0x74971000 	C:\Windows\system32\WindowsCodecs.dll
+0x6bf80000 - 0x6bfa9000 	C:\Program Files (x86)\Dropbox\Client\DropboxExt.26.dll
+0x5a270000 - 0x5a2a1000 	C:\Windows\system32\EhStorShell.dll
+0x6d4a0000 - 0x6d510000 	C:\Windows\system32\ntshrui.dll
+0x73350000 - 0x73369000 	C:\Windows\system32\srvcli.dll
+0x72e80000 - 0x72e8b000 	C:\Windows\system32\cscapi.dll
+0x731f0000 - 0x731f8000 	C:\Windows\System32\drprov.dll
+0x73af0000 - 0x73b19000 	C:\Windows\System32\WINSTA.dll
+0x64bb0000 - 0x64bc4000 	C:\Windows\System32\ntlanman.dll
+0x73150000 - 0x73167000 	C:\Windows\System32\davclnt.dll
+0x73210000 - 0x73218000 	C:\Windows\System32\DAVHLPR.dll
+0x73340000 - 0x7334f000 	C:\Windows\system32\wkscli.dll
+0x73370000 - 0x73379000 	C:\Windows\system32\netutils.dll
+0x64670000 - 0x646f9000 	C:\Windows\system32\PortableDeviceApi.dll
+0x76790000 - 0x767bf000 	C:\Windows\syswow64\WINTRUST.dll
+0x76070000 - 0x76191000 	C:\Windows\syswow64\CRYPT32.dll
+0x77640000 - 0x7764c000 	C:\Windows\syswow64\MSASN1.dll
+0x64640000 - 0x6466b000 	C:\Windows\system32\PortableDeviceTypes.dll
+0x64590000 - 0x645b2000 	C:\Windows\system32\EhStorAPI.dll
+0x727c0000 - 0x727c9000 	C:\Windows\system32\LINKINFO.dll
+0x74ca0000 - 0x74ca8000 	C:\Windows\system32\Secur32.dll
+0x6d560000 - 0x6d569000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\management.dll
+0x6d450000 - 0x6d474000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\jpeg.dll
+0x2ee40000 - 0x2ee4e000 	C:\Windows\System32\jdns_sd.dll
+0x2ee50000 - 0x2ee5e000 	C:\Windows\system32\dnssd.dll
+0x6d1a0000 - 0x6d1c3000 	C:\Applied Biosystems\StepOne Software v2.3\jre\bin\dcpr.dll
+
+VM Arguments:
+jvm_args: -Dosgi.configuration.area=C:/Applied Biosystems/StepOne Software v2.3/config/eclipse -Ddata=C:/Applied Biosystems/StepOne Software v2.3/config/eclipse/workspace -Dcom.apldbio.core.security.db.DataSource=DerbyDataSource -Dderby.system.home=C:/Applied Biosystems/StepOne Software v2.3 -Dhome=C:/Applied Biosystems/StepOne Software v2.3 -Dswing.aatext=true -Duser.language=en -Duser.country=US -Dlogin=true -Xms128m -Xmx512m -Xbootclasspath/p:C:/Applied Biosystems/StepOne Software v2.3/eclipse/plugins/com.apldbio.sds.platform_2.1.0/lib/jai_imageio.jar 
+java_command: C:\Applied Biosystems\StepOne Software v2.3\bin\..\eclipse\startup.jar -os -ws -arch -launcher C:\Applied Biosystems\StepOne Software v2.3\bin\stepone.exe -name Stepone -showsplash 600 -exitdata 18b4_118 -o C:\Users\user\Dropbox\BehavEphyRNAseq\StepOnePlusData\15-06-23-leech_std_curve.eds -vm C:/Applied Biosystems/StepOne Software v2.3/jre/bin/javaw.exe -vmargs -Dosgi.configuration.area=C:/Applied Biosystems/StepOne Software v2.3/config/eclipse -Ddata=C:/Applied Biosystems/StepOne Software v2.3/config/eclipse/workspace -Dcom.apldbio.core.security.db.DataSource=DerbyDataSource -Dderby.system.home=C:/Applied Biosystems/StepOne Software v2.3 -Dhome=C:/Applied Biosystems/StepOne Software v2.3 -Dswing.aatext=true -Duser.language=en -Duser.country=US -Dlogin=true -Xms128m -Xmx512m -Xbootclasspath/p:C:/Applied Biosystems/StepOne Software v2.3/eclipse/plugins/com.apldbio.sds.platform_2.1.0/lib/jai_imageio.jar -jar C:\Applied Biosystems\StepOne Software v2.3\bin\..\eclipse\startup.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+CLASSPATH=C:\Applied Biosystems\StepOne Software v2.3\eclipse\startup.jar
+PATH="C:\Applied Biosystems\StepOne Software v2.3\bin";"C:\Applied Biosystems\StepOne Software v2.3\eclipse";"C:\Applied Biosystems\StepOne Software v2.3\jre\bin";C:\Applied Biosystems\StepOne Software v2.3\bin;C:\Applied Biosystems\StepOne Software v2.3\eclipse;C:\Applied Biosystems\StepOne Software v2.3\eclipse\plugins\com.apldbio.sds.experiment.genotyping_2.1.0\bin;C:\Applied Biosystems\StepOne Software v2.3\eclipse\plugins\com.apldbio.sds.experiment.genotyping_2.1.0\bin\bin\win32;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;c:\Program Files (x86)\Common Files\Roxio Shared\DLLShared\;c:\Program Files (x86)\Common Files\Roxio Shared\10.0\DLLShared\;C:\Program Files\MATLAB\R2015a\bin;C:\Program Files (x86)\Skype\Phone\
+USERNAME=Admin
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 42 Stepping 7, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows XP Build 2600 Service Pack 2
+
+CPU:total 8 (8 cores per cpu, 2 threads per core) family 6 model 42 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, ht
+
+Memory: 4k page, physical 16733200k(13330600k free), swap 33464564k(28680060k free)
+
+vm_info: Java HotSpot(TM) Client VM (16.3-b01) for windows-x86 JRE (1.6.0_20-b02), built on Apr 12 2010 13:52:23 by "java_re" with MS VC++ 7.1 (VS2003)
+
+time: Thu Jul 02 18:23:51 2015
+elapsed time: 7315 seconds
+
