@@ -1,5 +1,15 @@
 # [Maxwell® RSC simplyRNA Tissue Kit](https://www.promega.com/~/media/files/resources/protocols/technical%20manuals/101/maxwell%20rsc%20simplyrna%20cells%20kit%20and%20maxwell%20rsc%20simplyrna%20tissue%20kit%20technical%20manual.pdf)
 
+## Sample information
+Tissue punches for this project were collected as described [here](https://github.com/raynamharris/BehavEphyRNAseq/data/sample_info/punches_060915.csv)
+
+## Maxwell Cartridge Prep
+To maintain an RNase-free environment during processing, change gloves before handling cartridges, Maxwell® CSC/ RSC Plungers and Elution Tubes. 
+
+- [ ] Place the cartridges to be used in the deck tray with the printed side facing away from the Elution Tubes. Press down on the cartridge to snap it into position. Note: if using less than 16, center cartridges on the deck.
+- [ ] Carefully peel back the seal so that all plastic comes off the top of the cartridge. Ensure that all sealing tape and any residual adhesive are removed before placing cartridges into the instrument.
+- [ ] Add 
+
 ## Prep and Storage of Solutions
 
 ### 1-Thioglycerol/Homogenization Solution
@@ -9,10 +19,3 @@ A volume of 200μl of 1-Thioglycerol/Homogenization Solution is needed for each 
 
 ### DNase I Solution
 Add 275μl of Nuclease-Free Water to the vial of lyophilized DNase I. Invert to rinse DNase off the underside of the cap and swirl gently to mix; do not vortex. Add 5μl of Blue Dye to the reconstituted DNase I as a visual aid for pipetting. Dispense the DNase I Solution into single-use aliquots in nuclease-free tubes. Store reconstituted DNase I at –30°C to –10°C. DNase I solution maintains activity for up to 10 freeze-thaw cycles.
-
-## Maxwell Cartridge Prep
-To maintain an RNase-free environment during processing, change gloves before handling cartridges, Maxwell® CSC/ RSC Plungers and Elution Tubes. 
-
-- [ ] Decide how many cartridges you will use. If using less than 16, center the cartridges on the deck tray. 
-- [ ] Place the cartridges to be used in the deck tray with the printed side facing away from the Elution Tubes. Press down on the cartridge to snap it into position. 
-- [ ] Carefully peel back the seal so that all plastic comes off the top of the cartridge. Ensure that all sealing tape and any residual adhesive are removed before placing cartridges into the instrument.
