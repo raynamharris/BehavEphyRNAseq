@@ -27,10 +27,10 @@
 - [ ] Touch the Start button to begin the extraction run. The platform will retract, and the door will close.
 
 ## After the Maxwell Run Completes
-- [ ]Follow on-screen instructions at the end of the method to open door. Verify that the plungers are located in well #8 of the cartridge at the end of the run. 
-- [ ]Remove the deck tray from the instrument. Remove Elution Tubes containing RNA, and close the tubes. After the run has been completed, the extraction run report will be displayed. 
+- [ ] Follow on-screen instructions at the end of the method to open door. Verify that the plungers are located in well #8 of the cartridge at the end of the run. 
+- [ ] Remove the deck tray from the instrument. Remove Elution Tubes containing RNA, and close the tubes. After the run has been completed, the extraction run report will be displayed. 
 - [ ] If sample eluates are not processed immediately, the eluted RNA should be stored at –70°C, or at –20°C for up to 24 hours. 
-- [ ]Remove the cartridges and plungers from the deck tray and discard, following your
+- [ ] Remove the cartridges and plungers from the deck tray and discard, following your
 institutions recommended guidelines for disposal of hazardous material. Do not reuse reagent cartridges, plungers or Elution Tubes.
 
 -----------------------------------------------------------------------------------------
