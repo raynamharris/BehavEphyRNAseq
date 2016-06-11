@@ -1,7 +1,10 @@
 # [Maxwell® RSC simplyRNA Tissue Kit](https://www.promega.com/~/media/files/resources/protocols/technical%20manuals/101/maxwell%20rsc%20simplyrna%20cells%20kit%20and%20maxwell%20rsc%20simplyrna%20tissue%20kit%20technical%20manual.pdf)
 
-## Sample information
-Tissue punches for this project were collected as described [here](../data/sample_info/punches_060915.csv)
+## Sample Prep
+Tissue punches for this project were collected as described [here](../data/sample_info/punches_060915.csv). They were homogenized in 200 \( \mu \ M \)L and stored at -80&degC.
+
+- [ ] Identify samples to be processed.
+- [ ] Remove samples from 
 
 ## Maxwell Cartridge Prep
 To maintain an RNase-free environment during processing, change gloves before handling cartridges, Maxwell® CSC/ RSC Plungers and Elution Tubes. 
