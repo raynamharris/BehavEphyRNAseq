@@ -15,3 +15,4 @@ http://www.promega.com/~/media/files/resources/protocols/technical%20manuals/101
 - [ ] Add 5μl of standard to the appropriate tube. Pipette up and down to mix
 - [ ] Incubate assays for 5 minutes at room temperature, protected from light
 - [ ] Place in the Quantus<sup>TM</sup> Fluorometer  and measure the fluorescence.
+- [ ] You can open the corresponding Maxwell® RSC Instrument results workshop to have the data automatically populate and Excell spreadsheet with the sample layout.
