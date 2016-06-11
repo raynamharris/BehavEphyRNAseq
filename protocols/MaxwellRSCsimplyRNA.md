@@ -9,7 +9,7 @@
 - [ ] Place the cartridges in the deck tray with the printed side facing away from the Elution Tubes. Press down to snap it into position. Note: Center cartridges on the deck.
 - [ ] Carefully peel back the seal so that all plastic comes off the top of the cartridge. 
 - [ ] Place a Maxwell® CSC/RSC Plunger in the well closest to the Elution Tube (well #8).
-- [ ] Place 0.5mL Elution Tubes in the front of the deck tray. Add 30μl of Nuclease-Free Water to the bottom of each Elution Tube.
+- [ ] Place 0.5mL Elution Tubes in the front of the deck tray. Add 40μl of Nuclease-Free Water to the bottom of each Elution Tube.
 - [ ] Add 5μl of blue DNase I Solution to well #4 (yellow reagent). 
 - [ ] Add 200μl of Lysis Buffer to the thawed punch sample. Vortex vigorously for 15 seconds to mix. Transfer all 400μl of lysate to the well farthest from the elution tube (well #8).
 
@@ -28,8 +28,10 @@
 
 ## After the Maxwell Run Completes
 - [ ] Follow on-screen instructions at the end of the method to open door. Verify that the plungers are located in well #8 of the cartridge at the end of the run. 
-- [ ] Remove the deck tray from the instrument. Remove Elution Tubes containing RNA, and close the tubes. After the run has been completed, the extraction run report will be displayed. 
-- [ ] If sample eluates are not processed immediately, the eluted RNA should be stored at –70°C, or at –20°C for up to 24 hours. 
+- [ ] Remove the deck tray from the instrument. Remove Elution Tubes containing RNA, and close the tubes. 
+- [ ] Transfer 5μl RNA to a tube for analysis on the Bioanalyzer. 
+- [ ] Transfer 5μl RNA to a tube for analysis on the Quantas. 
+- [ ] Transfer remaining ~20μl RNA to a 1.5ml tube for labeled with the RNAseq ID for shipment to the GSAF. 
 - [ ] Remove the cartridges and plungers from the deck tray and discard, following your
 institutions recommended guidelines for disposal of hazardous material. Do not reuse reagent cartridges, plungers or Elution Tubes.
 
