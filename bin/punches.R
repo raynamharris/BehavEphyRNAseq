@@ -8,8 +8,8 @@ library("reshape2")
 setwd("~/Github/BehavEphyRNAseq/data/sample_info")
 
 #read raw data
-punches <- read.csv("punches_060915.csv", header=TRUE)
-animals <- read.csv("animals_maddy.csv", header=TRUE)
+punches <- read.csv("punches.csv", header=TRUE)
+animals <- read.csv("animals.csv", header=TRUE)
 
 #combine mine and maddy's notes
 full <- join(animals, punches, by = "Mouse", type = "full", match = "all")
