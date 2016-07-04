@@ -1,41 +1,57 @@
-Paradigm,Mouse,Behavior,E-phy,YokedTo,Conflict,APA
-Training + Conflict,15-140A,Good,No,15-140B,Conflict,Trained
-Yoked + Conflict,15-140B,Good,No,15-140A,Conflict,Yoked
-Training + Training,15-140C,Good,No,15-140D,NoConflict,Trained
-Yoked + Training,15-140D,Good,No,15-140C,NoConflict,Yoked
-Training + Conflict,15-141A,Bad,No,15-141B,Conflict,Trained
-Yoked + Conflict,15-141B,Bad,No,15-141A,Conflict,Yoked
-Training + Training,15-141C,Bad,No,15-141D,NoConflict,Trained
-Yoked + Training,15-141D,Bad,No,15-141C,NoConflict,Yoked
-Training + Conflict,15-142A,Good,NG,15-142B,Conflict,Trained
-Yoked + Conflict,15-142B,Good,NG,15-142A,Conflict,Yoked
-Training + Training,15-142C,Good,NG,15-142D,NoConflict,Trained
-Yoked + Training,15-142D,Good,NG,15-142C,NoConflict,Yoked
-Training + Conflict,15-143A,Good,Yes,15-143B,Conflict,Trained
-Yoked + Conflict,15-143B,Good,Yes,15-143A,Conflict,Yoked
-Training + Training,15-143C,Good,Yes,15-143D,NoConflict,Trained
-Yoked + Training,15-143D,Good,Yes,15-143C,NoConflict,Yoked
-Training + Conflict,15-144A,Good,Yes,15-144B,Conflict,Trained
-Yoked + Conflict,15-144B,Good,Yes,15-144A,Conflict,Yoked
-Training + Training,15-144C,Good,Yes,15-144D,NoConflict,Trained
-Yoked + Training,15-144D,Good,Yes,15-144C,NoConflict,Yoked
-Training + Conflict,15-145A,Good,Yes,15-145B,Conflict,Trained
-Yoked + Conflict,15-145B,Good,Yes,15-145A,Conflict,Yoked
-Training + Training,15-145C,Bad,Yes,15-145D,NoConflict,Trained
-Yoked + Training,15-145D,Bad,Yes,15-145C,NoConflict,Yoked
-Training + Conflict,15-146A,Good,Yes,15-146B,Conflict,Trained
-Yoked + Conflict,15-146B,Good,Yes,15-146A,Conflict,Yoked
-Training + Training,15-146C,Good,Yes,15-146D,NoConflict,Trained
-Yoked + Training,15-146D,Good,Yes,15-146C,NoConflict,Yoked
-No Training,15-147,Cage,Yes,NA,Control,Control
-Training + Conflict,15-147A,OK,Yes,15-147B,Conflict,Trained
-Yoked + Conflict,15-147B,OK,Yes,15-147A,Conflict,Yoked
-Training + Training,15-147C,Good,Yes,15-147D,NoConflict,Trained
-Yoked + Training,15-147D,Good,Yes,15-147C,NoConflict,Yoked
-No Training,15-148,Cage,Yes,NA,Control,Control
-Training + Conflict,15-148A,Good,Yes,15-148B,Conflict,Trained
-Yoked + Conflict,15-148B,Good,Yes,15-148A,Conflict,Yoked
-Training + Training,15-148C,OK,Yes,15-148D,NoConflict,Trained
-Yoked + Training,15-148D,OK,Yes,15-148C,NoConflict,Yoked
-Maddy + Punch,15-100,None,None,NA,None,None
-Maddy + Dissociate,15-101,None,None,NA,None,None
+Mouse,Year,Strain,Behavior,E-phy,YokedTo,Conflict,APA,Paradigm,notes,
+15-140A,Summer2015,WT,Good,No,15-140B,Conflict,Trained,Training + Conflict,,
+15-140B,Summer2015,WT,Good,No,15-140A,Conflict,Yoked,Yoked + Conflict,,
+15-140C,Summer2015,WT,Good,No,15-140D,NoConflict,Trained,Training + Training,,
+15-140D,Summer2015,WT,Good,No,15-140C,NoConflict,Yoked,Yoked + Training,,
+15-141A,Summer2015,WT,Bad,No,15-141B,Conflict,Trained,Training + Conflict,,
+15-141B,Summer2015,WT,Bad,No,15-141A,Conflict,Yoked,Yoked + Conflict,,
+15-141C,Summer2015,WT,Bad,No,15-141D,NoConflict,Trained,Training + Training,,NEW COLLECTION METHOD!!
+15-141D,Summer2015,WT,Bad,No,15-141C,NoConflict,Yoked,Yoked + Training,,
+15-142A,Summer2015,WT,Good,NG,15-142B,Conflict,Trained,Training + Conflict,,
+15-142B,Summer2015,WT,Good,NG,15-142A,Conflict,Yoked,Yoked + Conflict,,
+15-142C,Summer2015,WT,Good,NG,15-142D,NoConflict,Trained,Training + Training,,
+15-142D,Summer2015,WT,Good,NG,15-142C,NoConflict,Yoked,Yoked + Training,,
+15-143A,Summer2015,WT,Good,Yes,15-143B,Conflict,Trained,Training + Conflict,,
+15-143B,Summer2015,WT,Good,Yes,15-143A,Conflict,Yoked,Yoked + Conflict,,
+15-143C,Summer2015,WT,Good,Yes,15-143D,NoConflict,Trained,Training + Training,,
+15-143D,Summer2015,WT,Good,Yes,15-143C,NoConflict,Yoked,Yoked + Training,,
+15-144A,Summer2015,WT,Good,Yes,15-144B,Conflict,Trained,Training + Conflict,,
+15-144B,Summer2015,WT,Good,Yes,15-144A,Conflict,Yoked,Yoked + Conflict,,
+15-144C,Summer2015,WT,Good,Yes,15-144D,NoConflict,Trained,Training + Training,,
+15-144D,Summer2015,WT,Good,Yes,15-144C,NoConflict,Yoked,Yoked + Training,,CYRSTALS
+15-145A,Summer2015,WT,Good,Yes,15-145B,Conflict,Trained,Training + Conflict,,collected 3.5 hours late!!!! Slice recovering for very long time
+15-145B,Summer2015,WT,Good,Yes,15-145A,Conflict,Yoked,Yoked + Conflict,,
+15-145C,Summer2015,WT,Bad,Yes,15-145D,NoConflict,Trained,Training + Training,,
+15-145D,Summer2015,WT,Bad,Yes,15-145C,NoConflict,Yoked,Yoked + Training,,
+15-146A,Summer2015,WT,Good,Yes,15-146B,Conflict,Trained,Training + Conflict,,
+15-146B,Summer2015,WT,Good,Yes,15-146A,Conflict,Yoked,Yoked + Conflict,,
+15-146C,Summer2015,WT,Good,Yes,15-146D,NoConflict,Trained,Training + Training,,
+15-146D,Summer2015,WT,Good,Yes,15-146C,NoConflict,Yoked,Yoked + Training,,
+15-147,Summer2015,WT,Cage,Yes,NA,NA,NA,Homecage,,
+15-147A,Summer2015,WT,OK,Yes,15-147B,Conflict,Trained,Training + Conflict,,
+15-147B,Summer2015,WT,OK,Yes,15-147A,Conflict,Yoked,Yoked + Conflict,,
+15-147C,Summer2015,WT,Good,Yes,15-147D,NoConflict,Trained,Training + Training,,
+15-147D,Summer2015,WT,Good,Yes,15-147C,NoConflict,Yoked,Yoked + Training,,
+15-148,Summer2015,WT,Cage,Yes,NA,NA,NA,Homecage,,
+15-148A,Summer2015,WT,Good,Yes,15-148B,Conflict,Trained,Training + Conflict,,
+15-148B,Summer2015,WT,Good,Yes,15-148A,Conflict,Yoked,Yoked + Conflict,,
+15-148C,Summer2015,WT,OK,Yes,15-148D,NoConflict,Trained,Training + Training,,
+15-148D,Summer2015,WT,OK,Yes,15-148C,NoConflict,Yoked,Yoked + Training,,
+15-100,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Punch,,
+15-101,Summer2015,WT,NA,NA,NA,NA,NA,Maddy + Dissociate,,
+15-140E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,
+15-141E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,
+15-144E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,
+16-122B,Summer2016,WT,,,,Conflict,Yoked,Yoked + Conflict,,
+16-122A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,
+16-122C,Summer2016,WT,,,,NoConflict,Trained,Training + Training,new slice buffer,
+16-122D,Summer2016,WT,,,,NoConflict,Yoked,Yoked + Training,very large ventricle,
+16-116A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,
+16-116B,Summer2016,WT,,,,Conflict,Yoked,Yoked + Conflict,,
+12-126B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,
+16-116D,Summer2016,FMR1-KO,,,,NoConflict,Yoked,Yoked + Training,,
+16-116C,Summer2016,FMR1-KO,,,,NoConflict,Trained,Training + Training,,
+16-123B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,
+16-123A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,
+16-123C,Summer2016,WT,,,,NoConflict,Trained,Training + Training,,
+16-123D,Summer2016,WT,,,,NoConflict,Yoked,Yoked + Training,,
