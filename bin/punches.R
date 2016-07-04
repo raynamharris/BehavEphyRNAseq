@@ -43,27 +43,3 @@ MaxwellRSCtest <- full %>%
   select(Tube, Paradigm, Mouse, Behavior, E.phy, Punch, Slice, RNAisolationdate) %>% 
   arrange(RNAisolationdate, Mouse, Punch, Slice) 
   
-
-
-
-
-
-
-
-#combine photos with maddies
-CA1toDGphotos <- read.csv("CA1toDGphotos.csv", header=TRUE, sep=",")
-
-#group and count number of animals
-animals_good <- animals %>% 
-  group_by(Paradigm, Behavior, E.phy) %>%
-  filter(Behavior == 'Good', E.phy == 'Yes')%>%
-  tally()
-head(animals_good)
-#write.csv(animals_good, "animals_good.csv", row.names=FALSE)
-
-#show punch location for "good" animals
-location <- CA1toDGphotos %>%
-  select(Mouse, Paradigm, Behavior, E.phy, L1, L2, L3, L4) %>%
-  filter(Behavior == 'Good', E.phy == 'Yes', L1 > 1)
-#write.csv(location, "location.csv", row.names=FALSE)
-
