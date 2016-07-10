@@ -1700,271 +1700,269 @@ CMO,16-121D,,,,,7/28/16,,,,MK,RMH,300,250,,,,,,,,,,,2016,students,
 CMP,16-121D,,,,,7/28/16,,,,MK,RMH,300,250,,,,,,,,,,,2016,students,
 CMQ,16-121D,,,,,7/28/16,,,,MK,RMH,300,250,,,,,,,,,,,2016,students,
 CMR,16-121D,,,,,7/28/16,,,,MK,RMH,300,250,,,,,,,,,,,2016,students,
-EAA,16-123A,5,CA1,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAB,16-123A,5,CA1,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAC,16-123A,5,CA2,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAD,16-123A,5,CA3,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAE,16-123A,5,CA3,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAF,16-123A,5,CA,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAG,16-123A,5,DG,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EAH,16-123A,5,mossy right,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EAI,16-123A,5,mossy middle,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EAJ,16-123A,5,mossy left,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EAK,16-123A,5,1,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAL,16-123A,5,2,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAM,16-123A,5,3,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAN,16-123A,5,4,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAO,16-123A,5,5,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAP,16-123A,5,6,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAQ,16-123A,5,7,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAR,16-123A,5,8,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAS,16-123A,5,9,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAT,16-123A,5,10,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAU,16-123A,5,11,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAV,16-123A,5,12,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAW,16-123A,5,13,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAX,16-123A,5,14,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EAY,16-123A,5,15,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EAZ,16-123A,5,16,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBA,16-123A,5,17,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBB,16-123A,5,18,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBC,16-123A,5,19,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBD,16-123A,5,20,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBE,16-123A,5,21,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBF,16-123A,5,22,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBG,16-123A,5,slice,,,7/2/16,12:15,13:09,13:30,MK,RMH,,,,,,,,,,,,,2016,students,slice
-EBH,16-123C,5,mossy right,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EBJ,16-123C,5,mossy middle left,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EBK,16-123C,5,mossy middle right,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EBL,16-123C,5,mossy left,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-EBM,16-123C,5,DG,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBN,16-123C,5,CA1,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBO,16-123C,5,CA2,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBP,16-123C,5,18,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBQ,16-123C,5,19,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBR,16-123C,5,20,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBS,16-123C,5,22,,,7/3/16,11:00,12:40,12:50,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBT,16-123C,5,17,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EBU,16-123D,5,DG,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBV,16-123D,5,CA1,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBW,16-123D,5,CA3,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBX,16-123D,5,CA2,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBY,16-123D,5,CA,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-EBZ,16-123D,5,mossy right,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-ECB,16-123D,5,mossy left,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-ECC,16-123D,5,1,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,outside
-ECD,16-123D,5,2,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,outside
-ECE,16-123D,5,18,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECF,16-123D,5,19,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECG,16-123D,5,20,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECH,16-123D,5,21,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECI,16-123D,5,22,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECJ,16-123D,5,17,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECK,16-123D,5,3,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,outside
-ECL,16-123D,5,10,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,outside
-ECM,16-123D,5,9,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,outside
-ECN,16-123D,5,slice,,,7/3/16,23:00,23:30,23:45,MK,RMH,,,,,,,,,,,,,2016,students,slice
-ECO,16-123D,5,?,?,,?,?,?,?,MK,?,,,,,,,,,,,,,2016,students,?
-ECO2,16-117A,5,CA1,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-ECP,16-117A,5,CA3,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-ECQ,16-117A,5,DG,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-ECR,16-117A,5,CA4,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,hippocampus
-ECS,16-117A,5,mossy right,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-ECT,16-117A,5,mossy left,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,mossycells
-ECU,16-117A,5,18,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECV,16-117A,5,20,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECW,16-117A,5,21,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECX,16-117A,5,22,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECY,16-117A,5,17,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-ECZ,16-117A,5,16,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EDA,16-117A,5,15,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,inside
-EDB,16-117A,5,1,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EDC,16-117A,5,2,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EDD,16-117A,5,3,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,outside
-EDE,16-117A,5,slice,,,7/4/16,11:00,13:21,13:32,MK,RMH,,,,,,,,,,,,,2016,students,slice
-EFH,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFI,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFJ,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFK,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFL,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFM,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFN,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFO,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFP,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFQ,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFR,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFS,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFT,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFU,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFV,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFW,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFX,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFY,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EFZ,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGA,16-246B,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGB,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGC,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGD,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGE,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGF,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGG,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGH,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGI,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGJ,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGK,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGL,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGM,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGN,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGO,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGP,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGQ,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGR,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGS,16-246C,,,,,7/6/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGT,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGU,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGV,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGW,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGX,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGY,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EGZ,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHA,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHB,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHC,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHD,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHE,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHF,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHG,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHH,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHI,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHJ,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHK,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHL,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHM,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHN,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHO,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHP,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHQ,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHR,16-256,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHS,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHT,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHU,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHV,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHW,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHX,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHY,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EHZ,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIA,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIB,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIC,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EID,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIE,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIF,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIG,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIH,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EII,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIJ,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIK,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIL,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIM,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIN,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIO,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIP,16-259D,,,,,7/7/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIR,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIS,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIT,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIU,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIV,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIW,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIX,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIY,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EIZ,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJA,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJB,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJC,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJD,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJE,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJF,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJH,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJI,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJJ,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJK,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJL,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJM,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJN,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJO,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJP,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJQ,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJR,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJS,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJT,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJU,16-259,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJV,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJW,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJX,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJY,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EJZ,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKA,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKB,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKC,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKD,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKE,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKF,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKG,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKH,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKI,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKJ,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKK,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKL,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKM,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKN,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKO,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKP,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKQ,16-259A,,,,,7/8/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKR,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKS,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKT,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKU,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKV,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKW,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKX,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKY,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EKZ,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELA,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELB,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELC,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELD,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELE,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELF,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELG,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELH,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELI,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELJ,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELK,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELL,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELM,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELN,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELO,16-256A,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELP,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELQ,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELR,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELS,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELT,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELU,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELV,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELW,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELX,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELY,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-ELZ,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMA,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMB,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMC,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMD,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EME,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMF,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMG,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMH,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMI,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMJ,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMK,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EML,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
-EMM,16-266D,,,,,7/9/16,,,,JMA,RMH,,250,,,,,,,,,,,2016,students,
+EAA,16-123A,5,CA1,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAB,16-123A,5,CA1,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAC,16-123A,5,CA2,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAD,16-123A,5,CA3,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAE,16-123A,5,CA3,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAF,16-123A,5,CA,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAG,16-123A,5,DG,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EAH,16-123A,5,mossy right,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EAI,16-123A,5,mossy middle,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EAJ,16-123A,5,mossy left,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EAK,16-123A,5,1,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAL,16-123A,5,2,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAM,16-123A,5,3,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAN,16-123A,5,4,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAO,16-123A,5,5,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAP,16-123A,5,6,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAQ,16-123A,5,7,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAR,16-123A,5,8,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAS,16-123A,5,9,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAT,16-123A,5,10,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAU,16-123A,5,11,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAV,16-123A,5,12,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAW,16-123A,5,13,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAX,16-123A,5,14,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+EAY,16-123A,5,15,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EAZ,16-123A,5,16,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBA,16-123A,5,17,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBB,16-123A,5,18,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBC,16-123A,5,19,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBD,16-123A,5,20,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBE,16-123A,5,21,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBF,16-123A,5,22,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBG,16-123A,5,slice,yes,,7/2/16,12:15,13:09,13:30,MK,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,slice
+EBH,16-123C,5,mossy right,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EBJ,16-123C,5,mossy middle left,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EBK,16-123C,5,mossy middle right,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EBL,16-123C,5,mossy left,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+EBM,16-123C,5,DG,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBN,16-123C,5,CA1,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBO,16-123C,5,CA2,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBP,16-123C,5,18,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBQ,16-123C,5,19,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBR,16-123C,5,20,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBS,16-123C,5,22,yes,,7/3/16,11:00,12:40,12:50,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBT,16-123C,5,17,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+EBU,16-123D,5,DG,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBV,16-123D,5,CA1,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBW,16-123D,5,CA3,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBX,16-123D,5,CA2,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBY,16-123D,5,CA,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+EBZ,16-123D,5,mossy right,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+ECB,16-123D,5,mossy left,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,mossycells
+ECC,16-123D,5,1,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+ECD,16-123D,5,2,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+ECE,16-123D,5,18,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+ECF,16-123D,5,19,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+ECG,16-123D,5,20,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+ECH,16-123D,5,21,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+ECI,16-123D,5,22,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+ECJ,16-123D,5,17,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,inside
+ECK,16-123D,5,3,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+ECL,16-123D,5,10,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+ECM,16-123D,5,9,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,outside
+ECN,16-123D,5,slice,yes,,7/3/16,23:00,23:30,23:45,MK,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,slice
+ECO2,16-117A,5,CA1,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+ECP,16-117A,5,CA3,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 1,2016,students,hippocampus
+ECQ,16-117A,5,DG,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,hippocampus
+ECR,16-117A,5,CA4,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,hippocampus
+ECS,16-117A,5,mossy right,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,mossycells
+ECT,16-117A,5,mossy left,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,mossycells
+ECU,16-117A,5,18,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+ECV,16-117A,5,20,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+ECW,16-117A,5,21,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+ECX,16-117A,5,22,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+ECY,16-117A,5,17,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+ECZ,16-117A,5,16,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+EDA,16-117A,5,15,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,inside
+EDB,16-117A,5,1,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,outside
+EDC,16-117A,5,2,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,outside
+EDD,16-117A,5,3,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,outside
+EDE,16-117A,5,slice,yes,,7/4/16,11:00,13:21,13:32,MK,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,slice
+EFH,16-246B,1,CA1,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFI,16-246B,2,CA1,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFJ,16-246B,3,CA1,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFK,16-246B,1,DG,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFL,16-246B,2,DG,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFM,16-246B,3,DG,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFN,16-246B,1,CA3,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFO,16-246B,2,CA3,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFQ,16-246B,1,CA4,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFR,16-246B,2,CA4,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFS,16-246B,3,CA4,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFT,16-246B,1,CA2,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFU,16-246B,2,CA2,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFV,16-246B,3,CA2,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EFW,16-246B,1,slice,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,
+EFX,16-246B,2,slice,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,
+EFY,16-246B,3,slice,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,
+EGA,16-246B,3,CA3,9.7x,,7/6/16,13:45,14:20,15:02,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EFZ,16-246C,1,CA1,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGB,16-246C,2,CA1,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGC,16-246C,3,CA1,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGD,16-246C,1,DG,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGE,16-246C,2,DG,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGF,16-246C,3,DG,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGH,16-246C,1,CA3,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGI,16-246C,2,CA3,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGJ,16-246C,3,CA3,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGK,16-246C,1,CA2,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGL,16-246C,2,CA2,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGM,16-246C,3,CA2,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGN,16-246C,1,CA4,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGO,16-246C,2,CA4,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGP,16-246C,3,CA4,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGQ,16-246C,1,slice,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGR,16-246C,2,slice,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGS,16-246C,3,slice,yes,,7/6/16,17:50,18:00,18:17,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EGT,16-256,1,CA1,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Slices Box 1,2016,students,
+EGU,16-256,2,CA1,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EGV,16-256,3,CA1,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 2,2016,students,
+EGW,16-256,4,CA1,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EGX,16-256,1,DG,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EGY,16-256,2,DG,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EGZ,16-256,3,DG,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHA,16-256,4,DG,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHB,16-256,1,CA3,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHC,16-256,2,CA3,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHD,16-256,3,CA3,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHE,16-256,4,CA3,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHF,16-256,1,CA2,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHG,16-256,2,CA2,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHH,16-256,3,CA2,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHI,16-256,4,CA2,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHJ,16-256,1,CA4,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHK,16-256,2,CA4,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHL,16-256,3,CA4,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHM,16-256,4,CA4,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHO,16-256,4,slice,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHP,16-256,3,slice,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHQ,16-256,2,slice,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHR,16-256,1,slice,9.5x,,7/7/16,14:00,14:45,15:06,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHS,16-259D,1,CA3,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHT,16-259D,2,CA3,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHU,16-259D,3,CA3,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHV,16-259D,4,CA3,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHW,16-259D,1,DG,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHX,16-259D,2,CA1,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHY,16-259D,3,CA1,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EHZ,16-259D,4,CA1,9.6x,"took 2nd punch, lost 1st",7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIA,16-259D,1,CA1,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIB,16-259D,2,DG,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIC,16-259D,3,DG,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EID,16-259D,4,DG,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIE,16-259D,1,CA2,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIF,16-259D,2,CA2,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIG,16-259D,3,CA2,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIH,16-259D,4,CA2,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EII,16-259D,1,CA4,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIJ,16-259D,2,CA4,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIK,16-259D,3,CA4,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIL,16-259D,4,CA4,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIM,16-259D,1,slice,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EIN,16-259D,2,slice,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EIO,16-259D,3,slice,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EIP,16-259D,4,slice,9.6x,,7/7/16,19:15,19:42,20:02,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EIR,16-259,1,CA1,double punch,,7/7/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIS,16-259,2,CA1,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIT,16-259,3,CA1,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIU,16-259,4,CA1,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIV,16-259,5,CA1,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIW,16-259,1,CA3,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIX,16-259,2,CA3,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIY,16-259,3,CA3,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EIZ,16-259,4,CA3,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJA,16-259,5,CA3,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJB,16-259,1,DG,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJC,16-259,2,DG,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJD,16-259,3,DG,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJE,16-259,4,DG,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJF,16-259,5,DG,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJH,16-259,2,CA4,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJI,16-259,3,CA4,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJJ,16-259,4,CA4,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJK,16-259,5,CA4,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJL,16-259,1,CA2,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJM,16-259,2,CA2,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJN,16-259,3,CA2,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJO,16-259,4,CA2,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJP,16-259,5,CA2,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Student Punches 3,2016,students,
+EJQ,16-259,1,slice,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EJR,16-259,2,slice,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EJS,16-259,3,slice,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EJT,16-259,4,slice,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EJU,16-259,5,slice,,,7/8/16,14:00,14:25,14:47,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EJV,16-259A,1,CA1,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EJW,16-259A,2,CA1,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EJX,16-259A,3,CA1,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EJY,16-259A,4,CA3,,"took 2nd punch, lost 1st",7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EJZ,16-259A,1,CA3,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKA,16-259A,2,CA3,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKB,16-259A,3,CA3,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKC,16-259A,4,CA1,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKD,16-259A,1,DG,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKE,16-259A,2,DG,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKF,16-259A,3,DG,,not sure its in,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKG,16-259A,4,DG,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKH,16-259A,1,CA2,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKI,16-259A,2,CA2,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKJ,16-259A,3,CA2,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKK,16-259A,4,CA2,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKL,16-259A,3,CA4,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKM,16-259A,4,CA4,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKN,16-259A,1,slice,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EKO,16-259A,2,slice,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EKP,16-259A,3,slice,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EKQ,16-259A,4,slice,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,Slices Box 2,2016,students,
+EKR,16-256A,1,CA4,,,7/8/16,19:30,19:46,20:00,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKS,16-256A,2,CA4,,,7/9/16,17:30,18:00,18:10,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKT,16-256A,3,CA4,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKU,16-256A,4,CA4,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKV,16-256A,1,CA2,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKV2,16-256A,2,CA2,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKW,16-256A,3,CA2,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKX,16-256A,4,CA2,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKY,16-256A,1,CA3,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EKZ,16-256A,2,CA3,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELA,16-256A,3,CA3,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELB,16-256A,4,CA3,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELC,16-256A,1,CA1,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELD,16-256A,2,CA1,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELE,16-256A,3,CA1,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELF,16-256A,4,CA1,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELG,16-256A,1,DG,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELH,16-256A,2,DG,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELI,16-256A,3,DG,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELJ,16-256A,4,DG,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELK,16-256A,1,slice,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELL,16-256A,2,slice,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELM,16-256A,3,slice,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELN,16-256A,4,slice,,,7/9/16,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELO,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELP,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELQ,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELR,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELS,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELT,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELU,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELV,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELW,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELX,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELY,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+ELZ,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMA,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMB,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMC,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMD,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EME,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMF,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMG,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMH,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMI,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMJ,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMK,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EML,16-266D,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+EMM,,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
+,,,,,,,,,,JMA,RMH,300,250,,,,,,,,,,,2016,students,
