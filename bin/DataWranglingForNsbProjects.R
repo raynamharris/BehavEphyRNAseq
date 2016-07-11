@@ -4,8 +4,11 @@
 ## are described in the same csv file in BehavPhysRNAseq repo
 ## I'll use this script to create a file for the students and save it in the qPCR-mouse repo
 
+library(dplyr)
+
 ## 1. Read data
 ## 2. Wrangle/clean for students
+
 
 ## 1. read data
 setwd("~/Github/BehavEphyRNAseq/data/sample_info")
@@ -15,6 +18,7 @@ str(punches)
 str(animals)
 str(punches$Mouse)
 str(animals$Mouse)
+
 ## 2. clean data & join
 cleanpunches <- punches
 cleanpunches$Date <- as.Date(cleanpunches$Date, "%m/%d/%y")
@@ -30,8 +34,8 @@ str(cleanpunches)
 cleanpunches <- cleanpunches %>% 
   left_join(animals, by="Mouse")
   
-
 ## 3. Wrangle for students
+
 NSBpunches <- cleanpunches %>%
   filter(Purpose == "students", Punch != "CA1?") %>%
   select(Tube, Mouse, Slice, Punch, photos, Date, 
