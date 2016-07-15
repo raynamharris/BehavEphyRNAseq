@@ -86,20 +86,23 @@ Mouse,Year,Strain,Behavior,E-phy,YokedTo,Conflict,APA,Paradigm,notes,behavior
 16-125B,Summer2016,,,,,,,,,MK
 16-125C,Summer2016,,,,,,,,,MK
 16-125D,Summer2016,,,,,,,,,MK
-16-256,Summer2016,Huntingtin,,,,NA,Trained,Training,,Cycle3
-16-256A,Summer2016,Huntingtin,,,,NA,Trained,Training,,Cycle3
-16-259 ,Summer2016,Huntingtin,,,,NA,Trained,Training,,Cycle3
-16-259A,Summer2016,Huntingtin,,,,NA,NoShock,Experienced,,Cycle3
-16-259D,Summer2016,Huntingtin,,,,NA,HomeCage,HomeCage,,Cycle3
-16-264B,Summer2016,WT(),,,,NA,Trained,Training ,,Cycle3
-16-264C,Summer2016,WT(),,,,NA,NoShock,Experienced,,Cycle3
-16-266D,Summer2016,WT(),,,,NA,Trained,Training,,Cycle3
-16-259B,Summer2016,,,,,,,,,Cycle3
-16-260C,Summer2016,,,,,,,,,Cycle3
-16-226B,Summer2016,,,,,,,,,Cycle3
-16-266C,Summer2016,WT(),,,,NA,Trained,Training,,Cycle3
-16-268B,Summer2016,,,,,,,,,Cycle3
-16-259C,Summer2016,,,,,,,,,Cycle3
-16-267A,Summer2016,,,,,,,,,Cycle3
-16-261B,Summer2016,,,,,,,,,Cycle3
-,,,,,,,,,,Cycle3
+16-256,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
+16-256A,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
+16-259 ,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
+16-259A,Summer2016,HD (YAC128),,,,NA,NoShock,Experienced,,Cycle3
+16-259D,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3
+16-264B,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training ,,Cycle3
+16-264C,Summer2016,WT(FVB/NJ),,,,NA,NoShock,Experienced,,Cycle3
+16-266D,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training,,Cycle3
+16-259B,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,SCN samples ,Cycle3
+16-260C,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3
+16-266B,Summer2016,WT(FVB/NJ),,,,NA,HomeCage,Homecage,SCN samples ,Cycle3
+16-266C,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training,,Cycle3
+16-268B,Summer2016,WT(FVB/NJ),,,,NA,HomeCage,Homecage,,Cycle3
+16-259C,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
+16-267A,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training,,Cycle3
+16-261B,Summer2016,HD (YAC128),,,,NA,HomeCage,Homecage,SCN samples ,Cycle3
+16-260 ,Summer2016,HD (YAC128),,,,NA,NoShock,Experienced,,Cycle3
+16-267B,Summer2016,WT(FVB/NJ),,,,NA,NoShock,Experienced,SCN samples ,Cycle3
+16-265C,Summer2016,WT(FVB/NJ),,,,NA,HomeCage,Homecage,,Cycle3
+16-257A,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
