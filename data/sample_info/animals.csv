@@ -1,108 +1,108 @@
-Mouse,Year,Strain,Behavior,E-phy,YokedTo,Conflict,APA,Paradigm,notes,behavior
-???,Summer2015,,,,,,,,,RosEmma
-12-126B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,MK
-15-100,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Punch,,MK
-15-101,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Dissociate,,MK
-15-140A,Summer2015,WT,Good,No,15-140B,Conflict,Trained,Training + Conflict,,MK
-15-140B,Summer2015,WT,Good,No,15-140A,Conflict,Yoked,Yoked + Conflict,,MK
-15-140C,Summer2015,WT,Good,No,15-140D,NoConflict,Trained,Training + Training,,MK
-15-140D,Summer2015,WT,Good,No,15-140C,NoConflict,Yoked,Yoked + Training,,MK
-15-140E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,MK
-15-141A,Summer2015,WT,Bad,No,15-141B,Conflict,Trained,Training + Conflict,,MK
-15-141B,Summer2015,WT,Bad,No,15-141A,Conflict,Yoked,Yoked + Conflict,,MK
-15-141C,Summer2015,WT,Bad,No,15-141D,NoConflict,Trained,Training + Training,NEW COLLECTION METHOD!!,MK
-15-141D,Summer2015,WT,Bad,No,15-141C,NoConflict,Yoked,Yoked + Training,,MK
-15-141E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,MK
-15-142A,Summer2015,WT,Good,NG,15-142B,Conflict,Trained,Training + Conflict,,MK
-15-142B,Summer2015,WT,Good,NG,15-142A,Conflict,Yoked,Yoked + Conflict,,MK
-15-142C,Summer2015,WT,Good,NG,15-142D,NoConflict,Trained,Training + Training,,MK
-15-142D,Summer2015,WT,Good,NG,15-142C,NoConflict,Yoked,Yoked + Training,,MK
-15-143A,Summer2015,WT,Good,Yes,15-143B,Conflict,Trained,Training + Conflict,,MK
-15-143B,Summer2015,WT,Good,Yes,15-143A,Conflict,Yoked,Yoked + Conflict,,MK
-15-143C,Summer2015,WT,Good,Yes,15-143D,NoConflict,Trained,Training + Training,,MK
-15-143D,Summer2015,WT,Good,Yes,15-143C,NoConflict,Yoked,Yoked + Training,,MK
-15-144A,Summer2015,WT,Good,Yes,15-144B,Conflict,Trained,Training + Conflict,,MK
-15-144B,Summer2015,WT,Good,Yes,15-144A,Conflict,Yoked,Yoked + Conflict,,MK
-15-144C,Summer2015,WT,Good,Yes,15-144D,NoConflict,Trained,Training + Training,,MK
-15-144D,Summer2015,WT,Good,Yes,15-144C,NoConflict,Yoked,Yoked + Training,CYRSTALS,MK
-15-144E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,MK
-15-145A,Summer2015,WT,Good,Yes,15-145B,Conflict,Trained,Training + Conflict,collected 3.5 hours late!!!! Slice recovering for very long time,MK
-15-145B,Summer2015,WT,Good,Yes,15-145A,Conflict,Yoked,Yoked + Conflict,,MK
-15-145C,Summer2015,WT,Bad,Yes,15-145D,NoConflict,Trained,Training + Training,,MK
-15-145D,Summer2015,WT,Bad,Yes,15-145C,NoConflict,Yoked,Yoked + Training,,MK
-15-146A,Summer2015,WT,Good,Yes,15-146B,Conflict,Trained,Training + Conflict,,MK
-15-146B,Summer2015,WT,Good,Yes,15-146A,Conflict,Yoked,Yoked + Conflict,,MK
-15-146C,Summer2015,WT,Good,Yes,15-146D,NoConflict,Trained,Training + Training,,MK
-15-146D,Summer2015,WT,Good,Yes,15-146C,NoConflict,Yoked,Yoked + Training,,MK
-15-147,Summer2015,WT,Cage,Yes,NA,NA,NA,Homecage,,MK
-15-147A,Summer2015,WT,OK,Yes,15-147B,Conflict,Trained,Training + Conflict,,MK
-15-147B,Summer2015,WT,OK,Yes,15-147A,Conflict,Yoked,Yoked + Conflict,,MK
-15-147C,Summer2015,WT,Good,Yes,15-147D,NoConflict,Trained,Training + Training,,MK
-15-147D,Summer2015,WT,Good,Yes,15-147C,NoConflict,Yoked,Yoked + Training,,MK
-15-148,Summer2015,WT,Cage,Yes,NA,NA,NA,Homecage,,MK
-15-148A,Summer2015,WT,Good,Yes,15-148B,Conflict,Trained,Training + Conflict,,MK
-15-148B,Summer2015,WT,Good,Yes,15-148A,Conflict,Yoked,Yoked + Conflict,,MK
-15-148C,Summer2015,WT,OK,Yes,15-148D,NoConflict,Trained,Training + Training,,MK
-15-148D,Summer2015,WT,OK,Yes,15-148C,NoConflict,Yoked,Yoked + Training,,MK
-15-310,Summer2015,,,,,,,,,RosEmma
-15-331,Summer2015,,,,,,,,,RosEmma
-16-116A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,MK
-16-116B,Summer2016,WT,,,,Conflict,Yoked,Yoked + Conflict,,MK
-16-116C,Summer2016,FMR1-KO,,,,NoConflict,Trained,Training + Training,,MK
-16-116D,Summer2016,FMR1-KO,,,,NoConflict,Yoked,Yoked + Training,,MK
-16-117A,Summer2016,,,,,,,,,MK
-16-117B,Summer2016,,,,,,,,,MK
-16-117C,Summer2016,,,,,,,,,MK
-16-117D,Summer2016,,,,,,,,,MK
-16-118A,Summer2016,,,,,,,,,MK
-16-118B,Summer2016,,,,,,,,,MK
-16-118C,Summer2016,,,,,,,,,MK
-16-118D,Summer2016,,,,,,,,,MK
-16-119A,Summer2016,,,,,,,,,MK
-16-119B,Summer2016,,,,,,,,,MK
-16-119C,Summer2016,,,,,,,,,MK
-16-119D,Summer2016,,,,,,,,,MK
-16-120A,Summer2016,,,,,,,,,MK
-16-120B,Summer2016,,,,,,,,,MK
-16-120C,Summer2016,,,,,,,,,MK
-16-120D,Summer2016,,,,,,,,,MK
-16-121A,Summer2016,,,,,,,,,MK
-16-121B,Summer2016,,,,,,,,,MK
-16-121C,Summer2016,,,,,,,,,MK
-16-121D,Summer2016,,,,,,,,,MK
-16-122A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,MK
-16-122B,Summer2016,WT,,,,Conflict,Yoked,Yoked + Conflict,,MK
-16-122C,Summer2016,WT,,,,NoConflict,Trained,Training + Training,new slice buffer,MK
-16-122D,Summer2016,WT,,,,NoConflict,Yoked,Yoked + Training,very large ventricle,MK
-16-123A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,new disection soluiton,MK
-16-123B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,MK
-16-123C,Summer2016,WT,,,,NoConflict,Trained,Training + Training,,MK
-16-123D,Summer2016,WT,,,,NoConflict,Yoked,Yoked + Training,,MK
-16-124A,Summer2016,,,,,,,,,MK
-16-124B,Summer2016,,,,,,,,,MK
-16-124C,Summer2016,,,,,,,,,MK
-16-124D,Summer2016,,,,,,,,,MK
-16-125A,Summer2016,,,,,,,,,MK
-16-125B,Summer2016,,,,,,,,,MK
-16-125C,Summer2016,,,,,,,,,MK
-16-125D,Summer2016,,,,,,,,,MK
-16-256,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
-16-256A,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
-16-259 ,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
-16-259A,Summer2016,HD (YAC128),,,,NA,NoShock,Experienced,,Cycle3
-16-259D,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3
-16-264B,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training ,,Cycle3
-16-264C,Summer2016,WT(FVB/NJ),,,,NA,NoShock,Experienced,,Cycle3
-16-266D,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training,,Cycle3
-16-259B,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,SCN samples ,Cycle3
-16-260C,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3
-16-266B,Summer2016,WT(FVB/NJ),,,,NA,HomeCage,Homecage,SCN samples ,Cycle3
-16-266C,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training,,Cycle3
-16-268B,Summer2016,WT(FVB/NJ),,,,NA,HomeCage,Homecage,,Cycle3
-16-259C,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
-16-267A,Summer2016,WT(FVB/NJ),,,,NA,Trained,Training,,Cycle3
-16-261B,Summer2016,HD (YAC128),,,,NA,HomeCage,Homecage,SCN samples ,Cycle3
-16-260 ,Summer2016,HD (YAC128),,,,NA,NoShock,Experienced,,Cycle3
-16-267B,Summer2016,WT(FVB/NJ),,,,NA,NoShock,Experienced,SCN samples ,Cycle3
-16-265C,Summer2016,WT(FVB/NJ),,,,NA,HomeCage,Homecage,,Cycle3
-16-257A,Summer2016,HD (YAC128),,,,NA,Trained,Training,,Cycle3
+Mouse,Year,Strain,Behavior,E-phy,YokedTo,Conflict,APA,Paradigm,notes,behavior,Group
+12-126B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,MK,
+15-100,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Punch,,MK,
+15-101,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Dissociate,,MK,
+15-140A,Summer2015,WT,Good,No,15-140B,Conflict,Trained,Training + Conflict,,MK,
+15-140B,Summer2015,WT,Good,No,15-140A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-140C,Summer2015,WT,Good,No,15-140D,NoConflict,Trained,Training + Training,,MK,
+15-140D,Summer2015,WT,Good,No,15-140C,NoConflict,Yoked,Yoked + Training,,MK,
+15-140E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,MK,
+15-141A,Summer2015,WT,Bad,No,15-141B,Conflict,Trained,Training + Conflict,,MK,
+15-141B,Summer2015,WT,Bad,No,15-141A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-141C,Summer2015,WT,Bad,No,15-141D,NoConflict,Trained,Training + Training,NEW COLLECTION METHOD!!,MK,
+15-141D,Summer2015,WT,Bad,No,15-141C,NoConflict,Yoked,Yoked + Training,,MK,
+15-141E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,MK,
+15-142A,Summer2015,WT,Good,NG,15-142B,Conflict,Trained,Training + Conflict,,MK,
+15-142B,Summer2015,WT,Good,NG,15-142A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-142C,Summer2015,WT,Good,NG,15-142D,NoConflict,Trained,Training + Training,,MK,
+15-142D,Summer2015,WT,Good,NG,15-142C,NoConflict,Yoked,Yoked + Training,,MK,
+15-143A,Summer2015,WT,Good,Yes,15-143B,Conflict,Trained,Training + Conflict,,MK,
+15-143B,Summer2015,WT,Good,Yes,15-143A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-143C,Summer2015,WT,Good,Yes,15-143D,NoConflict,Trained,Training + Training,,MK,
+15-143D,Summer2015,WT,Good,Yes,15-143C,NoConflict,Yoked,Yoked + Training,,MK,
+15-144A,Summer2015,WT,Good,Yes,15-144B,Conflict,Trained,Training + Conflict,,MK,
+15-144B,Summer2015,WT,Good,Yes,15-144A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-144C,Summer2015,WT,Good,Yes,15-144D,NoConflict,Trained,Training + Training,,MK,
+15-144D,Summer2015,WT,Good,Yes,15-144C,NoConflict,Yoked,Yoked + Training,CYRSTALS,MK,
+15-144E,Summer2015,WT,NA,NA,NA,NA,NA,testing,mouse not used for ephys,MK,
+15-145A,Summer2015,WT,Good,Yes,15-145B,Conflict,Trained,Training + Conflict,collected 3.5 hours late!!!! Slice recovering for very long time,MK,
+15-145B,Summer2015,WT,Good,Yes,15-145A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-145C,Summer2015,WT,Bad,Yes,15-145D,NoConflict,Trained,Training + Training,,MK,
+15-145D,Summer2015,WT,Bad,Yes,15-145C,NoConflict,Yoked,Yoked + Training,,MK,
+15-146A,Summer2015,WT,Good,Yes,15-146B,Conflict,Trained,Training + Conflict,,MK,
+15-146B,Summer2015,WT,Good,Yes,15-146A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-146C,Summer2015,WT,Good,Yes,15-146D,NoConflict,Trained,Training + Training,,MK,
+15-146D,Summer2015,WT,Good,Yes,15-146C,NoConflict,Yoked,Yoked + Training,,MK,
+15-147,Summer2015,WT,Cage,Yes,NA,NA,NA,Homecage,,MK,
+15-147A,Summer2015,WT,OK,Yes,15-147B,Conflict,Trained,Training + Conflict,,MK,
+15-147B,Summer2015,WT,OK,Yes,15-147A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-147C,Summer2015,WT,Good,Yes,15-147D,NoConflict,Trained,Training + Training,,MK,
+15-147D,Summer2015,WT,Good,Yes,15-147C,NoConflict,Yoked,Yoked + Training,,MK,
+15-148,Summer2015,WT,Cage,Yes,NA,NA,NA,Homecage,,MK,
+15-148A,Summer2015,WT,Good,Yes,15-148B,Conflict,Trained,Training + Conflict,,MK,
+15-148B,Summer2015,WT,Good,Yes,15-148A,Conflict,Yoked,Yoked + Conflict,,MK,
+15-148C,Summer2015,WT,OK,Yes,15-148D,NoConflict,Trained,Training + Training,,MK,
+15-148D,Summer2015,WT,OK,Yes,15-148C,NoConflict,Yoked,Yoked + Training,,MK,
+15-310,Summer2015,HD (Q175 KI),,,,NA,Trained,Trained,,Cycle3,HD Trained
+15-331,Summer2015,WT (C57Bl6),,,,NA,Trained,Trained,,Cycle3,WT Trained
+16-116A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,MK,
+16-116B,Summer2016,WT,,,,Conflict,Yoked,Yoked + Conflict,,MK,
+16-116C,Summer2016,FMR1-KO,,,,NoConflict,Trained,Training + Training,,MK,
+16-116D,Summer2016,FMR1-KO,,,,NoConflict,Yoked,Yoked + Training,,MK,
+16-117A,Summer2016,,,,,,,,,MK,
+16-117B,Summer2016,,,,,,,,,MK,
+16-117C,Summer2016,,,,,,,,,MK,
+16-117D,Summer2016,,,,,,,,,MK,
+16-118A,Summer2016,,,,,,,,,MK,
+16-118B,Summer2016,,,,,,,,,MK,
+16-118C,Summer2016,,,,,,,,,MK,
+16-118D,Summer2016,,,,,,,,,MK,
+16-119A,Summer2016,,,,,,,,,MK,
+16-119B,Summer2016,,,,,,,,,MK,
+16-119C,Summer2016,,,,,,,,,MK,
+16-119D,Summer2016,,,,,,,,,MK,
+16-120A,Summer2016,,,,,,,,,MK,
+16-120B,Summer2016,,,,,,,,,MK,
+16-120C,Summer2016,,,,,,,,,MK,
+16-120D,Summer2016,,,,,,,,,MK,
+16-121A,Summer2016,,,,,,,,,MK,
+16-121B,Summer2016,,,,,,,,,MK,
+16-121C,Summer2016,,,,,,,,,MK,
+16-121D,Summer2016,,,,,,,,,MK,
+16-122A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,,MK,
+16-122B,Summer2016,WT,,,,Conflict,Yoked,Yoked + Conflict,,MK,
+16-122C,Summer2016,WT,,,,NoConflict,Trained,Training + Training,new slice buffer,MK,
+16-122D,Summer2016,WT,,,,NoConflict,Yoked,Yoked + Training,very large ventricle,MK,
+16-123A,Summer2016,WT,,,,Conflict,Trained,Training + Conflict,new disection soluiton,MK,
+16-123B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,MK,
+16-123C,Summer2016,WT,,,,NoConflict,Trained,Training + Training,,MK,
+16-123D,Summer2016,WT,,,,NoConflict,Yoked,Yoked + Training,,MK,
+16-124A,Summer2016,,,,,,,,,MK,
+16-124B,Summer2016,,,,,,,,,MK,
+16-124C,Summer2016,,,,,,,,,MK,
+16-124D,Summer2016,,,,,,,,,MK,
+16-125A,Summer2016,,,,,,,,,MK,
+16-125B,Summer2016,,,,,,,,,MK,
+16-125C,Summer2016,,,,,,,,,MK,
+16-125D,Summer2016,,,,,,,,,MK,
+16-256,Summer2016,HD (YAC128),,,,NA,Trained,Trained,,Cycle3,HD Trained
+16-256A,Summer2016,HD (YAC128),,,,NA,Trained,Trained,,Cycle3,HD Trained
+16-257A,Summer2016,HD (YAC128),,,,NA,Trained,Trained,,Cycle3,HD Trained
+16-259A,Summer2016,HD (YAC128),,,,NA,NoShock,Experienced,,Cycle3,HD Experienced
+16-259B,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,SCN samples ,Cycle3,HD HomeCage
+16-259C,Summer2016,HD (YAC128),,,,NA,Trained,Trained,,Cycle3,HD Trained
+16-259D,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3,HD HomeCage
+16-260A,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3,HD HomeCage
+16-260C,Summer2016,HD (YAC128),,,,NA,HomeCage,HomeCage,,Cycle3,HD HomeCage
+16-261B,Summer2016,HD (YAC128),,,,NA,HomeCage,Homecage,SCN samples ,Cycle3,HD HomeCage
+16-264B,Summer2016,WT (FVB/NJ),,,,NA,Trained,Trained,,Cycle3,HD HomeCage
+16-264C,Summer2016,WT (FVB/NJ),,,,NA,NoShock,Experienced,,Cycle3,WT Experienced
+16-265C,Summer2016,WT (FVB/NJ),,,,NA,HomeCage,Homecage,,Cycle3,WT Homecage
+16-266B,Summer2016,WT (FVB/NJ),,,,NA,HomeCage,Homecage,SCN samples ,Cycle3,WT Homecage
+16-266C,Summer2016,WT (FVB/NJ),,,,NA,Trained,Trained,,Cycle3,WT Trained
+16-266D,Summer2016,WT (FVB/NJ),,,,NA,Trained,Trained,,Cycle3,WT Trained
+16-267A,Summer2016,WT (FVB/NJ),,,,NA,Trained,Trained,,Cycle3,WT Trained
+16-267B,Summer2016,WT (FVB/NJ),,,,NA,NoShock,Experienced,SCN samples ,Cycle3,WT Experienced
+16-268B,Summer2016,WT (FVB/NJ),,,,NA,HomeCage,Homecage,,Cycle3,WT Homecage
+16-260,Summer2016,HD (YAC128),,,,NA,NoShock,Experienced,,Cycle3,HD Experienced
+16-259,Summer2016,HD (YAC128),,,,NA,Trained,Trained,,Cycle3,HD Trained

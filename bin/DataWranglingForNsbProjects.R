@@ -5,6 +5,8 @@
 ## I'll use this script to create a file for the students and save it in the qPCR-mouse repo
 
 library(dplyr)
+library(plyr)
+library(tidyr)
 
 ## 1. Read data
 ## 2. Wrangle/clean for students
@@ -21,6 +23,7 @@ str(animals$Mouse)
 
 ## 2. clean data & join
 cleanpunches <- punches
+cleanpunches$Mouse <- as.factor(cleanpunches$Mouse)
 cleanpunches$Date <- as.Date(cleanpunches$Date, "%m/%d/%y")
 cleanpunches$year <- as.factor(cleanpunches$year)
 cleanpunches$year <- as.factor(cleanpunches$year)
@@ -28,27 +31,44 @@ cleanpunches$RNAisolationdate <- as.Date(cleanpunches$RNAisolationdate, "%m/%d/%
 cleanpunches$Punchsize <- as.factor(cleanpunches$Punchsize)
 cleanpunches$Tube <- as.character(cleanpunches$Tube)
 cleanpunches$ready.time <-  strftime(cleanpunches$ready.time,"%H:%M")
-cleanpunches$year <-  as.character(cleanpunches$year)
+cleanpunches$year <- as.character(cleanpunches$year)
 str(cleanpunches)
 
 cleanpunches <- cleanpunches %>% 
   left_join(animals, by="Mouse")
   
 ## 3. Wrangle for students
-
+## inludes Maddies Test samples
 NSBpunches <- cleanpunches %>%
-  filter(Purpose == "students", Punch != "CA1?") %>%
+  filter(Purpose == "students", Punch != "CA1?", Mouse != "???") %>%
   select(Tube, Mouse, Slice, Punch, photos, Date, 
          ready.time, start.time, Slice.collector,
          punch.location, slice.location, storagebox, notes.x,
-         Strain, Conflict, APA, Paradigm, behavior, Purpose)
+         Strain, Conflict, APA, Paradigm, behavior, Purpose, Group)%>%
+  arrange(Mouse)
 str(NSBpunches)
 
 
+## just the huntington comparisons
+HDmice <- NSBpunches %>%
+  filter(Date < "2016-07-28", Punch != "slice", behavior == "Cycle3") %>%
+  distinct(Mouse, Strain,  Paradigm, Group) %>%
+  arrange(Mouse)
 
-NSBpunchesMouse <- NSBpunches %>%
-  filter(Date < "2016-07-28", Punch != "slice") %>%
-  distinct(Mouse, Date, Paradigm, behavior, Purpose) 
+HDGroups <- NSBpunches %>%
+  filter(Date < "2016-07-28", Punch != "slice", behavior == "Cycle3") %>%
+  distinct(Mouse, Strain,  Paradigm, Group) %>%
+  arrange(Group, Strain) %>%
+  summarise(count(Group))
+
+HDTissues <- NSBpunches %>%
+  filter(Date < "2016-07-28", Punch != "slice", behavior == "Cycle3") %>%
+  select(Mouse, Strain,  Paradigm, Group, Punch) %>%
+  arrange(Group, Strain, Punch) 
+HDTissues <- (count(HDTissues, vars=c("Group","Punch")))
+HDTissues <- spread(HDTissues, Punch, freq)
+
+
 NSBpunchesSlice <- NSBpunches %>%
   filter(Punch == "slice") %>%
   distinct(Mouse, Punch, Date, Paradigm, behavior, storagebox) 
