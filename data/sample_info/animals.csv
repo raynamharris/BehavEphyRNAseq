@@ -1,4 +1,4 @@
-Mouse,Year,Strain,Behavior,E-phy,YokedTo,Conflict,APA,Paradigm,notes,behavior,Group
+Mouse,Year,Genotype,Behavior,E-phy,YokedTo,Conflict,APA,Paradigm,notes,behavior,Group
 12-126B,Summer2016,FMR1-KO,,,,Conflict,Yoked,Yoked + Conflict,,MK,
 15-100,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Punch,,MK,
 15-101,Spring2016,WT,NA,NA,NA,NA,NA,Maddy + Dissociate,,MK,

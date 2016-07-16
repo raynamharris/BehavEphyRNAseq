@@ -44,7 +44,7 @@ NSBpunches <- cleanpunches %>%
   select(Tube, Mouse, Slice, Punch, photos, Date, 
          ready.time, start.time, Slice.collector,
          punch.location, slice.location, storagebox, notes.x,
-         Strain, Conflict, APA, Paradigm, behavior, Purpose, Group)%>%
+         Genotype, Conflict, APA, Paradigm, behavior, Purpose, Group)%>%
   arrange(Mouse)
 str(NSBpunches)
 
@@ -52,19 +52,19 @@ str(NSBpunches)
 ## just the huntington comparisons
 HDmice <- NSBpunches %>%
   filter(Date < "2016-07-28", Punch != "slice", behavior == "Cycle3") %>%
-  distinct(Mouse, Strain,  Paradigm, Group) %>%
+  distinct(Mouse, Genotype,  Paradigm, Group) %>%
   arrange(Mouse)
 
 HDGroups <- NSBpunches %>%
   filter(Date < "2016-07-28", Punch != "slice", behavior == "Cycle3") %>%
-  distinct(Mouse, Strain,  Paradigm, Group) %>%
+  distinct(Mouse, Genotype,  Paradigm, Group) %>%
   arrange(Group, Strain) %>%
   summarise(count(Group))
 
 HDTissues <- NSBpunches %>%
   filter(Date < "2016-07-28", Punch != "slice", behavior == "Cycle3") %>%
-  select(Mouse, Strain,  Paradigm, Group, Punch) %>%
-  arrange(Group, Strain, Punch) 
+  select(Mouse, Genotype,  Paradigm, Group, Punch) %>%
+  arrange(Group, Genotype, Punch) 
 HDTissues <- (count(HDTissues, vars=c("Group","Punch")))
 HDTissues <- spread(HDTissues, Punch, freq)
 

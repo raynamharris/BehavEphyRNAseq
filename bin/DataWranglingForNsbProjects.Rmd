@@ -1,0 +1,56 @@
+---
+title: "Integrative Huntington Project"
+author: "Rayna M Harris"
+date: "July 15, 2016"
+output: html_document
+---
+
+This document will summarize the data we have for the Integrative Hippocampus Projects
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(plyr)
+library(tidyr)
+
+setwd("~/Github/BehavEphyRNAseq/data/sample_info")
+punches <- read.csv("punches.csv", header=TRUE, sep="," )
+animals <- read.csv("animals.csv", header=TRUE, sep="," )
+
+cleanpunches <- punches
+cleanpunches$Mouse <- as.factor(cleanpunches$Mouse)
+cleanpunches <- cleanpunches %>% 
+  left_join(animals, by="Mouse")
+  
+NSBpunches <- cleanpunches %>%
+  filter(Purpose == "students", Punch != "CA1?", Mouse != "???") %>%
+  select(Tube, Mouse, Slice, Punch, 
+         Genotype, Conflict, APA, Paradigm, behavior, Purpose, Group)%>%
+  arrange(Mouse)
+
+HDGroups <- NSBpunches %>%
+  filter(Punch != "slice", behavior == "Cycle3") %>%
+  distinct(Mouse, Genotype,  Paradigm, Group) %>%
+  arrange(Group, Genotype) %>%
+  summarise(count(Group))
+
+HDTissues <- NSBpunches %>%
+  filter(Punch != "slice", behavior == "Cycle3") %>%
+  select(Mouse, Genotype,  Paradigm, Group, Punch) %>%
+  arrange(Group, Genotype, Punch) 
+HDTissues <- (count(HDTissues, vars=c("Group","Punch")))
+HDTissues <- spread(HDTissues, Punch, freq)
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+HDmice <- NSBpunches %>%
+  filter(Punch != "slice", behavior == "Cycle3") %>%
+  distinct(Mouse, Genotype,  Paradigm, Group) %>%
+  arrange(Mouse)
+```
+
+```{r results = 'asis'}
+knitr::kable(HDTissues, caption = "Huntington Mice Tissues Collected")
+knitr::kable(HDmice, caption = "Huntington Mice Processed")
+```
+
