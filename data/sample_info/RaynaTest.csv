@@ -1,0 +1,24 @@
+,Tube,Mouse,Genotype,Group,Punch,Slice,storagebox
+1,ECU,16-117A,FMR1,FMR1 NoConflict Trained,18,5,Student Punches 1
+2,EBB,16-123A,WT,WT NoConflict Trained,18,5,Student Punches 1
+3,EBP,16-123C,WT,WT Conflict Trained,18,5,Student Punches 1
+4,ECE,16-123D,WT,WT Conflict Yoked,18,5,Student Punches 1
+5,EBQ,16-123C,WT,WT Conflict Trained,19,5,Student Punches 1
+6,ECF,16-123D,WT,WT Conflict Yoked,19,5,Student Punches 1
+7,ECV,16-117A,FMR1,FMR1 NoConflict Trained,20,5,Student Punches 1
+8,EBD,16-123A,WT,WT NoConflict Trained,20,5,Student Punches 1
+9,EBR,16-123C,WT,WT Conflict Trained,20,5,Student Punches 1
+10,ECG,16-123D,WT,WT Conflict Yoked,20,5,Student Punches 1
+11,cerebellum,,,,,,fridge
+12,cerebellum,,,,,,fridge
+13,EDE,,,,,,Slices Box 2
+14,EBG,,,,,,Slices Box 2
+15,ECN,,,,,,Slices Box 2
+16,EZI,,,,,,Slices Box 3
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,

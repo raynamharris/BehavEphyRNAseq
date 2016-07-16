@@ -1,11 +1,15 @@
 ---
-title: "Integrative Huntington Project"
-author: "Rayna M Harris"
+title: "Integrative Hippocampus Module"
+author: "Neural Systems & Behavior 2016"
 date: "July 15, 2016"
 output: html_document
 ---
+## Overview
+This document will summarize the samples we have available for gene expression analysis during the Integrative Hippocampus Module. We have three datasets that can be combined or sliced as the students see fit. 
 
-This document will summarize the data we have for the Integrative Hippocampus Projects
+- Educational Exercise Samples
+- Huntington (Htt) vs Wild Type Samples
+- Fragile X Mental Retardation Protein 1 (FMR1) vs Wild Type Samples
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
@@ -22,35 +26,62 @@ cleanpunches <- cleanpunches %>%
   left_join(animals, by="Mouse")
   
 NSBpunches <- cleanpunches %>%
-  filter(Purpose == "students", Punch != "CA1?", Mouse != "???") %>%
-  select(Tube, Mouse, Slice, Punch, 
-         Genotype, Conflict, APA, Paradigm, behavior, Purpose, Group)%>%
+  filter(Purpose == "students", Punch != "CA1?", Mouse != "???", Mouse != "15-310", Mouse != "15-331") %>%
+  select(Tube, Mouse, Slice, Punch, Date, 
+         ready.time, start.time, Slice.collector,
+         punch.location, slice.location, storagebox, notes.x,
+         Genotype, Conflict, APA, Group, collector, Purpose) %>%
   arrange(Mouse)
-
-HDGroups <- NSBpunches %>%
-  filter(Punch != "slice", behavior == "Cycle3") %>%
-  distinct(Mouse, Genotype,  Paradigm, Group) %>%
-  arrange(Group, Genotype) %>%
-  summarise(count(Group))
-
-HDTissues <- NSBpunches %>%
-  filter(Punch != "slice", behavior == "Cycle3") %>%
-  select(Mouse, Genotype,  Paradigm, Group, Punch) %>%
-  arrange(Group, Genotype, Punch) 
-HDTissues <- (count(HDTissues, vars=c("Group","Punch")))
-HDTissues <- spread(HDTissues, Punch, freq)
 ```
 
+## Huntington (Htt) vs Wild Type Samples
+The following mice were processed by students in the Hippocampus Modules in 2015 and 2016.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-HDmice <- NSBpunches %>%
-  filter(Punch != "slice", behavior == "Cycle3") %>%
-  distinct(Mouse, Genotype,  Paradigm, Group) %>%
+HttGroups <- NSBpunches %>%
+  filter(Punch != "slice", collector == "Cycle3") %>%
+  distinct(Mouse, Genotype, Group) %>%
+  arrange(Group, Genotype) %>%
+  summarise(count(Group))
+HttGroups <- as.data.frame(HttGroups)
+```
+
+#### Number of Animals Processed
+Genotype | Experience | Sample Size
+---------|------------|------------
+Htt (YAC128) | HomeCage | 5
+Htt (YAC128) | No Shock | 2
+Htt (YAC128) | Trained | 5
+WT (FVB/NJ) | HomeCage | 3
+WT (FVB/NJ) | No Shock | 2
+WT (FVB/NJ) | Trained | 4
+
+#### Number of Tissue-Punched Samples
+Note: Punches were collected from multiple slices per animal
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+HttTissues <- NSBpunches %>%
+  filter(Punch != "slice", collector == "Cycle3") %>%
+  select(Mouse, Genotype, Group, Punch) %>%
+  arrange(Group, Genotype, Punch) 
+HttTissues <- (count(HttTissues, vars=c("Group","Punch")))
+HttTissues <- spread(HttTissues, Punch, freq)
+```
+
+```{r results = 'asis', echo=FALSE}
+knitr::kable(HttTissues)
+```
+
+
+#### List of all Htt Mice
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+HttMice <- NSBpunches %>%
+  filter(Punch != "slice", collector == "Cycle3") %>%
+  distinct(Mouse, Genotype, Group) %>%
   arrange(Mouse)
 ```
 
-```{r results = 'asis'}
-knitr::kable(HDTissues, caption = "Huntington Mice Tissues Collected")
-knitr::kable(HDmice, caption = "Huntington Mice Processed")
+```{r results = 'asis', echo=FALSE}
+knitr::kable(HttMice)
 ```
 
