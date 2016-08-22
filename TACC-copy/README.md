@@ -8,13 +8,13 @@ I decided to keep my data and my scripts and my commands files in the same direc
 
 So, inside `2016-07-26-rawdata` I have the data from job JA16443 as well as the following scripts and commands files:
 
-| Scripts | Description | Notes
-| :--- | :--- | :--- | 
-00_gsaf_download | Bash script to download data from amazon cloud | See    https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
-01_fastqc | Quality control of raw data | Output moved to ../2016-08-22-fastqc
-02_gunzip | Gunzip, keep original | deleted .e and .o files
-03_clean | 3 step trimming and filtering | adapted from Misha's 2 step method https://github.com/raynamharris/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt
-04_fastqc | Quality control of clean data | Output moved to ../2016-08-22-fastqc
+| Scripts | Description
+| :--- | :--- | 
+00_gsaf_download | Bash script to download data from amazon cloud. See    https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
+01_fastqc | Quality control of raw data 
+02_gunzip | Gunzip, keep original files
+03_clean | 3 step trimming and filtering using Fastx toolkit, adapted from Misha https://github.com/raynamharris/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt
+04_fastqc | Quality control of clean data
 
 ## Workflow
 
@@ -63,7 +63,7 @@ for file in *.fastq.gz
 do
      echo $file
      cat >> 01_fastqc.cmds <<EOF
-fastqc $file
+	fastqc $file
 EOF
 done
 ~~~
@@ -139,7 +139,7 @@ Then, I created and launched a job with this command.
 ~~~ {.bash}
 launcher_creator.py -t 1:00:00 -j 03_clean.cmds -n clean -l 03_clean.slurm -A NeuroEthoEvoDevo -m 'module load fastx_toolkit/0.0.13.2'
 sbatch 03_clean.slurm
-~~~ {.bash}
+~~~ 
 
 Now, I can look at a few lines of each to see if indeed things were trimmed (and compare it to the old sequences. 
 
@@ -162,10 +162,10 @@ for file in *.trim.fq
 do
      echo $file
      cat >> 04_fastqc.cmds <<EOF
-fastqc $file
+	fastqc $file
 EOF
 done
-~~~ {.bash}
+~~~ 
 
 Create and launch the slurm file.
 
