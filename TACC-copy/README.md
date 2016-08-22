@@ -174,6 +174,15 @@ launcher_creator.py -t 0:30:00 -j 04_fastqc.cmds -n fastqc -l 04_fastqc.slurm -A
 sbatch 04_fastqc.slurm
 ~~~
 
+Then, I moved all the output files to the folder with all the other fastqc files.
+
+~~~ {.bash}
+mv *.html ../2016-08-22-fastqc
+mv *.zip ../2016-08-22-fastqc
+mv fastqc.* ../2016-08-22-fastqc
+cd ../2016-08-22-fastqc
+~~~
+
 Used filezilla to transfer the files to my local computer and then check them online.
 
 
