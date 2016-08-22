@@ -1,0 +1,12 @@
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 100-CA3-2_S1_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 100-CA3-2_S1_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 100-DG-4_S2_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 100-DG-4_S2_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 100ng-UHR-control_S11_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 100ng-UHR-control_S11_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 101-CA3-2_S3_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 101-CA3-2_S3_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 101-DG-2_S4_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 101-DG-2_S4_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143A-CA1-1_S5_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143A-CA1-1_S5_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143B-CA3-1_S6_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143B-CA3-1_S6_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143C-CA3-1_S7_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143C-CA3-1_S7_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143D-CA3-3_S8_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143D-CA3-3_S8_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 144B-DG-1_S9_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 144B-DG-1_S9_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 144D-CA1-2_S10_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 144D-CA1-2_S10_R1_001.trim.fq 
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 1ng-UHR-control_S12_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 1ng-UHR-control_S12_R1_001.trim.fq 
