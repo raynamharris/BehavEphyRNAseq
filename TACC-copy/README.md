@@ -135,7 +135,7 @@ Then, I like to rename these to `.fq` files to help keep things visually distinc
 ~~~ {.bash}
 for file in *.fastq
 do
-	newfile=${file//.fastq/.q}
+	newfile=${file//.fastq/.fq}
 	echo $file $newfile
 	mv $file $newfile
 done
@@ -218,3 +218,36 @@ cd ../2016-08-22-fastqc
 Used filezilla to transfer the files to my local computer and then check them online.
 
 
+### Bowtie2
+
+Let's use Bowtie 2 for mapping
+
+# download and unzip mouse index 
+~~~ {.bash}
+mkdir $SCRATCH/BehavEphyRNAseq/index_mm9
+cd $SCRATCH/BehavEphyRNAseq/index_mm9
+wget ftp://ftp.ccb.jhu.edu/pub/data/bowtie2_indexes/mm9.zip
+unzip mm9.zip
+~~~
+
+Now we will go back to our scratch area to do the alignment, and set up symbolic links to the index in the work area to simplify the alignment command.
+
+~~~ {.bash}
+cd BehavEphyRNAseq/JA16268/2016-05-24-rawdata
+ln -s -f $SCRATCH/BehavEphyRNAseq/index_mm9/mm9 mm9
+~~~
+
+Create the commands file...not sure how to do this automatically....
+
+~~~ {.bash}
+echo "bowtie2 -x $SCRATCH/BehavEphyRNAseq/index_mm9/mm9 -U 142C_CA1_S_S19_L003_R1_001.trim.fq, 143C_CA1_S_S20_L003_R1_001.trim.fq, 142C_CA1_S_S19_L003_R2_001.trim.fq, 143C_CA1_S_S20_L003_R2_001.trim.fq, 142C_DG_S_S21_L003_R1_001.trim.fq, 143C_DG_S_S22_L003_R1_001.trim.fq, 142C_DG_S_S21_L003_R2_001.trim.fq, 143C_DG_S_S22_L003_R2_001.trim.fq -S JA16268.sam " > 05_bowtie2.cmds
+~~~ 
+
+Create and launch the job.
+
+~~~ {.bash}
+launcher_creator.py -n bowtie2 -j 05_bowtie2.cmds -l 05_bowtie2.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load perl; module load bowtie/2.2.5"
+sbatch 05_bowtie2.slurm
+~~~ 
+
+-------- note ---- this part is not working yet...
