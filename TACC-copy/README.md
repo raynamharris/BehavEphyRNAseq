@@ -1,8 +1,22 @@
-# TaqSeq Workflow
+# RNAseq Workflow
 
-Small RNAseq project designed to see if TaqSeq will for for hippocampal punches
+The bioinformatic workflow for the RNAseq portion of this project will be mostly done on TACC. To keep my scripts under version control, I keep a copy on my computer in this "TACC-copy directory". 
 
-## $SCRATCH/JA16443/
+## RNAseq Jobs
+
+All of the sample information is contained in `../data/sample_info/punches.csv` and `../data/sample_info/punches.csv`. 
+
+These samples have been process in multiple sequencing jobs. 
+
+| RNAseq Job | Data | Description
+| :--- | :---: | :--- |
+JA16268 | May 24, 2016 | paired end
+JA16443 | July 26, 2016 | Tag-seq
+JA16444 | TBA | Tag-seq
+
+## Workflow
+
+I use the command line to create a lot of the commands files and batch scripts, so this readme documents the workflow I use to create these files.  My hope is that this style will help me easily reproduce the workflow (either for reanalysing this project or for applying the workflow to new datasets).
 
 I decided to keep my data and my scripts and my commands files in the same directory, gasp! I tried to keep them separate for a while, but having the commands files in the same directory with the launcher script and the data just makes life easier. I do move the fastqc output files to their own directory after processing because that makes me happy.
 
@@ -16,28 +30,28 @@ So, inside `2016-07-26-rawdata` I have the data from job JA16443 as well as the 
 03_clean | 3 step trimming and filtering using Fastx toolkit, adapted from Misha https://github.com/raynamharris/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt
 04_fastqc | Quality control of clean data
 
-## Workflow
-
-More of less, this is what had to be executed at the command line. 
-
-~~~ {.bash}
-# start by creating a space on scratch where I'll download and process the raw data
-mkdir $SCRATCH/JA16443/2016-07-26-rawdata
-cd $SCRATCH/JA16443/2016-07-26-rawdata
-~~~  
 
 ###  00_gsaf_download
 
-Use nano to create a bash script named `00_gsaf_download.sh` with the bash script written by the GSAF stored here: https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
+For storing and working with my data, I created a directory on scratch `$SCRATCH/BehavEphyRNAseq`. Inside a created inside for each job and a subdirectory for the raw data.
 
 ~~~ {.bash}
+mkdir $SCRATCH/BehavEphyRNAseq
+mkdir -p $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
+mkdir -p $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+~~~ 
+
+To download the raw data, I navidated to the appropriate directory use nano to create a bash script named `00_gsaf_download.sh` with the bash script written by the GSAF stored here: https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
 nano 00_gsaf_download.sh
 ~~~ 
 
-Then I executed the following command, replacing <"linktokey"> with the real webaddress inside quotes
+Then I executed the following command. Note: the key is only active for 72 hours. 
 
 ~~~ {.bash}
-00_gsaf_download.sh <"linktokey">
+00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16443.SA16131.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1469736784&Signature=EBDWx1Ke55tIRekbuN0WPrt4d6s%3D"
 ~~~ 
 
 Then, I cleaned up my directory a bit with the following code:
