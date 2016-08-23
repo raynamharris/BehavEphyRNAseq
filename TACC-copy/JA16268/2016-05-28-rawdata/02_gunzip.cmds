@@ -1,0 +1,8 @@
+gunzip -c 142C_CA1_S_S19_L003_R1_001.fastq.gz > 142C_CA1_S_S19_L003_R1_001.fastq
+gunzip -c 142C_CA1_S_S19_L003_R2_001.fastq.gz > 142C_CA1_S_S19_L003_R2_001.fastq
+gunzip -c 142C_DG_S_S21_L003_R1_001.fastq.gz > 142C_DG_S_S21_L003_R1_001.fastq
+gunzip -c 142C_DG_S_S21_L003_R2_001.fastq.gz > 142C_DG_S_S21_L003_R2_001.fastq
+gunzip -c 143C_CA1_S_S20_L003_R1_001.fastq.gz > 143C_CA1_S_S20_L003_R1_001.fastq
+gunzip -c 143C_CA1_S_S20_L003_R2_001.fastq.gz > 143C_CA1_S_S20_L003_R2_001.fastq
+gunzip -c 143C_DG_S_S22_L003_R1_001.fastq.gz > 143C_DG_S_S22_L003_R1_001.fastq
+gunzip -c 143C_DG_S_S22_L003_R2_001.fastq.gz > 143C_DG_S_S22_L003_R2_001.fastq

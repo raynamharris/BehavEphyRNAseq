@@ -1,0 +1,8 @@
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 142C_CA1_S_S19_L003_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 142C_CA1_S_S19_L003_R1_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 142C_CA1_S_S19_L003_R2_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 142C_CA1_S_S19_L003_R2_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 142C_DG_S_S21_L003_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 142C_DG_S_S21_L003_R1_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 142C_DG_S_S21_L003_R2_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 142C_DG_S_S21_L003_R2_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143C_CA1_S_S20_L003_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143C_CA1_S_S20_L003_R1_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143C_CA1_S_S20_L003_R2_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143C_CA1_S_S20_L003_R2_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143C_DG_S_S22_L003_R1_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143C_DG_S_S22_L003_R1_001.trim.fq
+fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i 143C_DG_S_S22_L003_R2_001.fq | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o 143C_DG_S_S22_L003_R2_001.trim.fq

@@ -1,0 +1,113 @@
+Warning: Permanently added 'c557-304,129.114.90.160' (RSA) to the list of known hosts.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 10801568 reads.
+Output: 10274607 reads.
+discarded 464365 too-short reads.
+discarded 55198 adapter-only reads.
+discarded 7398 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 10274607 reads.
+Output: 9792158 reads.
+discarded 447528 too-short reads.
+discarded 34921 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 10801568 reads.
+Output: 10278715 reads.
+discarded 445243 too-short reads.
+discarded 26334 adapter-only reads.
+discarded 51276 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 10278715 reads.
+Output: 9665407 reads.
+discarded 561139 too-short reads.
+discarded 52169 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 12026218 reads.
+Output: 11564582 reads.
+discarded 398140 too-short reads.
+discarded 54890 adapter-only reads.
+discarded 8606 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 11564582 reads.
+Output: 11134708 reads.
+discarded 397842 too-short reads.
+discarded 32032 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 12026218 reads.
+Output: 11542281 reads.
+discarded 398848 too-short reads.
+discarded 28340 adapter-only reads.
+discarded 56749 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 11542281 reads.
+Output: 11041147 reads.
+discarded 456940 too-short reads.
+discarded 44194 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 17239199 reads.
+Output: 16834467 reads.
+discarded 340094 too-short reads.
+discarded 51710 adapter-only reads.
+discarded 12928 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 16834467 reads.
+Output: 16481312 reads.
+discarded 326634 too-short reads.
+discarded 26521 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 17239199 reads.
+Output: 16799962 reads.
+discarded 332251 too-short reads.
+discarded 22064 adapter-only reads.
+discarded 84922 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 16799962 reads.
+Output: 16376621 reads.
+discarded 387726 too-short reads.
+discarded 35615 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 22431139 reads.
+Output: 22075813 reads.
+discarded 287195 too-short reads.
+discarded 51209 adapter-only reads.
+discarded 16922 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 22075813 reads.
+Output: 21770553 reads.
+discarded 280888 too-short reads.
+discarded 24372 adapter-only reads.
+discarded 0 N reads.
+Clipping Adapter: AAAAAAAA
+Min. Length: 20
+Input: 22431139 reads.
+Output: 22014354 reads.
+discarded 283038 too-short reads.
+discarded 21817 adapter-only reads.
+discarded 111930 N reads.
+Clipping Adapter: TTTTTTTT
+Min. Length: 20
+Input: 22014354 reads.
+Output: 21646823 reads.
+discarded 333142 too-short reads.
+discarded 34389 adapter-only reads.
+discarded 0 N reads.
