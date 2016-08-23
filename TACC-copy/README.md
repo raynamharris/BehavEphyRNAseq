@@ -76,10 +76,14 @@ I used the following for loop, to create a commands file for fastq
 for file in *.fastq.gz
 do
      echo $file
-     cat >> 01_fastqc.cmds <<EOF
-	fastqc $file
-EOF
+     echo "fastqc $file" >> 01_fastqc.cmds
 done
+~~~
+
+Check to see that the commands file looks like it should
+
+~~~ {.bash}
+cat 01_fastqc.cmds
 ~~~
 
 Then, I ran these two comamands to create and launch a fastqc job
@@ -89,29 +93,34 @@ launcher_creator.py -t 0:30:00 -j 01_fastqc.cmds -n fastqc -l 01_fastqc.slurm -A
 sbatch 01_fastqc.slurm
 ~~~
 
-Then, I moved all the output files to a separate folder
+Then, I moved all the output files to a separate folder, with the date pre-appended.
 
 ~~~ {.bash}
-mkdir ../2016-08-22-fastqc
-mv *.html ../2016-08-22-fastqc
-mv *.zip ../2016-08-22-fastqc
-mv fastqc.* ../2016-08-22-fastqc
-cd ../2016-08-22-fastqc
+mkdir ../<date>-fastqc
+mv *.html ../<date>-fastqc
+mv *.zip ../<date>-fastqc
+mv fastqc.* ../<date>-fastqc
 ~~~
 
 ### 02_ gunzip
 
-I'll use this for loop to create a list of gunzip commands that will have a new output with the `.fq` extension AND it will keep the orginal `.fastq.gz` file.
+I'll use this for loop to create a list of gunzip commands that will have a new output with the `.fastq` extension AND it will keep the orginal `.fastq.gz` file.
 
 ~~~ {.bash}
 for file in *.fastq.gz
 do
-	newfile=${file//.fastq.gz/.fq}
+	newfile=${file//.fastq.gz/.fastq}
 	echo $file $newfile
-	cat >> 02_gunzip.cmds <<EOF
-	gunzip -c $file $newfile
-EOF
+	echo "gunzip -c $file > $newfile" >> 02_gunzip.cmds 
 done
+~~~
+
+
+
+Check to see that the commands file looks like it should
+
+~~~ {.bash}
+cat 02_gunzip.cmds
 ~~~
 
 Then, I used this launcher command to unzip the files. I removed the job stderr and stdout files after the job was complete with `rm gunzip.*`. 
@@ -120,6 +129,19 @@ Then, I used this launcher command to unzip the files. I removed the job stderr 
 launcher_creator.py -t 1:00:00 -j 02_gunzip.cmds -n gunzip -l 02_gunzip.slurm -A NeuroEthoEvoDevo
 sbatch 02_gunzip.slurm
 ~~~
+
+Then, I like to rename these to `.fq` files to help keep things visually distinct
+
+~~~ {.bash}
+for file in *.fastq
+do
+	newfile=${file//.fastq/.q}
+	echo $file $newfile
+	mv $file $newfile
+done
+~~~
+
+
 
 Now, we can look at the raw data with head commands.
 
@@ -142,9 +164,7 @@ for file in *.fq
 do
 	newfile=${file//.fq/.trim.fq}
 	echo $file $newfile
-	cat >> 03_clean.cmds <<EOF
-	fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i $file | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o $newfile 
-EOF
+	echo "fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i $file | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o $newfile"  >> 03_clean.cmds
 done
 ~~~ 
 
@@ -175,9 +195,7 @@ Create the commands file:
 for file in *.trim.fq
 do
      echo $file
-     cat >> 04_fastqc.cmds <<EOF
-	fastqc $file
-EOF
+     echo "fastqc $file" >> 04_fastqc.cmds
 done
 ~~~ 
 
