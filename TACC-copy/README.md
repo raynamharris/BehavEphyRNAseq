@@ -233,15 +233,16 @@ unzip mm9.zip
 Now we will go back to our scratch area to do the alignment, and set up symbolic links to the index in the work area to simplify the alignment command.
 
 ~~~ {.bash}
-cd BehavEphyRNAseq/JA16268/2016-05-24-rawdata
-ln -s -f $SCRATCH/BehavEphyRNAseq/index_mm9/mm9 mm9
+cd $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
+ln -s $SCRATCH/BehavEphyRNAseq/index_mm9/
 ~~~
 
 Create the commands file...not sure how to do this automatically....
 
 ~~~ {.bash}
-echo "bowtie2 -x $SCRATCH/BehavEphyRNAseq/index_mm9/mm9 -U 142C_CA1_S_S19_L003_R1_001.trim.fq, 143C_CA1_S_S20_L003_R1_001.trim.fq, 142C_CA1_S_S19_L003_R2_001.trim.fq, 143C_CA1_S_S20_L003_R2_001.trim.fq, 142C_DG_S_S21_L003_R1_001.trim.fq, 143C_DG_S_S22_L003_R1_001.trim.fq, 142C_DG_S_S21_L003_R2_001.trim.fq, 143C_DG_S_S22_L003_R2_001.trim.fq -S JA16268.sam " > 05_bowtie2.cmds
-~~~ 
+echo "bowtie2 -t -x index_mm9/mm9 -U 142C_CA1_S_S19_L003_R1_001.trim.fq -S JA16268.sam" > 05_bowtie2.cmds
+~~~
+
 
 Create and launch the job.
 
@@ -250,4 +251,14 @@ launcher_creator.py -n bowtie2 -j 05_bowtie2.cmds -l 05_bowtie2.slurm -t 01:00:0
 sbatch 05_bowtie2.slurm
 ~~~ 
 
--------- note ---- this part is not working yet...
+Repeat for JA16443
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+ln -s $SCRATCH/BehavEphyRNAseq/index_mm9/
+echo "bowtie2 -t -x index_mm9/mm9 -U 143A-CA1-1_S5_R1_001.trim.fq -S JA16443.sam" > 05_bowtie2.cmds
+launcher_creator.py -n bowtie2 -j 05_bowtie2.cmds -l 05_bowtie2.slurm -t 01:00:00 -A NeuroEthoEvoDevo -q normal -m "module load perl; module load bowtie/2.2.5"
+sbatch 05_bowtie2.slurm
+~~~
+
+**Note:** Here I've only mapped one sample, because I was getting some errors when I have a list of comma separated files.
