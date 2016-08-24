@@ -84,13 +84,19 @@ Mouse,Year,Genotype,Behavior,E-phy,YokedTo,Conflict,APA,Group,notes,collector
 16-125B,Summer2016,WT,,,,NoConflict,Yoked,WT NoConflict Yoked,,MK
 16-125C,Summer2016,WT,,,,Conflict,Trained,WT Conflict Trained,,MK
 16-125D,Summer2016,WT,,,,Conflict,Yoked,WT Conflict Yoked,,MK
+16-126A,Summer2016,WT,,,,NoConflict,Trained,WT NoConflict Trained,,MK
+16-126B,Summer2016,WT,,,,NoConflict,Yoked,WT NoConflict Yoked,,MK
+16-126C,Summer2016,WT,,,,Conflict,Trained,WT Conflict Trained,,MK
+16-126D,Summer2016,WT,,,,Conflict,Yoked,WT Conflict Yoked,,MK
 16-256,Summer2016,Htt (YAC128),,,,NA,Trained,Htt (YAC128) Trained,,Cycle3
 16-256A,Summer2016,Htt (YAC128),,,,NA,Trained,Htt (YAC128) Trained,,Cycle3
 16-257A,Summer2016,Htt (YAC128),,,,NA,Trained,Htt (YAC128) Trained,,Cycle3
+16-259,Summer2016,Htt (YAC128),,,,NA,Trained,Htt (YAC128) Trained,,Cycle3
 16-259A,Summer2016,Htt (YAC128),,,,NA,NoShock,Htt (YAC128) NoShock,,Cycle3
 16-259B,Summer2016,Htt (YAC128),,,,NA,HomeCage,Htt (YAC128) HomeCage,SCN samples ,Cycle3
 16-259C,Summer2016,Htt (YAC128),,,,NA,Trained,Htt (YAC128) Trained,,Cycle3
 16-259D,Summer2016,Htt (YAC128),,,,NA,HomeCage,Htt (YAC128) HomeCage,,Cycle3
+16-260,Summer2016,Htt (YAC128),,,,NA,NoShock,Htt (YAC128) NoShock,,Cycle3
 16-260A,Summer2016,Htt (YAC128),,,,NA,HomeCage,Htt (YAC128) HomeCage,,Cycle3
 16-260C,Summer2016,Htt (YAC128),,,,NA,HomeCage,Htt (YAC128) HomeCage,,Cycle3
 16-261B,Summer2016,Htt (YAC128),,,,NA,HomeCage,Htt (YAC128) HomeCage,SCN samples ,Cycle3
@@ -103,9 +109,3 @@ Mouse,Year,Genotype,Behavior,E-phy,YokedTo,Conflict,APA,Group,notes,collector
 16-267A,Summer2016,WT (FVB/NJ),,,,NA,Trained,WT (FVB/NJ) Trained,,Cycle3
 16-267B,Summer2016,WT (FVB/NJ),,,,NA,NoShock,WT (FVB/NJ) NoShock,SCN samples ,Cycle3
 16-268B,Summer2016,WT (FVB/NJ),,,,NA,HomeCage,WT (FVB/NJ) HomeCage,,Cycle3
-16-260,Summer2016,Htt (YAC128),,,,NA,NoShock,Htt (YAC128) NoShock,,Cycle3
-16-259,Summer2016,Htt (YAC128),,,,NA,Trained,Htt (YAC128) Trained,,Cycle3
-16-126A,Summer2016,WT,,,,NoConflict,Trained,WT NoConflict Trained,,MK
-16-126B,Summer2016,WT,,,,NoConflict,Yoked,WT NoConflict Yoked,,MK
-16-126C,Summer2016,WT,,,,Conflict,Trained,WT Conflict Trained,,MK
-16-126D,Summer2016,WT,,,,Conflict,Yoked,WT Conflict Yoked,,MK
