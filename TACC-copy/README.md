@@ -229,70 +229,30 @@ cd ../2016-08-22-fastqc
 Used filezilla to transfer the files to my local computer and then check them online.
 
 
-### Bowtie2
+### Reference Genomes and Indexes
 
-Let's use Bowtie 2 for mapping
+Get the mm9 reference genome. Note: I did this from the root directory, but I probably should have submitted a job!
 
-Download and unzip mouse index 
+See http://support.illumina.com/sequencing/sequencing_software/igenome.html for lists of available genomes.
 
 ~~~ {.bash}
-mkdir $SCRATCH/BehavEphyRNAseq/index_mm9
-cd $SCRATCH/BehavEphyRNAseq/index_mm9
-wget ftp://ftp.ccb.jhu.edu/pub/data/bowtie2_indexes/mm9.zip
-unzip mm9.zip
+cd $SCRATCH/BehavEphyRNAseq/
+wget ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Mus_musculus/UCSC/mm9/Mus_musculus_UCSC_mm9.tar.gz
+tar -zxvf Mus_musculus_UCSC_mm9.tar.gz
 ~~~
 
-Now we will go back to our scratch area to do the alignment, and set up symbolic links to the index in the work area to simplify the alignment command.
+To ways to find the names of chromosomes in genome file (.fa) and in the annotation file (.gtf)
 
 ~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
-ln -s $SCRATCH/BehavEphyRNAseq/index_mm9/
-~~~
-
-Create the commands file...not sure how to do this automatically....
-
-~~~ {.bash}
-echo "bowtie2 -t -x index_mm9/mm9 -U 142C_CA1_S_S19_L003_R1_001.trim.fq -S JA16268.sam" > 05_bowtie2.cmds
-~~~
-
-
-Create and launch the job.
-
-~~~ {.bash}
-launcher_creator.py -n bowtie2 -j 05_bowtie2.cmds -l 05_bowtie2.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load perl; module load bowtie/2.2.5"
-sbatch 05_bowtie2.slurm
+grep '^>' $SCRATCH/BehavEphyRNAseq/Mus_musculus/UCSC/mm9/Sequence/WholeGenomeFasta/genome.fa
+cut -f 1 $SCRATCH/BehavEphyRNAseq/Mus_musculus/UCSC/mm9/Annotation/Genes/genes.gtf | sort | uniq -c
 ~~~ 
 
-Repeat for JA16443
 
-~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
-ln -s $SCRATCH/BehavEphyRNAseq/index_mm9/
-echo "bowtie2 -t -x index_mm9/mm9 -U 143A-CA1-1_S5_R1_001.trim.fq -S JA16443.sam" > 05_bowtie2.cmds
-launcher_creator.py -n bowtie2 -j 05_bowtie2.cmds -l 05_bowtie2.slurm -t 01:00:00 -A NeuroEthoEvoDevo -q normal -m "module load perl; module load bowtie/2.2.5"
-sbatch 05_bowtie2.slurm
-~~~
-
-**Note:** Here I've only mapped one sample, because I was getting some errors when I have a list of comma separated files.
+### BWA
 
 
-### 06_Samtools 
-
-https://wikis.utexas.edu/display/bioiteam/Assessing+Mapping+Results+I
-http://biobits.org/samtools_primer.html
-
-This part will be broken down into 06a and 06s for align and sort.
-
-Go to raw data and create a commands and launcher files. 
-
-~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
-echo "samtools view -b -S JA16268.bam JA16268_aligned.sam " > 06a_samtools.cmds
-launcher_creator.py -n samtools-a -j 06a_samtools.cmds -l 06a_samtools.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load samtools/1.3"
-sbatch 06a_samtools.slurm
-~~~
-
-Summary Statistics
+### BOWTIE 2 Summary Statistics
 
 ~~~ {.bash}
 module load samtools
@@ -307,47 +267,15 @@ samtools flagstat JA16268.bam
 Repeat for JA16443
 
 ~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
-echo "samtools view -b -S JA16443.sam > JA16443.bam && samtools sort JA16443.bam JA16443 && samtools index JA16443.bam" > 06_samtools.cmds
-launcher_creator.py -q normal -n samtools -j 06_samtools.cmds -l 06_samtools.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load samtools/1.3"
-sbatch 06_samtools.slurm
 module load samtools
 samtools flagstat JA16443.bam
-
+~~~
 ~~~
 14866 + 0 in total (QC-passed reads + QC-failed reads)
 5877 + 0 mapped (39.53%:-nan%)
 ~~~
 
 **Interpretation:** The tag-seq data produced ~5K mapped reads where the regular RNA-seq data produced ~5M mapped reads.
-
-### 07_Bedtools
-
-~~~ {.bash}
-module load bedtools
-~~~
-
-Get the mm9 reference genome. Note: I did this from the root directory, but I probably should have submitted a job!
-
-See http://support.illumina.com/sequencing/sequencing_software/igenome.html for lists of available genomes.
-
-~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/index_mm9
-wget ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Mus_musculus/UCSC/mm9/Mus_musculus_UCSC_mm9.tar.gz
-tar -zxvf Mus_musculus_UCSC_mm9.tar.gz
-~~~
-
-To ways to find the names of chromosomes in genome file (.fa) and in the annotation file (.gtf)
-
-~~~ {.bash}
-grep '^>' $SCRATCH/BehavEphyRNAseq/index_mm9/Mus_musculus/UCSC/mm9/Sequence/WholeGenomeFasta/genome.fa
-cut -f 1 $SCRATCH/BehavEphyRNAseq/index_mm9/Mus_musculus/UCSC/mm9/Annotation/Genes/genes.gtf  | sort | uniq -c
-~~~ 
-
-
-bedtools multicov -bams  -bed reference/genes.formatted.gtf > gene_counts.gff
-
-
 
 
 
