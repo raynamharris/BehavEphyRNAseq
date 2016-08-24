@@ -249,10 +249,83 @@ cut -f 1 $SCRATCH/BehavEphyRNAseq/Mus_musculus/UCSC/mm9/Annotation/Genes/genes.g
 ~~~ 
 
 
-### BWA
+### 06_BWA
+
+https://wikis.utexas.edu/pages/viewpage.action?pageId=67797479#Mappingtutorial(bowtie2,bwa)(GVA14)-MappingwithBWA
+
+Start with the single end Tag-seq data. Make an output directory for the output. Create a soft link to the indexes for easier commands.
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+mkdir ../2016-08-24-bwa
+ln -s $SCRATCH/BehavEphyRNAseq/Mus_musculus/UCSC/mm9/Sequence/BWAIndex
+~~~ 
+
+Command for  Illumina single-end reads shorter than ~70bp:
+bwa aln ref.fa reads.fq > reads.sai; bwa samse ref.fa reads.sai reads.fq > aln-se.sam
+
+~~~ {.bash}
+for file in *trim.fq
+do
+	saifile=${file//.fq/.sai}
+	samfile=${file//.fq/.sam}
+	echo $file $saifile $samfile
+	echo "bwa aln BWAIndex/genome.fa $file > $saifile; bwa samse BWAIndex/genome.fa $saifile $file > $samfile"  >> 06_bwa.cmds
+done
+cat 06_bwa.cmds
+~~~ 
+
+Create and launch job
+
+~~~ {.bash}
+launcher_creator.py -t 01:00:00 -j 06_bwa.cmds -n bwa -l 06_bwa.slurm -A NeuroEthoEvoDevo -m 'module load bwa/0.7.7'
+sbatch 06_bwa.slurm
+~~~ 
+
+Did it work?
+
+~~~ {.bash}
+for file in *.sam
+do
+echo $file
+samtools flagstat $file
+done
+~~~ 
+
+No, not for the tag-seq data.
 
 
-### BOWTIE 2 Summary Statistics
+### 07_Samtools
+
+http://biobits.org/samtools_primer.html
+
+The commands
+- samtools view -b -S -o alignments/sim_reads_aligned.bam alignments/sim_reads_aligned.sam
+- samtools sort alignments/sim_reads_aligned.bam alignments/sim_reads_aligned.sorted
+- samtools index alignments/sim_reads_aligned.sorted.bam
+
+But, I will do all these together with a pipe
+
+samtools view -b -S $file | samtools sort | samtools index - $bamfile
+
+~~~ {.bash}
+for file in *.sam
+do
+	bamfile=${file//.sam/.bam}
+	echo $file $bamfile
+	echo "samtools view -b -S -o $file | samtools sort | samtools index - $bamfile"  >> 07_samtools.cmds
+done
+cat 07_samtools.cmds
+~~~ 
+
+~~~ {.bash}
+launcher_creator.py -t 01:00:00 -j 07_samtools.cmds -n samtools -l 07_samtools.slurm -A NeuroEthoEvoDevo -m 'module load samtools/1.3'
+sbatch 07_samtools.slurm
+~~~
+
+
+
+### 05_bowtie2 Summary Statistics
 
 ~~~ {.bash}
 module load samtools
