@@ -42,7 +42,6 @@ I constantly referred to these webpages while optimzing this workflow.
 - [Misha's Tag-seq Workflow](https://github.com/z0on/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt)
 - 
 
-
 ###  00_gsaf_download
 
 For storing and working with my data, I created a directory on scratch `$SCRATCH/BehavEphyRNAseq`. Inside a created inside for each job and a subdirectory for the raw data.
