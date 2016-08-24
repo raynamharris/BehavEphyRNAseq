@@ -278,9 +278,10 @@ cat 06_bwa.cmds
 Create and launch job
 
 ~~~ {.bash}
-launcher_creator.py -t 01:00:00 -j 06_bwa.cmds -n bwa -l 06_bwa.slurm -A NeuroEthoEvoDevo -m 'module load bwa/0.7.7'
+launcher_creator.py -t 01:30:00 -j 06_bwa.cmds -n bwa -l 06_bwa.slurm -A NeuroEthoEvoDevo -m 'module load bwa/0.7.7'
 sbatch 06_bwa.slurm
 ~~~ 
+
 
 Did it work?
 
@@ -292,21 +293,140 @@ samtools flagstat $file
 done
 ~~~ 
 
+Here is a slimmed version of the output. Note: I ran it twice and got different results for a few samples. Yikes!!!
+
+~~~
+142C_CA1_S_S19_L003_R1_001.trim.sam
+6815744 + 0 in total (QC-passed reads + QC-failed reads)
+3092451 + 0 mapped (45.37%:-nan%)
+
+142C_CA1_S_S19_L003_R2_001.trim.sam
+7864320 + 0 in total (QC-passed reads + QC-failed reads)
+3783480 + 0 mapped (48.11%:-nan%)
+
+0 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 mapped (-nan%:-nan%)
+
+142C_DG_S_S21_L003_R1_001.trim.sam
+13369344 + 0 in total (QC-passed reads + QC-failed reads)
+3651980 + 0 mapped (27.32%:-nan%)
+
+142C_DG_S_S21_L003_R2_001.trim.sam
+10892560 + 0 in total (QC-passed reads + QC-failed reads)
+3510025 + 0 mapped (32.22%:-nan%)
+
+143C_CA1_S_S20_L003_R1_001.trim.sam
+5767168 + 0 in total (QC-passed reads + QC-failed reads)
+3609402 + 0 mapped (62.59%:-nan%)
+
+143C_CA1_S_S20_L003_R2_001.trim.sam
+0 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 mapped (-nan%:-nan%)
+
+18690052 + 0 in total (QC-passed reads + QC-failed reads)
+3265799 + 0 mapped (17.47%:-nan%)
+
+143C_DG_S_S22_L003_R1_001.trim.sam
+18690052 + 0 in total (QC-passed reads + QC-failed reads)
+3265799 + 0 mapped (17.47%:-nan%)
+
+143C_DG_S_S22_L003_R2_001.trim.sam
+0 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 mapped (-nan%:-nan%)
+
+143C_DG_S_S22_L003_R2_001.trim.sam
+14276719 + 0 in total (QC-passed reads + QC-failed reads)
+2860619 + 0 mapped (20.04%:-nan%)
+
+
+ALL Tag-seq data
+
+0 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 mapped (-nan%:-nan%)
+~~~
+
+
+
 No, not for the tag-seq data.
 
 
 ### 07_Samtools
 
 http://biobits.org/samtools_primer.html
+http://www.htslib.org/doc/samtools-1.1.html
 
 The commands
 - samtools view -b -S -o alignments/sim_reads_aligned.bam alignments/sim_reads_aligned.sam
-- samtools sort alignments/sim_reads_aligned.bam alignments/sim_reads_aligned.sorted
+- samtools sort -T /tmp/aln.sorted -o aln.sorted.bam aln.bam
 - samtools index alignments/sim_reads_aligned.sorted.bam
+
+
+
+#### 07a View
+
+~~~ {.bash}
+for file in *.sam
+do
+	bamfile=${file//.sam/.bam}
+	echo $file $bamfile
+	echo "samtools view -b -S $file > $bamfile" >> 07a_samtools.cmds
+done
+cat 07a_samtools.cmds
+~~~ 
+
+~~~ {.bash}
+launcher_creator.py -t 01:00:00 -j 07a_samtools.cmds -n samtoolsa -l 07a_samtools.slurm -A NeuroEthoEvoDevo -m 'module load samtools/1.3'
+sbatch 07a_samtools.slurm
+~~~
+
+#### 07b sort
+
+Usage: samtools sort -T /tmp/aln.sorted -o aln.sorted.bam aln.bam
+
+~~~ {.bash}
+mkdir tmp
+for file in *.bam
+do
+	sortedtmp=${file//.bam/.temp.sorted}
+	sortedbam=${file//.bam/_sorted.bam}
+	echo $file $sortedfile $sortedtmp
+	echo "samtools sort -T temp/$sortedtmp $sortedbam $file" >> 07b_samtools.cmds
+done
+cat 07b_samtools.cmds
+~~~ 
+
+~~~ {.bash}
+launcher_creator.py -t 01:00:00 -j 07b_samtools.cmds -n samtoolsb -l 07b_samtools.slurm -A NeuroEthoEvoDevo -m 'module load samtools/1.3'
+sbatch 07b_samtools.slurm
+~~~
+
+#### 07c index
+
+- samtools index alignments/sim_reads_aligned.sorted.bam
+
+
+~~~ {.bash}
+for file in *.bam
+do
+	sortedfile=${file//.bam/_sorted.bam}
+	echo $file $sortedfile
+	echo "samtools sort $file $sortedfile" >> 07b_samtools.cmds
+done
+cat 07b_samtools.cmds
+~~~ 
+
+~~~ {.bash}
+launcher_creator.py -t 01:00:00 -j 07b_samtools.cmds -n samtoolsb -l 07b_samtools.slurm -A NeuroEthoEvoDevo -m 'module load samtools/1.3'
+sbatch 07b_samtools.slurm
+~~~
+
+
+#### not working samptools pipe
 
 But, I will do all these together with a pipe
 
 samtools view -b -S $file | samtools sort | samtools index - $bamfile
+
 
 ~~~ {.bash}
 for file in *.sam
@@ -322,6 +442,22 @@ cat 07_samtools.cmds
 launcher_creator.py -t 01:00:00 -j 07_samtools.cmds -n samtools -l 07_samtools.slurm -A NeuroEthoEvoDevo -m 'module load samtools/1.3'
 sbatch 07_samtools.slurm
 ~~~
+
+
+Did it work?
+
+~~~ {.bash}
+module load samtools
+for file in *.bam 
+do
+echo $file
+samtools flagstat $file
+done
+
+
+
+
+
 
 
 
@@ -343,6 +479,7 @@ Repeat for JA16443
 module load samtools
 samtools flagstat JA16443.bam
 ~~~
+
 ~~~
 14866 + 0 in total (QC-passed reads + QC-failed reads)
 5877 + 0 mapped (39.53%:-nan%)
