@@ -40,7 +40,7 @@ I constantly referred to these webpages while optimzing this workflow.
 - [wiki page for launcher_creator.py](https://wikis.utexas.edu/display/bioiteam/launcher_creator.py)
 - [Dhivya's RNAseq course](https://wikis.utexas.edu/display/bioiteam/Introduction+to+RNA+Seq+Course+2016)
 - [Misha's Tag-seq Workflow](https://github.com/z0on/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt)
-- 
+- [Samtools Tutuorial](http://biobits.org/samtools_primer.html)
 
 ###  00_gsaf_download
 
@@ -279,14 +279,17 @@ sbatch 05_bowtie2.slurm
 ### 06_Samtools 
 
 https://wikis.utexas.edu/display/bioiteam/Assessing+Mapping+Results+I
+http://biobits.org/samtools_primer.html
+
+This part will be broken down into 06a and 06s for align and sort.
 
 Go to raw data and create a commands and launcher files. 
 
 ~~~ {.bash}
 cd $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
-echo "samtools view -b -S JA16268.sam > JA16268.bam && samtools sort JA16268.bam JA16268 && samtools index JA16268.bam" > 06_samtools.cmds
-launcher_creator.py -n samtools -j 06_samtools.cmds -l 06_samtools.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load samtools/1.3"
-sbatch 06_samtools.slurm
+echo "samtools view -b -S JA16268.bam JA16268_aligned.sam " > 06a_samtools.cmds
+launcher_creator.py -n samtools-a -j 06a_samtools.cmds -l 06a_samtools.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load samtools/1.3"
+sbatch 06a_samtools.slurm
 ~~~
 
 Summary Statistics
@@ -326,18 +329,24 @@ module load bedtools
 
 Get the mm9 reference genome. Note: I did this from the root directory, but I probably should have submitted a job!
 
+See http://support.illumina.com/sequencing/sequencing_software/igenome.html for lists of available genomes.
+
 ~~~ {.bash}
 cd $SCRATCH/BehavEphyRNAseq/index_mm9
 wget ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Mus_musculus/UCSC/mm9/Mus_musculus_UCSC_mm9.tar.gz
 tar -zxvf Mus_musculus_UCSC_mm9.tar.gz
 ~~~
 
-To ways to find the names of chromosomes in genome file
+To ways to find the names of chromosomes in genome file (.fa) and in the annotation file (.gtf)
 
 ~~~ {.bash}
-grep '^>' Mus_musculus_UCSC_mm9.fa
-cut -f 1 Mus_musculus_UCSC_mm9.gtf | sort | uniq -c
+grep '^>' $SCRATCH/BehavEphyRNAseq/index_mm9/Mus_musculus/UCSC/mm9/Sequence/WholeGenomeFasta/genome.fa
+cut -f 1 $SCRATCH/BehavEphyRNAseq/index_mm9/Mus_musculus/UCSC/mm9/Annotation/Genes/genes.gtf  | sort | uniq -c
 ~~~ 
+
+
+bedtools multicov -bams  -bed reference/genes.formatted.gtf > gene_counts.gff
+
 
 
 
