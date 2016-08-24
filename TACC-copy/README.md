@@ -31,6 +31,18 @@ So, inside `2016-07-26-rawdata` I have the data from job JA16443 as well as the 
 04_fastqc | Quality control of clean data
 
 
+## Resources
+
+I constantly referred to these webpages while optimzing this workflow.
+
+- [Explain Shell - a interactive webpage with shell argument explainations](http://explainshell.com/)
+- [Stampede User Guide](https://portal.tacc.utexas.edu/user-guides/stampede)
+- [wiki page for launcher_creator.py](https://wikis.utexas.edu/display/bioiteam/launcher_creator.py)
+- [Dhivya's RNAseq course](https://wikis.utexas.edu/display/bioiteam/Introduction+to+RNA+Seq+Course+2016)
+- [Misha's Tag-seq Workflow](https://github.com/z0on/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt)
+- 
+
+
 ###  00_gsaf_download
 
 For storing and working with my data, I created a directory on scratch `$SCRATCH/BehavEphyRNAseq`. Inside a created inside for each job and a subdirectory for the raw data.
@@ -222,7 +234,8 @@ Used filezilla to transfer the files to my local computer and then check them on
 
 Let's use Bowtie 2 for mapping
 
-# download and unzip mouse index 
+Download and unzip mouse index 
+
 ~~~ {.bash}
 mkdir $SCRATCH/BehavEphyRNAseq/index_mm9
 cd $SCRATCH/BehavEphyRNAseq/index_mm9
@@ -264,7 +277,7 @@ sbatch 05_bowtie2.slurm
 **Note:** Here I've only mapped one sample, because I was getting some errors when I have a list of comma separated files.
 
 
-## 06_Samtools 
+### 06_Samtools 
 
 https://wikis.utexas.edu/display/bioiteam/Assessing+Mapping+Results+I
 
@@ -304,6 +317,7 @@ samtools flagstat JA16443.bam
 5877 + 0 mapped (39.53%:-nan%)
 ~~~
 
+**Interpretation:** The tag-seq data produced ~5K mapped reads where the regular RNA-seq data produced ~5M mapped reads.
 
 
 
