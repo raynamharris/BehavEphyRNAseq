@@ -319,5 +319,27 @@ samtools flagstat JA16443.bam
 
 **Interpretation:** The tag-seq data produced ~5K mapped reads where the regular RNA-seq data produced ~5M mapped reads.
 
+### 07_Bedtools
+
+~~~ {.bash}
+module load bedtools
+~~~
+
+Get the mm9 reference genome. Note: I did this from the root directory, but I probably should have submitted a job!
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/index_mm9
+wget ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Mus_musculus/UCSC/mm9/Mus_musculus_UCSC_mm9.tar.gz
+tar -zxvf Mus_musculus_UCSC_mm9.tar.gz
+~~~
+
+To ways to find the names of chromosomes in genome file
+
+~~~ {.bash}
+grep '^>' Mus_musculus_UCSC_mm9.fa
+cut -f 1 Mus_musculus_UCSC_mm9.gtf | sort | uniq -c
+~~~ 
+
+
 
 
