@@ -390,7 +390,7 @@ do
 	sortedtmp=${file//.bam/.temp.sorted}
 	sortedbam=${file//.bam/_sorted.bam}
 	echo $file $sortedfile $sortedtmp
-	echo "samtools sort -T temp/$sortedtmp $sortedbam $file" >> 07b_samtools.cmds
+	echo "samtools sort -T temp/$sortedtmp -o $sortedbam $file" >> 07b_samtools.cmds
 done
 cat 07b_samtools.cmds
 ~~~ 
