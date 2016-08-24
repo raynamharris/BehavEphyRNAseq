@@ -262,3 +262,48 @@ sbatch 05_bowtie2.slurm
 ~~~
 
 **Note:** Here I've only mapped one sample, because I was getting some errors when I have a list of comma separated files.
+
+
+## 06_Samtools 
+
+https://wikis.utexas.edu/display/bioiteam/Assessing+Mapping+Results+I
+
+Go to raw data and create a commands and launcher files. 
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
+echo "samtools view -b -S JA16268.sam > JA16268.bam && samtools sort JA16268.bam JA16268 && samtools index JA16268.bam" > 06_samtools.cmds
+launcher_creator.py -n samtools -j 06_samtools.cmds -l 06_samtools.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load samtools/1.3"
+sbatch 06_samtools.slurm
+~~~
+
+Summary Statistics
+
+~~~ {.bash}
+module load samtools
+samtools flagstat JA16268.bam
+~~~
+
+~~~
+10027976 + 0 in total (QC-passed reads + QC-failed reads)
+5114817 + 0 mapped (51.01%:-nan%)
+~~~
+
+Repeat for JA16443
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+echo "samtools view -b -S JA16443.sam > JA16443.bam && samtools sort JA16443.bam JA16443 && samtools index JA16443.bam" > 06_samtools.cmds
+launcher_creator.py -q normal -n samtools -j 06_samtools.cmds -l 06_samtools.slurm -t 01:00:00 -A NeuroEthoEvoDevo -m "module load samtools/1.3"
+sbatch 06_samtools.slurm
+module load samtools
+samtools flagstat JA16443.bam
+
+~~~
+14866 + 0 in total (QC-passed reads + QC-failed reads)
+5877 + 0 mapped (39.53%:-nan%)
+~~~
+
+
+
+
