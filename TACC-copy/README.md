@@ -1,4 +1,4 @@
-# RNAseq Workflow
+# RNAseq Workflow 
 
 The bioinformatic workflow for the RNAseq portion of this project will be mostly done on TACC. To keep my scripts under version control, I keep a copy on my computer in this "TACC-copy directory". 
 
@@ -12,24 +12,24 @@ These samples have been process in multiple sequencing jobs.
 | :--- | :---: | :--- |
 JA16268 | May 24, 2016 | paired end
 JA16443 | July 26, 2016 | Tag-seq
-JA16444 | TBA | Tag-seq
+JA16444 | October 5, 2016 | paired end
 
-## Workflow
+For storing and working with my data, I created a directory on scratch `$SCRATCH/BehavEphyRNAseq`. Inside, there is a subdirectory for each job and then a subdirectory for the raw data.
+
+## Workflow JA16444
 
 I use the command line to create a lot of the commands files and batch scripts, so this readme documents the workflow I use to create these files.  My hope is that this style will help me easily reproduce the workflow (either for reanalysing this project or for applying the workflow to new datasets).
 
 I decided to keep my data and my scripts and my commands files in the same directory, gasp! I tried to keep them separate for a while, but having the commands files in the same directory with the launcher script and the data just makes life easier. I do move the fastqc output files to their own directory after processing because that makes me happy.
 
-So, inside `2016-07-26-rawdata` I have the data from job JA16443 as well as the following scripts and commands files:
+So, inside `rawdata` I have the data from job JA16444 as well as the following scripts and commands files:
 
 | Scripts | Description
 | :--- | :--- | 
 00_gsaf_download | Bash script to download data from amazon cloud. See    https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
 01_fastqc | Quality control of raw data 
-02_gunzip | Gunzip, keep original files
-03_clean | 3 step trimming and filtering using Fastx toolkit, adapted from Misha https://github.com/raynamharris/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt
-04_fastqc | Quality control of clean data
-
+02_kallistoquant | gene quantification using kallisto with the Mus transcriptome
+03_kallistoquantcandidategenes | gene quantification using kallisto with only a subset of candidate genes from the Mus transcriptome
 
 ## Resources
 
@@ -42,44 +42,31 @@ I constantly referred to these webpages while optimzing this workflow.
 - [Misha's Tag-seq Workflow](https://github.com/z0on/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt)
 - [Samtools Tutuorial](http://biobits.org/samtools_primer.html)
 
-###  00_gsaf_download
+##  00_gsaf_download 
 
-For storing and working with my data, I created a directory on scratch `$SCRATCH/BehavEphyRNAseq`. Inside a created inside for each job and a subdirectory for the raw data.
+Inside the project directory on scratch `$SCRATCH/BehavEphyRNAseq`, create subdirectory for the job and then a subdirectory for the raw data. Navidate to the directory
 
 ~~~ {.bash}
-mkdir $SCRATCH/BehavEphyRNAseq
-mkdir -p $SCRATCH/BehavEphyRNAseq/JA16268/2016-05-24-rawdata
-mkdir -p $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+mkdir -p $SCRATCH/BehavEphyRNAseq/JA16444/00_rawdata
+cd $SCRATCH/BehavEphyRNAseq/JA16444/00_rawdata
 ~~~ 
 
-To download the raw data, I navidated to the appropriate directory use nano to create a bash script named `00_gsaf_download.sh` with the bash script written by the GSAF stored here: https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
+To download, I'll copy a  bash script named `00_gsaf_download.sh` from a one of my folders. This bash script was provide by the GSAF (https://wikis.utexas.edu/display/GSAF/How+to+download+your+data). The script was copied wihtout modification, but I added a few lines at the end to clean up the directory (by making a wgetlog directory for the download stats files) and to make all the sequences files read only (with the `chmod` command).
 
 ~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
-nano 00_gsaf_download.sh
+# move into directory and copy script from other location
+cp $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata/00_gsaf_download.sh .
 ~~~ 
 
 Then I executed the following command. Note: the key is only active for 72 hours. 
 
 ~~~ {.bash}
-00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16443.SA16131.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1469736784&Signature=EBDWx1Ke55tIRekbuN0WPrt4d6s%3D"
+00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16444.SA16163.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1476550876&Signature=Ia7MlL%2FVTW9x0TLTBL0BIGEY%2FT8%3D"
 ~~~ 
 
-Then, I cleaned up my directory a bit with the following code:
 
-~~~ {.bash}
-mkdir wgetlog
-mv *.wget.log wgetlog/
-mv files.html wgetlog/
-~~~
-
-Finally, I made the files *read-only* with this command.
-
-~~~ {.bash}
-chmod u-w *.fastq.gz 
-~~~ 
-
-### 01_fastqc 
+## 01_fastqc 
+The first thing to do is check the quality of the reads. 
 
 I used the following for loop, to create a commands file for fastq
 
@@ -104,16 +91,263 @@ launcher_creator.py -t 0:30:00 -j 01_fastqc.cmds -n fastqc -l 01_fastqc.slurm -A
 sbatch 01_fastqc.slurm
 ~~~
 
-Then, I moved all the output files to a separate folder, with the date pre-appended.
+Then, I moved all the output files to a separate folder, with the date pre-appended (for JA1443) or with command order "01_" pre-appended (for JA1444).
 
 ~~~ {.bash}
+### for JA1443
 mkdir ../<date>-fastqc
 mv *.html ../<date>-fastqc
 mv *.zip ../<date>-fastqc
 mv fastqc.* ../<date>-fastqc
+
+### for JA1444
+mkdir ../01_fastqc
+mv *.html ../01_fastqc
+mv *.zip ../01_fastqc
+mv fastqc.* ../01_fastqc
 ~~~
 
-### 02_ gunzip
+One must save the data locally in order to view the html files. 
+
+In a new terminal window:
+
+~~~ {.bash}
+cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy
+mkdir JA16444
+cd JA16444
+scp rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/01_fastqc/*html .
+~~~
+
+####################
+## Build a kallisto_index ## this should go somewhere else because its only done once and not for every project!!!
+
+Download mouse transcriptome from https://www.gencodegenes.org/mouse_releases/current.html
+
+~~~ {.bash}
+mkdir $SCRATCH/BehavEphyRNAseq/refs
+cd $SCRATCH/BehavEphyRNAseq/refs
+curl -O 
+curl -O ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M11/gencode.vM11.pc_transcripts.fa.gz
+~~~
+
+Then, create the commands file.
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16444/00_rawdata
+echo "kallisto index -i gencode.vM11.pc_transcripts_kallisto.idx $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts.fa.gz" > 02_kallisto_index.cmds
+cat 02_kallisto_index.cmds
+~~~
+
+Then create the launcher script. 
+
+~~~ {.bash}
+launcher_creator.py -t 0:30:00 -j 02_kallisto_index.cmds -n kallistoindex -l 02_kallisto_index.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+sbatch 02_kallisto_index.slurm
+~~~
+
+Moved the outputs to the refs folder to keep it all the same
+
+
+##################
+
+### 02_kallistoquant
+
+Quanitify gene expression with kallisto quant.
+See https://pachterlab.github.io/kallisto/manual for details.
+
+
+Create the commands file. 
+
+~~~ {.bash}
+mkdir ../02_kallistoquant
+for R1 in *R1_001.fastq.gz; do
+    R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
+    samp=$(basename $R1 _R1_001.fastq.gz)
+    echo $R1 $R2 $samp
+    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../02_kallistoquant/${samp} $R1 $R2" >> 02_kallistoquant.cmds
+done
+~~~
+
+Create the launcher script and run. 
+
+~~~ {.bash}
+launcher_creator.py -t 1:00:00 -j 02_kallistoquant.cmds -n kallistoquant -l 02_kallistoquant.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+sbatch 02_kallistoquant.slurm
+~~~
+
+Now, save the data locally
+
+In a new terminal window:
+
+~~~ {.bash}
+cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy/JA16444/
+scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/02_kallistoquant .
+~~~
+
+Now, remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_S*/}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
+Then, replace the `_` with `-`
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_/-}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
+### 03_kallistoquantcandidategenes
+
+Quanitify gene expression with kallisto quant USING the candidate genes only file.
+See https://pachterlab.github.io/kallisto/manual for details.
+
+Create the commands file. 
+
+~~~ {.bash}
+mkdir ../03_kallistoquantcandidategenes
+for R1 in *R1_001.fastq.gz; do
+    R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
+    samp=$(basename $R1 _R1_001.fastq.gz)
+    echo $R1 $R2 $samp
+    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM7.transcripts_candidategenes_kallisto.idx  -o ../03_kallistoquantcandidategenes/${samp} $R1 $R2" >> 03_kallistoquantcandidategenes.cmds
+done
+~~~
+
+Create the launcher script and run. 
+
+~~~ {.bash}
+launcher_creator.py -t 1:00:00 -q normal -j 03_kallistoquantcandidategenes.cmds -n kallistoquantcandidategenes -l 03_kallistoquantcandidategenes.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+sbatch 03_kallistoquantcandidategenes.slurm
+~~~
+
+Create a file with all the sample names. This will be used later in R to create a sample information sheet that tells us all about the animal and the 
+
+~~~ {.bash}
+ls > sample.csv
+~~~
+
+Now, save the data locally
+
+In a new terminal window:
+
+~~~ {.bash}
+cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy/JA16444/
+scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/03_kallistoquantcandidategenes .
+~~~
+
+Now, remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_S*/}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
+Then, replace the `_` with `-`
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_/-}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
+
+
+
+
+
+
+
+
+## Workflow JA16443
+
+### JA16443
+So, inside `2016-07-26-rawdata` I have the data from job JA16443 as well as the following scripts and commands files:
+
+| Scripts | Description
+| :--- | :--- | 
+00_gsaf_download | Bash script to download data from amazon cloud. See    https://wikis.utexas.edu/display/GSAF/How+to+download+your+data
+01_fastqc | Quality control of raw data 
+02_gunzip | Gunzip, keep original files
+03_clean | 3 step trimming and filtering using Fastx toolkit, adapted from Misha https://github.com/raynamharris/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt
+04_fastqc | Quality control of clean data
+
+##  00_gsaf_download 
+
+For storing and working with my data, I created a directory on scratch `$SCRATCH/BehavEphyRNAseq`. Inside a created inside for each job and a subdirectory for the raw data.
+
+~~~ {.bash}
+mkdir -p $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+cd $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata
+~~~ 
+    
+To download, I'll copy a  bash script named `00_gsaf_download.sh` from a one of my folders. This bash script was provide by the GSAF (https://wikis.utexas.edu/display/GSAF/How+to+download+your+data). The script was copied wihtout modification, but I added a few lines at the end to clean up the directory (by making a wgetlog directory for the download stats files) and to make all the sequences files read only (with the `chmod` command).
+
+~~~ {.bash}
+# move into directory and copy script from other location
+cp $SCRATCH/BehavEphyRNAseq/JA16443/2016-07-26-rawdata/00_gsaf_download.sh .
+~~~ 
+
+Then I executed the following command. Note: the key is only active for 72 hours. 
+
+~~~ {.bash}
+00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16444.SA16163.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1476550876&Signature=Ia7MlL%2FVTW9x0TLTBL0BIGEY%2FT8%3D"
+~~~ 
+
+
+### 01_fastqc 
+The first thing to do is check the quality of the reads. 
+
+I used the following for loop, to create a commands file for fastq
+
+~~~ {.bash}
+for file in *.fastq.gz
+do
+     echo $file
+     echo "fastqc $file" >> 01_fastqc.cmds
+done
+~~~
+
+Check to see that the commands file looks like it should
+
+~~~ {.bash}
+cat 01_fastqc.cmds
+~~~
+
+Then, I ran these two comamands to create and launch a fastqc job
+
+~~~ {.bash}
+launcher_creator.py -t 0:30:00 -j 01_fastqc.cmds -n fastqc -l 01_fastqc.slurm -A NeuroEthoEvoDevo -m 'module load fastqc/0.11.5'
+sbatch 01_fastqc.slurm
+~~~
+
+Then, I moved all the output files to a separate folder, with the date pre-appended (for JA1443) or with command order "01_" pre-appended (for JA1444).
+
+~~~ {.bash}
+### for JA1443
+mkdir ../<date>-fastqc
+mv *.html ../<date>-fastqc
+mv *.zip ../<date>-fastqc
+mv fastqc.* ../<date>-fastqc
+    
+    
+## 02_ gunzip
 
 I'll use this for loop to create a list of gunzip commands that will have a new output with the `.fastq` extension AND it will keep the orginal `.fastq.gz` file.
 
@@ -125,8 +359,6 @@ do
 	echo "gunzip -c $file > $newfile" >> 02_gunzip.cmds 
 done
 ~~~
-
-
 
 Check to see that the commands file looks like it should
 
@@ -151,8 +383,6 @@ do
 	mv $file $newfile
 done
 ~~~
-
-
 
 Now, we can look at the raw data with head commands.
 
@@ -196,7 +426,69 @@ do
 done
 ~~~ 
 
-### 04_fastqc
+
+## 02_cutadapt  ######crap! don't like this cause its not paired end trimming
+A colleque recommmends cutadapt for trimming adapters of paired end reads.
+
+~~~ {.bash}
+for R1 in *R1_001.fastq.gz 
+do
+     	trimmedR1="$(basename $R1 .fastq.gz).trimmed.fastq"
+     	R2="$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz"
+     	trimmedR2="$(basename $R2 .fastq.gz).trimmed.fastq"
+     	echo $R1 $R2 $trimmedR1 $trimmedR2
+     	echo "cutadapt -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACACAGTGATCTCGTATGC -A GTCGGGTGGGTCACCGACCTTTTGCACGCCGCGAGAGGAAGTATTGGCGT -m 22 -o  $trimmedR1 -p $trimmedR2 $R1 $R2" >> 02_cutadapt.cmds
+done
+cat 02_cutadapt.cmds
+~~~
+
+Then, I used this launcher command to process the files. 
+
+~~~ {.bash}
+launcher_creator.py -t 1:00:00 -j 02_cutadapt.cmds -n cutadapt -l 02_gunzip.slurm -A NeuroEthoEvoDevo
+sbatch 02_gunzip.slurm
+~~~
+
+Clean up the folder
+
+~~~ {.bash}
+mkdir ../02_cutadapt
+mv *.trim.fq ../02_cutadapt
+mv cutadapt.* ../02_cutadapt
+~~~
+
+### 03_fastqc JA16444
+
+Now, I check to see how well the cleaning worked.
+
+Create the commands file: 
+
+~~~ {.bash}
+for file in *.trim.fq
+do
+     echo $file
+     echo "fastqc $file" >> 03_fastqc.cmds
+done
+~~~ 
+
+Create and launch the slurm file.
+
+~~~ {.bash}
+launcher_creator.py -t 0:30:00 -j 03_fastqc.cmds -n fastqc -l 03_fastqc.slurm -A NeuroEthoEvoDevo -m 'module load fastqc/0.11.5'
+sbatch 03_fastqc.slurm
+~~~
+
+Then, I moved all the output files to the folder with all the other fastqc files.
+
+~~~ {.bash}
+mv *.html ../03_fastqc
+mv *.zip ../03_fastqc
+mv fastqc.* ../03_fastqc
+cd ../03_fastqc
+~~~    
+    
+       
+### 04_fastqc  
 
 Now, I check to see how well the cleaning worked.
 
@@ -453,12 +745,6 @@ do
 echo $file
 samtools flagstat $file
 done
-
-
-
-
-
-
 
 
 ### 05_bowtie2 Summary Statistics
