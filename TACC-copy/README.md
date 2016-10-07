@@ -2,6 +2,17 @@
 
 The bioinformatic workflow for the RNAseq portion of this project will be mostly done on TACC. To keep my scripts under version control, I keep a copy on my computer in this "TACC-copy directory". 
 
+## Resources
+
+I constantly referred to these webpages while optimzing this workflow.
+
+- [Explain Shell - a interactive webpage with shell argument explainations](http://explainshell.com/)
+- [Stampede User Guide](https://portal.tacc.utexas.edu/user-guides/stampede)
+- [wiki page for launcher_creator.py](https://wikis.utexas.edu/display/bioiteam/launcher_creator.py)
+- [Dhivya's RNAseq course](https://wikis.utexas.edu/display/bioiteam/Introduction+to+RNA+Seq+Course+2016)
+- [Misha's Tag-seq Workflow](https://github.com/z0on/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt)
+- [Samtools Tutuorial](http://biobits.org/samtools_primer.html)
+
 ## RNAseq Jobs
 
 All of the sample information is contained in `../data/sample_info/punches.csv` and `../data/sample_info/punches.csv`. 
@@ -30,17 +41,6 @@ So, inside `rawdata` I have the data from job JA16444 as well as the following s
 01_fastqc | Quality control of raw data 
 02_kallistoquant | gene quantification using kallisto with the Mus transcriptome
 03_kallistoquantcandidategenes | gene quantification using kallisto with only a subset of candidate genes from the Mus transcriptome
-
-## Resources
-
-I constantly referred to these webpages while optimzing this workflow.
-
-- [Explain Shell - a interactive webpage with shell argument explainations](http://explainshell.com/)
-- [Stampede User Guide](https://portal.tacc.utexas.edu/user-guides/stampede)
-- [wiki page for launcher_creator.py](https://wikis.utexas.edu/display/bioiteam/launcher_creator.py)
-- [Dhivya's RNAseq course](https://wikis.utexas.edu/display/bioiteam/Introduction+to+RNA+Seq+Course+2016)
-- [Misha's Tag-seq Workflow](https://github.com/z0on/tag-based_RNAseq/blob/master/tagSeq_processing_README.txt)
-- [Samtools Tutuorial](http://biobits.org/samtools_primer.html)
 
 ##  00_gsaf_download 
 
@@ -94,13 +94,6 @@ sbatch 01_fastqc.slurm
 Then, I moved all the output files to a separate folder, with the date pre-appended (for JA1443) or with command order "01_" pre-appended (for JA1444).
 
 ~~~ {.bash}
-### for JA1443
-mkdir ../<date>-fastqc
-mv *.html ../<date>-fastqc
-mv *.zip ../<date>-fastqc
-mv fastqc.* ../<date>-fastqc
-
-### for JA1444
 mkdir ../01_fastqc
 mv *.html ../01_fastqc
 mv *.zip ../01_fastqc
