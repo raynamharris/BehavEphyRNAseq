@@ -174,7 +174,7 @@ In a new terminal window:
 
 ~~~ {.bash}
 cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy/JA16444/
-scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/02_kallistoquant .
+scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/02_kallistoquant_largemem .
 ~~~
 
 Now, remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
