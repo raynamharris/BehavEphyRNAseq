@@ -152,19 +152,19 @@ See https://pachterlab.github.io/kallisto/manual for details.
 Create the commands file. 
 
 ~~~ {.bash}
-mkdir ../02_kallistoquant
+mkdir ../02_kallistoquant_largemem
 for R1 in *R1_001.fastq.gz; do
     R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
     samp=$(basename $R1 _R1_001.fastq.gz)
     echo $R1 $R2 $samp
-    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../02_kallistoquant/${samp} $R1 $R2" >> 02_kallistoquant.cmds
+    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../02_kallistoquant_largemem/${samp} $R1 $R2" >> 02_kallistoquant.cmds
 done
 ~~~
 
-Create the launcher script and run. 
+Create the launcher script and run. **Note**: I actually had to many files to run this on the largemem and stay within the max cores limits, so this was submitted as two jobs. 
 
 ~~~ {.bash}
-launcher_creator.py -t 1:00:00 -j 02_kallistoquant.cmds -n kallistoquant -l 02_kallistoquant.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+launcher_creator.py -t 1:00:00 -j 02_kallistoquant.cmds -n kallistoquant -l 02_kallistoquant.slurm -A NeuroEthoEvoDevo -q largemem -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
 sbatch 02_kallistoquant.slurm
 ~~~
 
