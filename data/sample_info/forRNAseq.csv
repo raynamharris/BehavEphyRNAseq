@@ -1,78 +1,78 @@
 Tube,RNAseqID,Paradigm,Mouse,Behavior,E.phy,Punch,Slice,best.location,jobnumber,Random
-AET,101-DG-4,Maddy + Punch,15-100,None,None,DG,4,1,JA16---,1
-KX,143C-CA1-1,Training + Training,15-143C,Good,Yes,CA1,1,1,JA16---,2
-LV,144B-CA1-1,Yoked + Conflict,15-144B,Good,Yes,CA1,1,1,JA16---,3
-SR,146C-DG-4,Training + Training,15-146C,Good,Yes,DG,4,74,JA16---,4
-WS,148-CA1-2,No Training,15-148,Cage,Yes,CA1,2,77,JA16---,5
-JJ,143A-CA1-1,Training + Conflict,15-143A,Good,Yes,CA1,1,1,JA16---,6
-AFA,100-CA1-1,Maddy + Dissociate,15-101,None,None,CA1,1,1,JA16---,7
-ABA,148B-CA3-4,Yoked + Conflict,15-148B,Good,Yes,CA3,4,75,JA16---,8
-AEH,100-CA3-2,Maddy + Punch,15-100,None,None,CA3,2,1,JA16---,9
-AFO,101-DG-3,Maddy + Dissociate,15-101,None,None,DG,3,1,JA16---,10
-AFK,100-CA1-3,Maddy + Dissociate,15-101,None,None,CA1,3,1,JA16---,11
-ZN,148A-CA3-3,Training + Conflict,15-148A,Good,Yes,CA3,3,75,JA16---,12
-WC,147-CA3-4,No Training,15-147,Cage,Yes,CA3,4,75,JA16---,13
-OP,145B-CA1-1,Yoked + Conflict,15-145B,Good,Yes,CA1,1,75,JA16---,14
-WW,148-DG-2,No Training,15-148,Cage,Yes,DG,2,77,JA16---,15
-AFC,100-CA3-1,Maddy + Dissociate,15-101,None,None,CA3,1,1,JA16---,16
-YM,147D-DG-1,Yoked + Training,15-147D,Good,Yes,DG,1,74,JA16---,17
-MU,144D-CA3-2,Yoked + Training,15-144D,Good,Yes,CA3,2,2,JA16---,18
-KO,143D-DG-3,Yoked + Training,15-143D,Good,Yes,DG,3,3,JA16---,19
-AEJ,101-DG-2,Maddy + Punch,15-100,None,None,DG,2,1,JA16---,20
-NH,144C-CA1-2,Training + Training,15-144C,Good,Yes,CA1,2,2,JA16---,21
-YQ,147D-CA1-1,Yoked + Training,15-147D,Good,Yes,CA1,1,74,JA16---,22
-RS,146A-CA1-2,Training + Conflict,15-146A,Good,Yes,CA1,2,75,JA16---,23
-QO,146B-CA3-2,Yoked + Conflict,15-146B,Good,Yes,CA3,2,75,JA16---,24
-RM,146A-CA3-2,Training + Conflict,15-146A,Good,Yes,CA3,2,75,JA16---,25
-XE,147C-DG-3,Training + Training,15-147C,Good,Yes,DG,3,75,JA16---,26
-YI,147D-CA3-1,Yoked + Training,15-147D,Good,Yes,CA3,1,74,JA16---,27
-RJ,146A-DG-2,Training + Conflict,15-146A,Good,Yes,DG,2,75,JA16---,28
-OS,145B-CA3-1,Yoked + Conflict,15-145B,Good,Yes,CA3,1,75,JA16---,29
-AFF ,100-CA1-2,Maddy + Dissociate,15-101,None,None,CA1,2,1,JA16---,30
-AER,101-CA3-4,Maddy + Punch,15-100,None,None,CA3,4,1,JA16---,31
-NN,144C-DG-2,Training + Training,15-144C,Good,Yes,DG,2,2,JA16---,32
-LE,143C-CA3-1,Training + Training,15-143C,Good,Yes,CA3,1,1,JA16---,33
-JY ,143B-CA1-1,Yoked + Conflict,15-143B,Good,Yes,CA1,1,1,JA16---,34
-NK,144C-CA3-2,Training + Training,15-144C,Good,Yes,CA3,2,2,JA16---,35
-TC,146D-CA1-3,Yoked + Training,15-146D,Good,Yes,CA1,3,74,JA16---,36
-AFR,101-CA3-4,Maddy + Dissociate,15-101,None,None,CA3,4,1,JA16---,37
-SB,146C-CA1-4,Training + Training,15-146C,Good,Yes,CA1,4,74,JA16---,38
-OV,145B-DG-1,Yoked + Conflict,15-145B,Good,Yes,DG,1,75,JA16---,39
-AEK,100-CA1-3,Maddy + Punch,15-100,None,None,CA1,3,1,JA16---,40
-RF,146B-DG-2,Yoked + Conflict,15-146B,Good,Yes,DG,2,75,JA16---,41
-AAA,148A-DG-3,Training + Conflict,15-148A,Good,Yes,DG,3,75,JA16---,42
-RB,146B-CA1-2,Yoked + Conflict,15-146B,Good,Yes,CA1,2,75,JA16---,43
-AFT,101-DG-4,Maddy + Dissociate,15-101,None,None,DG,4,1,JA16---,44
-NX,145A-CA3-2,Training + Conflict,15-145A,Good,Yes,CA3,2,2,JA16---,45
-XL,147C-CA1-3,Training + Training,15-147C,Good,Yes,CA1,3,75,JA16---,46
-MH,144A-DG-2,Training + Conflict,15-144A,Good,Yes,DG,2,2,JA16---,47
-AEC,100-CA3-1,Maddy + Punch,15-100,None,None,CA3,1,1,JA16---,48
-ABE,148B-CA1-4,Yoked + Conflict,15-148B,Good,Yes,CA1,4,75,JA16---,49
-JH,143A-DG-1,Training + Conflict,15-143A,Good,Yes,DG,1,1,JA16---,50
-MR,144D-CA1-2,Yoked + Training,15-144D,Good,Yes,CA1,2,2,JA16---,51
-ABM,148B-DG-4,Yoked + Conflict,15-148B,Good,Yes,DG,4,75,JA16---,52
-OA,145A-DG-2,Training + Conflict,15-145A,Good,Yes,DG,2,2,JA16---,53
-SU,146D-CA3-3,Yoked + Training,15-146D,Good,Yes,CA3,3,74,JA16---,54
-ML,144A-CA3-2,Training + Conflict,15-144A,Good,Yes,CA3,2,2,JA16---,55
-AAD,148A-CA1-3,Training + Conflict,15-148A,Good,Yes,CA1,3,75,JA16---,56
-VM,147-CA1-4,No Training,15-147,Cage,Yes,CA1,4,75,JA16---,57
-AFH,101-CA3-2,Maddy + Dissociate,15-101,None,None,CA3,2,1,JA16---,58
-MD,144B-DG-1,Yoked + Conflict,15-144B,Good,Yes,DG,1,1,JA16---,59
-LN,144B-CA3-1,Yoked + Conflict,15-144B,Good,Yes,CA3,1,1,JA16---,60
-XI,147C-CA3-3,Training + Training,15-147C,Good,Yes,CA3,3,75,JA16---,61
+AFA,101-CA1-1,Maddy + Dissociate,15-101,None,None,CA1,1,1,JA16---,7
 AEA,100-CA1-1,Maddy + Punch,15-100,None,None,CA1,1,1,JA16---,62
+AFF ,101-CA1-2,Maddy + Dissociate,15-101,None,None,CA1,2,1,JA16---,30
 AEF ,100-CA1-2,Maddy + Punch,15-100,None,None,CA1,2,1,JA16---,63
-OD,145A-CA1-2,Training + Conflict,15-145A,Good,Yes,CA1,2,2,JA16---,64
-WI,148-CA3-2,No Training,15-148,Cage,Yes,CA3,2,77,JA16---,65
-TG,146D-DG-3,Yoked + Training,15-146D,Good,Yes,DG,3,74,JA16---,66
-AEO,101-DG-3,Maddy + Punch,15-100,None,None,DG,3,1,JA16---,67
+AFK,101-CA1-3,Maddy + Dissociate,15-101,None,None,CA1,3,1,JA16---,11
+AEK,100-CA1-3,Maddy + Punch,15-100,None,None,CA1,3,1,JA16---,40
+AFC,101-CA3-1,Maddy + Dissociate,15-101,None,None,CA3,1,1,JA16---,16
+AEC,100-CA3-1,Maddy + Punch,15-100,None,None,CA3,1,1,JA16---,48
+AEH,100-CA3-2,Maddy + Punch,15-100,None,None,CA3,2,1,JA16---,9
+AFH,101-CA3-2,Maddy + Dissociate,15-101,None,None,CA3,2,1,JA16---,58
+AER,100-CA3-4,Maddy + Punch,15-100,None,None,CA3,4,1,JA16---,31
+AFR,101-CA3-4,Maddy + Dissociate,15-101,None,None,CA3,4,1,JA16---,37
+AEJ,100-DG-2,Maddy + Punch,15-100,None,None,DG,2,1,JA16---,20
 AFJ,101-DG-2,Maddy + Dissociate,15-101,None,None,DG,2,1,JA16---,68
-JS,143B-CA3-1,Yoked + Conflict,15-143B,Good,Yes,CA3,1,1,JA16---,69
-SF,146C-CA3-4,Training + Training,15-146C,Good,Yes,CA3,4,74,JA16---,70
-NB,144D-DG-2,Yoked + Training,15-144D,Good,Yes,DG,2,2,JA16---,71
-KF,143D-CA1-3,Yoked + Training,15-143D,Good,Yes,CA1,3,3,JA16---,72
-MP,144A-CA1-2,Training + Conflict,15-144A,Good,Yes,CA1,2,2,JA16---,73
-KL,143D-CA3-3,Yoked + Training,15-143D,Good,Yes,CA3,3,3,JA16---,74
-VQ,147-DG-4,No Training,15-147,Cage,Yes,DG,4,75,JA16---,75
-JZ,143B-DG-1,Yoked + Conflict,15-143B,Good,Yes,DG,1,1,JA16---,76
+AFO,101-DG-3,Maddy + Dissociate,15-101,None,None,DG,3,1,JA16---,10
+AEO,100-DG-3,Maddy + Punch,15-100,None,None,DG,3,1,JA16---,67
+AET,100-DG-4,Maddy + Punch,15-100,None,None,DG,4,1,JA16---,1
+AFT,101-DG-4,Maddy + Dissociate,15-101,None,None,DG,4,1,JA16---,44
+JJ,143A-CA1-1,Training + Conflict,15-143A,Good,Yes,CA1,1,1,JA16---,6
 JG,143A-CA3-1,Training + Conflict,15-143A,Good,Yes,CA3,1,1,JA16---,77
+JH,143A-DG-1,Training + Conflict,15-143A,Good,Yes,DG,1,1,JA16---,50
+JY ,143B-CA1-1,Yoked + Conflict,15-143B,Good,Yes,CA1,1,1,JA16---,34
+JS,143B-CA3-1,Yoked + Conflict,15-143B,Good,Yes,CA3,1,1,JA16---,69
+JZ,143B-DG-1,Yoked + Conflict,15-143B,Good,Yes,DG,1,1,JA16---,76
+KX,143C-CA1-1,Training + Training,15-143C,Good,Yes,CA1,1,1,JA16---,2
+LE,143C-CA3-1,Training + Training,15-143C,Good,Yes,CA3,1,1,JA16---,33
+KF,143D-CA1-3,Yoked + Training,15-143D,Good,Yes,CA1,3,3,JA16---,72
+KL,143D-CA3-3,Yoked + Training,15-143D,Good,Yes,CA3,3,3,JA16---,74
+KO,143D-DG-3,Yoked + Training,15-143D,Good,Yes,DG,3,3,JA16---,19
+MP,144A-CA1-2,Training + Conflict,15-144A,Good,Yes,CA1,2,2,JA16---,73
+ML,144A-CA3-2,Training + Conflict,15-144A,Good,Yes,CA3,2,2,JA16---,55
+MH,144A-DG-2,Training + Conflict,15-144A,Good,Yes,DG,2,2,JA16---,47
+LV,144B-CA1-1,Yoked + Conflict,15-144B,Good,Yes,CA1,1,1,JA16---,3
+LN,144B-CA3-1,Yoked + Conflict,15-144B,Good,Yes,CA3,1,1,JA16---,60
+MD,144B-DG-1,Yoked + Conflict,15-144B,Good,Yes,DG,1,1,JA16---,59
+NH,144C-CA1-2,Training + Training,15-144C,Good,Yes,CA1,2,2,JA16---,21
+NK,144C-CA3-2,Training + Training,15-144C,Good,Yes,CA3,2,2,JA16---,35
+NN,144C-DG-2,Training + Training,15-144C,Good,Yes,DG,2,2,JA16---,32
+MR,144D-CA1-2,Yoked + Training,15-144D,Good,Yes,CA1,2,2,JA16---,51
+MU,144D-CA3-2,Yoked + Training,15-144D,Good,Yes,CA3,2,2,JA16---,18
+NB,144D-DG-2,Yoked + Training,15-144D,Good,Yes,DG,2,2,JA16---,71
+OD,145A-CA1-2,Training + Conflict,15-145A,Good,Yes,CA1,2,2,JA16---,64
+NX,145A-CA3-2,Training + Conflict,15-145A,Good,Yes,CA3,2,2,JA16---,45
+OA,145A-DG-2,Training + Conflict,15-145A,Good,Yes,DG,2,2,JA16---,53
+OP,145B-CA1-1,Yoked + Conflict,15-145B,Good,Yes,CA1,1,75,JA16---,14
+OS,145B-CA3-1,Yoked + Conflict,15-145B,Good,Yes,CA3,1,75,JA16---,29
+OV,145B-DG-1,Yoked + Conflict,15-145B,Good,Yes,DG,1,75,JA16---,39
+RS,146A-CA1-2,Training + Conflict,15-146A,Good,Yes,CA1,2,75,JA16---,23
+RM,146A-CA3-2,Training + Conflict,15-146A,Good,Yes,CA3,2,75,JA16---,25
+RJ,146A-DG-2,Training + Conflict,15-146A,Good,Yes,DG,2,75,JA16---,28
+RB,146B-CA1-2,Yoked + Conflict,15-146B,Good,Yes,CA1,2,75,JA16---,43
+QO,146B-CA3-2,Yoked + Conflict,15-146B,Good,Yes,CA3,2,75,JA16---,24
+RF,146B-DG-2,Yoked + Conflict,15-146B,Good,Yes,DG,2,75,JA16---,41
+SB,146C-CA1-4,Training + Training,15-146C,Good,Yes,CA1,4,74,JA16---,38
+SF,146C-CA3-4,Training + Training,15-146C,Good,Yes,CA3,4,74,JA16---,70
+SR,146C-DG-4,Training + Training,15-146C,Good,Yes,DG,4,74,JA16---,4
+TC,146D-CA1-3,Yoked + Training,15-146D,Good,Yes,CA1,3,74,JA16---,36
+SU,146D-CA3-3,Yoked + Training,15-146D,Good,Yes,CA3,3,74,JA16---,54
+TG,146D-DG-3,Yoked + Training,15-146D,Good,Yes,DG,3,74,JA16---,66
+VM,147-CA1-4,No Training,15-147,Cage,Yes,CA1,4,75,JA16---,57
+WC,147-CA3-4,No Training,15-147,Cage,Yes,CA3,4,75,JA16---,13
+VQ,147-DG-4,No Training,15-147,Cage,Yes,DG,4,75,JA16---,75
+XL,147C-CA1-3,Training + Training,15-147C,Good,Yes,CA1,3,75,JA16---,46
+XI,147C-CA3-3,Training + Training,15-147C,Good,Yes,CA3,3,75,JA16---,61
+XE,147C-DG-3,Training + Training,15-147C,Good,Yes,DG,3,75,JA16---,26
+YQ,147D-CA1-1,Yoked + Training,15-147D,Good,Yes,CA1,1,74,JA16---,22
+YI,147D-CA3-1,Yoked + Training,15-147D,Good,Yes,CA3,1,74,JA16---,27
+YM,147D-DG-1,Yoked + Training,15-147D,Good,Yes,DG,1,74,JA16---,17
+WS,148-CA1-2,No Training,15-148,Cage,Yes,CA1,2,77,JA16---,5
+WI,148-CA3-2,No Training,15-148,Cage,Yes,CA3,2,77,JA16---,65
+WW,148-DG-2,No Training,15-148,Cage,Yes,DG,2,77,JA16---,15
+AAD,148A-CA1-3,Training + Conflict,15-148A,Good,Yes,CA1,3,75,JA16---,56
+ZN,148A-CA3-3,Training + Conflict,15-148A,Good,Yes,CA3,3,75,JA16---,12
+AAA,148A-DG-3,Training + Conflict,15-148A,Good,Yes,DG,3,75,JA16---,42
+ABE,148B-CA1-4,Yoked + Conflict,15-148B,Good,Yes,CA1,4,75,JA16---,49
+ABA,148B-CA3-4,Yoked + Conflict,15-148B,Good,Yes,CA3,4,75,JA16---,8
+ABM,148B-DG-4,Yoked + Conflict,15-148B,Good,Yes,DG,4,75,JA16---,52
