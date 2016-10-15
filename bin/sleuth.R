@@ -11,9 +11,9 @@ library("dplyr")
 ## set paths to sample info and kallisto data
 setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 base_dir <- "~/Github/BehavEphyRNAseq/TACC-copy/JA16444"
-sample_id <- dir(file.path(base_dir,"03_kallistoquantcandidategenes/"))
+sample_id <- dir(file.path(base_dir,"02_kallistoquant_largemem"))
 sample_id
-kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "03_kallistoquantcandidategenes/", id))
+kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "02_kallistoquant_largemem", id))
 kal_dirs
 
 ## read in the sample info, rename and revalue things
@@ -24,11 +24,6 @@ s2c$Behavior[is.na(s2c$Behavior)] <- "noAPA" ## make NA more meaningful
 s2c$E.phy[is.na(s2c$E.phy)] <- "noAPA" ## make NA more meaningful
 s2c$Conflict[is.na(s2c$Conflict)] <- "noAPA" ## make NA more meaningful
 
-### for full transcriptome analysis only
-## Not all samples had mapped reads....created a files.csv with only mapped samples, used this to filter
-#files <- read.csv("files.csv",  sep=",", header = TRUE, stringsAsFactors=FALSE)
-#s2c <- inner_join(s2c, files)
-#s2c
 
 ## add more grouping columns
 s2c$APAconflict <- as.factor(paste(s2c$APA, s2c$Conflict, sep="_")) 
@@ -42,15 +37,16 @@ s2c
 s2c <- dplyr::mutate(s2c, path = kal_dirs)
 print(s2c)
 names(s2c)
+
 ## remove bad files
-s2c <- s2c %>% filter(!grepl("147D-CA1-1", path)) 
-s2c <- s2c %>% filter(!grepl("145B-CA3-1", path)) 
+#s2c <- s2c %>% filter(!grepl("147D-CA1-1", path)) 
+#s2c <- s2c %>% filter(!grepl("145B-CA3-1", path)) 
 
 
 ## subset the data 
 noAPA <- filter(s2c, APA == "noAPA")
 withAPA <- filter(s2c, APA != "noAPA")
-CA1 <- filter(s2c, Punch == "CA1")
+CA1 <- filter(s2c, Punch == "CA1", Conflict != "noAPA")
 DG <- filter(s2c, Punch == "DG")
 CA3 <- filter(s2c, Punch == "CA3")
 conflict <- filter(s2c, Conflict == "Conflict")
@@ -63,9 +59,9 @@ conflict <- filter(s2c, Conflict == "Conflict")
 ## (1) load the kallisto processed data into the object 
 ## (2) estimate parameters for the sleuth response error measurement model and 
 ## (3) perform differential analysis (testing). On a laptop the three steps should take about 2 minutes altogether.
-so <- sleuth_prep(s2c, ~ APA)
+so <- sleuth_prep(CA1, ~ APA + Conflict)
 so <- sleuth_fit(so)
-so <- sleuth_wt(so, 'APAYoked') 
+so <- sleuth_wt(so, 'ConflictNoConflict') 
 models(so)
 sleuth_live(so)
-results_table <- sleuth_results(so, 'APAYoked')
+results_table <- sleuth_results(so, 'ConflictNoConflict')
