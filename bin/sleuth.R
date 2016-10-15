@@ -63,7 +63,7 @@ conflict <- filter(s2c, Conflict == "Conflict")
 ## (1) load the kallisto processed data into the object 
 ## (2) estimate parameters for the sleuth response error measurement model and 
 ## (3) perform differential analysis (testing). On a laptop the three steps should take about 2 minutes altogether.
-so <- sleuth_prep(s2c, ~  APA)
+so <- sleuth_prep(s2c, ~ APA)
 so <- sleuth_fit(so)
 so <- sleuth_wt(so, 'APAYoked') 
 models(so)

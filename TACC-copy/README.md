@@ -260,9 +260,55 @@ do
 done
 ~~~
 
+### 04 Trimming Reads
+
+Okay, so kallisto is awesome because you can do it on unprocessed data. But, let's clean up our reads some. 
+
+First, lets remove adapters with cutadapt.
 
 
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16444/00_rawdata
+mkdir ../04_trimmedreads
+for R1 in *R1_001.fastq.gz
+do
+    R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
+    R1trim=$(basename $R1 fastq.gz)trim.fastq.gz
+    R2trim=$(basename $R2 fastq.gz)trim.fastq.gz
+    echo $R1 $R2 $R1trim $R2trim
+    echo "cutadapt -a GATCGGAAGAGCACACGTCTGAACTCCA -A ATCGTCGGACTGTAGAACTCTGAACGTG -m 22 -o $R1trim -p $R2trim $R1 $R2" >> 04_trimreads.cmds
+done
+~~~
 
+~~~ {.bash}
+launcher_creator.py -t 2:00:00 -j 04_trimreads.cmds -n trimreads -l 04_trimreads.slurm -A NeuroEthoEvoDevo -e rayna.harris@utexas.edu
+sbatch 04_trimreads.slurm
+~~~
+
+### 04 Filter and Trimming Reads (filtrimmedreads)
+
+Okay, so kallisto is awesome because you can do it on unprocessed data. But, let's clean up our reads some. 
+
+First, lets remove adapters with cutadapt.
+
+
+~~~ {.bash}
+cd $SCRATCH/BehavEphyRNAseq/JA16444/00_rawdata
+mkdir ../04_filtrimmedreads
+for R1 in *R1_001.fastq.gz
+do
+    R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
+    R1filtrim=$(basename $R1 fastq.gz)filtrim.fastq.gz
+    R2filtrim=$(basename $R2 fastq.gz)filtrim.fastq.gz
+    echo $R1 $R2 $R1filtrim $R2filtrim
+    echo "cutadapt -q 15,10 -a GATCGGAAGAGCACACGTCTGAACTCCA -A ATCGTCGGACTGTAGAACTCTGAACGTG -m 22 -o $R1filtrim -p $R2filtrim $R1 $R2" >> 04_filtrimmedreads.cmds
+done
+~~~
+
+~~~ {.bash}
+launcher_creator.py -t 4:00:00 -j 04_filtrimmedreads.cmds -n filtrimreads -l 04_filtrimmedreads.slurm -A NeuroEthoEvoDevo -e rayna.harris@utexas.edu 
+sbatch 04_trimreads.slurm
+~~~
 
 
 
