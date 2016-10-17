@@ -8,24 +8,27 @@ library(reshape2) #@ for melting dataframe
 library(ggdendro) ## for dendrograms!!
 library(magrittr) ## to use the weird pipe
 
-## wrangle the raw wt and fmr1 dataframes ----
+## read and wrangle the data ----
 
 ## read the data 
 setwd("~/Github/BehavEphyRNAseq/data/sample_info/")
 behav <- read.csv("APA_2013-2016.csv", header=TRUE, stringsAsFactors = FALSE, na.strings = c("", "ND", "N/A"))
 str(behav)
 
-## rename columns -----
+## rename columns 
 names(behav)[18] <- "NumEntrances"
 names(behav)[23] <- "NumShock"
 names(behav)[26] <- "Speed_cm_s"
 names(behav) # check all good
 head(behav)
 
-## remove extra header rows ----
-behav <- behav %>% dplyr::filter(Year %in% c("2012", "2013", "2014", "2016", "2017"))
+## remove bad/extra rows
+behav <- behav %>% dplyr::filter(Year %in% c("2012", "2013", "2014", "2015", "2016", "2017")) ## remove extra headers
+behav <- behav %>% dplyr::filter(TrainSession != "C4?") ## remove ?C in train train animal
+behav <- behav %>% dplyr::filter(!is.na(TotalTime.s.)) ## remove file with no data
 
-## make strings factors ----
+
+## make characters either factors or numbers, as appropriate
 cols = c(1:4,6:14)
 cols2 = c(15:58)
 behav[,cols] %<>% lapply(function(x) as.factor(as.character(x)))
@@ -40,41 +43,369 @@ behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained"))
 behav$TrainSequence[is.na(behav$TrainSequence)] <- "untrained" ## make NA more meaningful
 behav$TrainSequence <- as.factor(behav$TrainSequence)
 
-## create columns for genotype*APA, genotype*APA*session, and genotype*APA*session*IND
-behav$genoAPA <- as.factor(paste(behav$Genotype,behav$TrainSequence, sep="_"))
+## create combinatorial factor columns 
+behav$APA <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
+behav$APA <- revalue(behav$APA, c("train_trained" = "trained")) 
+behav$APA <- revalue(behav$APA, c("untrained_untrained" = "untrained")) 
+behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "trained_conflict")) 
+behav$APA <- revalue(behav$APA, c("train-conflict_yoked" = "yoked_conflict")) 
+behav$APA <- revalue(behav$APA, c("train-train_trained" = "trained_trained")) 
+behav$APA <- revalue(behav$APA, c("train-train_yoked" = "yoked_trained")) 
+levels(behav$APA)
+behav$APA <- factor(behav$APA, 
+                        levels = c("untrained", "yoked_trained", 
+                                   "yoked_conflict", "trained", 
+                                   "trained_trained", "trained_conflict"))
+
+behav$genoAPA <- as.factor(paste(behav$Genotype,behav$APA, sep="_"))
+behav$genoAPA <- factor(behav$genoAPA, 
+                        levels = c("WT_untrained", "WT_trained", 
+                                   "WT_yoked_trained", "WT_trained_trained", 
+                                   "WT_yoked_conflict", "WT_trained_conflict", 
+                                   "FMR1-KO_untrained", "FMR1-KO_trained",
+                                   "FMR1-KO_yoked_trained", "FMR1-KO_trained_trained",
+                                   "FMR1-KO_yoked_conflict", "FMR1-KO_trained_conflict"))
+behav$genoAPA
 behav$genoAPAsession  <- as.factor(paste(behav$genoAPA,behav$TrainSession, sep="_"))
-behav$genoAPAsessionInd <- as.factor(paste(behav$genoAPAsession,behav$ID, sep="_"))
-head(behav)
+behav$genoAPAsessionDay  <- as.factor(paste(behav$genoAPAsession,behav$Day, sep="_"))
+behav$genoAPAsessionDayInd <- as.factor(paste(behav$genoAPAsessionDay,behav$ID, sep="_"))
 
+behav$TrainSessionCombo <- behav$TrainSession
+levels(behav$TrainSessionCombo)
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C1" = "T4_C1")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T4" = "T4_C1")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C2" = "T5_C2")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T5" = "T5_C2")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C3" = "T6_C3")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T6" = "T6_C3")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T7" = "T+_C+")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T8" = "T+_C+"))
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C4" = "T+_C+"))
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C5" = "T+_C+")) 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C6" = "T+_C+")) 
+levels(behav$TrainSessionCombo)
+behav$TrainSessionCombo <- factor(behav$TrainSessionCombo, 
+                        levels = c("Hab", "T1","T2","T3","Retest",
+                                   "T4_C1","T5_C2","T6_C3","T+_C+","Retention"))
 
-## reorders dataframe ----
-behav <- behav[c(2,59:61,3:13,1,14:58)]  
+behav$TrainSessionComboDay <- as.factor(paste(behav$TrainSessionCombo, behav$Day, sep="_"))
+
+behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionComboDay, sep="_"))
+behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, sep="_"))
+
+## reorders dataframe 
+names(behav)
+behav <- behav[c(2,59:67,3:9,1,10:58)]  
 names(behav)
 
-### melt the wtfmr1 df to make long for graphics
-behav_long <- melt(behav, id=c("ID","genoAPA", "genoAPAsession", "genoAPAsessionInd", 
-                               "Genotype", "TrainProtocol", "TrainSequence","TrainGroup",
-                               "Day", "TrainSession", "ShockOnOff", "PairedPartner",
-                               "Experimenter", "Housing", "TestLocation", "Year", "filename"))
-str(behav_long)
-head(behav_long)
+## subset the data -----
+maddy <- behav %>% filter(Experimenter == "Maddy") 
+jma <- behav %>% filter(Experimenter != "Maddy") 
+wt <- behav %>% filter(Genotype == "WT")
+frmr1 <- behav %>% filter(Genotype != "WT")  
 
-### Beahvior ggplots!!! -----
-## create the color palette
-FentonPalette <- c('black','grey50','red','darkorange')
+
+### melt the wtfmr1 df to make long for graphics ----
+behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay",
+                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay",
+                               "TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                               "ShockOnOff","Year","PairedPartner","Experimenter",
+                               "Housing","TestLocation","Day","filename", "pair1", "pair2"))
+behav_long[21] <- NULL  ## some of the plots can't handle day
+behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% droplevels()
+str(behav_long)
+
+### widen the long df and then widen by day and session -----
+behav_long$measure <- as.factor(paste(behav_long$TrainSessionCombo, behav_long$variable, sep="_"))
+behav_long_wide <- dplyr::select(behav_long, ID, Genotype, APA, genoAPA, measure, value)
+behav_long_wide <- dcast(behav_long_wide, ID + Genotype + APA + genoAPA ~ measure, value.var= "value", fun.aggregate=mean)
+
+maddy_long_wide <- behav_long %>% 
+  filter(Experimenter == "Maddy") %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", "T5_C2", "T6_C3", "Retention", "Retest")) %>% 
+  dplyr::select(ID, Genotype, Year, APA, genoAPA, TrainSequence, TrainGroup, measure, value) %>%
+  droplevels()
+maddy_long_wide <- dcast(maddy_long_wide, ID + Genotype + Year + APA + genoAPA + TrainSequence + TrainGroup ~ measure, value.var= "value", fun.aggregate=mean)
+head(maddy_long_wide)
+levels(maddy_long_wide$ID)
+levels(maddy_long_wide$Genotype)
+levels(maddy_long_wide$Year)
+levels(maddy_long_wide$APA)
+levels(maddy_long_wide$genoAPA)
+levels(maddy_long_wide$TrainSequence)
+levels(maddy_long_wide$TrainGroup)
+
+## make a df to look at number of shock actually received by the yoked animals -----
+names(behav)
+yoked <- behav %>% 
+  select(pair1, pair2, TrainGroup, Experimenter, NumShock, NumEntrances) %>% 
+  filter(Experimenter == "Maddy")
+yokedpair <- behav %>% 
+  select(pair1, pair2, TrainGroup, Experimenter, NumShock, NumEntrances) %>% 
+  filter(Experimenter == "Maddy") 
+
+## rename columns 
+names(yoked)[1] <- "train"
+names(yoked)[2] <- "yoke"
+names(yokedpair)[1] <- "yoke"
+names(yokedpair)[2] <- "train"
+
+## join an caluclate some values
+yokedyokedpair <- full_join(yoked, yokedpair, by = "yoke")
+yokedyokedpair <- yokedyokedpair %>%  
+  mutate(shockdiff = NumShock.x - NumShock.y) %>%  
+  mutate(entrdiff = NumEntrances.x - NumEntrances.y)
+
+## create the color palettes ----
+
+## for maddy and other? palette
+#543005 brown wt train conflict
+#8c510a brown wt train train
+#bf812d brown wt train
+#dfc27d brown wt untrained
+#80cdc1 blue frmr1 untrained
+#35978f blue frmr1 train 
+#01665e blue frmr1 train train
+#003c30 blue frmr1 train conflict
+MaddyPalette <- (values=c("#dfc27d", "#bf812d","#8c510a", "#543005", "#80cdc1","#35978f","#01665e", "#003c30"))
+OtherPalette <- (values=c( "#543005", "#8c510a","#003c30","#01665e"))
+
+## for APA palette
+#40004b train conflict
+#762a83 train train
+#af8dc3 train 
+#7fbf7b untrained
+#1b7837 untrained trained
+#00441b untrained conflict
+APApalette <- (values=c("#7fbf7b","#1b7837","#00441b","#af8dc3", "#762a83","#40004b"))
+APApaletteSlim <- (values=c("#1b7837","#00441b","#762a83","#40004b"))
+
+## using the same red black orange grey scale JMA used
+JMPalette <- c('black','grey50','red','darkorange')
 WTPalette <- c('black','red')
 FMR1Palette <- c('grey50','darkorange')
 
-## basic format to behavior of groups by session stat smooth
+## ggplots of probably being in shock zone!!! -----
+levels(behav$TrainSessionCombo)
+maddy %>% 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Probability of being in the shock zone") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9,10),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retetst", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9" ="T+_C+", 
+                              "10" = "Retention")) +
+  facet_wrap(~Genotype+Year) 
 
-## this plot is no longer legit because of the retention/retest problem
-behav %>%
-  ggplot(aes(as.numeric(x=TrainSession), y=pTimeTarget, color=genoAPA)) + 
-  stat_smooth() + theme_bw() 
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  scale_y_continuous(name="Probability of being in the shock zone") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "T4/C1",
+                              "6" = "T5/C2", "7" = "T6/C3")) +
+  facet_wrap(~Genotype+Year) 
 
-behav$Experimenter
-behav$TrainSession
-behav %>% filter(Experimenter == "Maddy") %>%
-  droplevels() %>%
-  ggplot(aes(x=TrainSession, y=pTimeTarget, color=genoAPA)) + 
-  geom_boxplot() + theme_bw() 
+behav %>% 
+  filter(TrainSessionCombo %in% c("T3"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=pTimeTarget, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApalette) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Probability of being in the shock zone") 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T4_C1"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=pTimeTarget, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApaletteSlim) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Probability of being in the shock zone") 
+
+
+## ggpots of time to 1st entrance ----
+maddy %>% 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time1stEntr, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Time to 1st Entrance") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9,10),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retetst", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9" ="T+_C+", 
+                              "10" = "Retention")) +
+  facet_wrap(~Genotype+Year) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time1stEntr, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  scale_y_continuous(name="Time to 1st Entrance") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "T4/C1",
+                              "6" = "T5/C2", "7" = "T6/C3")) +
+  facet_wrap(~Genotype+Year) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T3"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=Time1stEntr, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApalette) +
+  facet_wrap(~Genotype + Year) +
+  scale_y_continuous(name="Time to 1st Entrance") 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T4_C1"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=Time1stEntr, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApaletteSlim) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Time to 1st Entrance") 
+
+
+## ggpots of TimeTarget ----
+maddy %>% 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TimeTarget, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Time spent in the shock zone") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9,10),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retetst", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9" ="T+_C+", 
+                              "10" = "Retention")) +
+  facet_wrap(~Genotype+Year) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TimeTarget, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  scale_y_continuous(name="Time spent in the shock zone") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "T4/C1",
+                              "6" = "T5/C2", "7" = "T6/C3")) +
+  facet_wrap(~Genotype+Year) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T3"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=TimeTarget, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApalette) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Time spent in the shock zone") 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T4_C1"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=TimeTarget, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApaletteSlim) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Time spent in the shock zone") 
+
+
+## ggpots of time to 2nd entrance ----
+maddy %>% 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Time to 2nd Entrance") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9,10),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retetst", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9" ="T+_C+", 
+                              "10" = "Retention")) +
+  facet_wrap(~Genotype+Year) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
+  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  scale_y_continuous(name="Time to 2nd Entrance") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "T4/C1",
+                              "6" = "T5/C2", "7" = "T6/C3")) +
+  facet_wrap(~Genotype+Year) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T3"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=Time2ndEntr, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApalette) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Time to 2nd Entrance") 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("T4_C1"))  %>%  droplevels() %>%
+  ggplot(aes((x=TrainSessionCombo), y=Time2ndEntr, fill=APA)) + 
+  geom_boxplot() + theme_bw() + scale_fill_manual(values=APApaletteSlim) +
+  facet_wrap(~Genotype+Year) +
+  scale_y_continuous(name="Time to 2nd Entrance") 
+
+
+## Plots of time in seconds ----
+behav_long %>% 
+  filter(grepl("Time", variable)) %>% 
+  filter(!grepl("TotalTime|pTime|MaxTimeAvoid", variable)) %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4/C1", "T5/C2", "T6/C3")) %>% 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=value, color=genoAPA)) +
+  stat_smooth() + facet_wrap(~variable, scales = "free_y") +
+  scale_y_continuous(name="Time (s)") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "T4/C1", "6" = "T5/C2", 
+                              "7" = "T6/C3")) +
+  theme_bw() 
+
+
+## correlation matrices and plots ----
+
+## first, make the data a matrix with genoAPAsessionInd as the row names
+behav_matrix <- behav   #create new dataframe
+rownames(behav_matrix) <- behav_matrix$genoAPAsessionDayInd     # set $genoAPAsessionInd as rownames
+names(behav_matrix)
+behav_matrix <- behav_matrix[-c(1:25)] #delete all non-numeric columns and TotalTime
+head(behav_matrix)
+str(behav_matrix)
+
+## next, compute a correlation matrix and melt
+behav_matrix_cormat <- round(cor(behav_matrix),2) # compute correlations
+
+##  some necessary functions
+reorder_cormat <- function(cormat){
+  # Use correlation between variables as distance
+  dd <- as.dist((1-cormat)/2)
+  hc <- hclust(dd)
+  cormat <-cormat[hc$order, hc$order]
+}
+# Get lower and lower triangle of the correlation matrix
+get_lower_tri<-function(cormat){
+  cormat[upper.tri(cormat)] <- NA
+  return(cormat)
+}
+get_upper_tri <- function(cormat){
+  cormat[lower.tri(cormat)]<- NA
+  return(cormat)
+}
+
+## calculate the corerelation matrix
+cormat <- reorder_cormat(behav_matrix_cormat)
+lower_tri <- get_lower_tri(cormat)
+melted_cormat <- melt(lower_tri, na.rm = TRUE)
+ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+  geom_tile(color = "white")+
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal()+ # minimal theme
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+                                   size = 12, hjust = 1))+
+  coord_fixed() 
