@@ -7,6 +7,7 @@ library(ggplot2) ## for awesome plots!
 library(reshape2) #@ for melting dataframe
 library(ggdendro) ## for dendrograms!!
 library(magrittr) ## to use the weird pipe
+library(gplots)
 
 ## read and wrangle the data ----
 
@@ -94,12 +95,14 @@ behav$TrainSessionCombo <- factor(behav$TrainSessionCombo,
 
 behav$TrainSessionComboDay <- as.factor(paste(behav$TrainSessionCombo, behav$Day, sep="_"))
 
+behav$genoAPAsessionCombo <- as.factor(paste(behav$genoAPA, behav$TrainSessionCombo, sep="_"))
+
 behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionComboDay, sep="_"))
 behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, sep="_"))
 
 ## reorders dataframe 
 names(behav)
-behav <- behav[c(2,59:68,3:9,1,10:58)]  
+behav <- behav[c(2,59:69,3:9,1,10:58)]  
 names(behav)
 
 ## subset the data -----
@@ -108,23 +111,7 @@ jma <- behav %>% filter(Experimenter != "Maddy")
 wt <- behav %>% filter(Genotype == "WT")
 frmr1 <- behav %>% filter(Genotype != "WT")  
 
-
-### melt the wtfmr1 df to make long for graphics ----
-behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay",
-                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay",
-                               "TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
-                               "ShockOnOff","Year","PairedPartner","Experimenter",
-                               "Housing","TestLocation","Day","filename", "pair1", "pair2"))
-behav_long[21] <- NULL  ## some of the plots can't handle day
-behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% droplevels()
-str(behav_long)
-
-### widen the long df and then widen by day and session -----
-behav_long$measure <- as.factor(paste(behav_long$TrainSessionCombo, behav_long$variable, sep="_"))
-behav_long_wide <- dplyr::select(behav_long, ID, Genotype, APA, genoAPA, measure, value)
-behav_long_wide <- dcast(behav_long_wide, ID + Genotype + APA + genoAPA ~ measure, value.var= "value", fun.aggregate=mean)
-
-## make a df to look at number of shock actually received by the yoked animals -----
+## make a df to look at number of shock actually received by the yoked animals 
 names(behav)
 yoked <- behav %>% 
   select(pair1, pair2, TrainGroup, Experimenter, NumShock, NumEntrances) %>% 
@@ -132,20 +119,18 @@ yoked <- behav %>%
 yokedpair <- behav %>% 
   select(pair1, pair2, TrainGroup, Experimenter, NumShock, NumEntrances) %>% 
   filter(Experimenter == "Maddy") %>% droplevels()
-
 ## rename columns 
 names(yoked)[1] <- "train"
 names(yoked)[2] <- "yoke"
 names(yokedpair)[1] <- "yoke"
 names(yokedpair)[2] <- "train"
-
 ## join an caluclate some values
 yokedyokedpair <- full_join(yoked, yokedpair, by = "yoke")
 yokedyokedpair <- yokedyokedpair %>%  
   mutate(shockdiff = NumShock.x - NumShock.y) %>%  
   mutate(entrdiff = NumEntrances.x - NumEntrances.y)
 
-## create the color palettes ----
+## create the ggplot color palettes ----
 
 ## for maddy and other? palette
 #543005 brown wt train conflict
@@ -157,15 +142,14 @@ yokedyokedpair <- yokedyokedpair %>%
 #01665e blue frmr1 train train
 #003c30 blue frmr1 train conflict
 MaddyPalette <- (values=c("#dfc27d", "#bf812d","#8c510a", "#543005", "#80cdc1","#35978f","#01665e", "#003c30"))
-OtherPalette <- (values=c( "#543005", "#8c510a","#003c30","#01665e"))
 
 ## for APA palette
-#40004b train conflict
-#762a83 train train
-#af8dc3 train 
-#7fbf7b untrained
-#1b7837 untrained trained
-#00441b untrained conflict
+#40004b purple train conflict
+#762a83 purple train train
+#af8dc3 purpletrain 
+#7fbf7b green untrained
+#1b7837 greenuntrained trained
+#00441b green untrained conflict
 APApalette <- (values=c("#7fbf7b","#1b7837","#00441b","#af8dc3", "#762a83","#40004b"))
 APApaletteSlim <- (values=c("#1b7837","#00441b","#762a83","#40004b"))
 
@@ -174,12 +158,16 @@ JMPalette <- c('black','grey50','red','darkorange')
 WTPalette <- c('black','red')
 FMR1Palette <- c('grey50','darkorange')
 
-## ggplots of probably being in shock zone!!! -----
+## ggplots across sessions!! -----
+
+## ggplots of time in target
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
-  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  stat_smooth() + theme_bw() +
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="Probability of being in the shock zone") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
@@ -188,12 +176,14 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~genoYear) 
 
-## ggpots of TimeTarget ----
+## ggpots of TimeTarget 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=TimeTarget, color=APA)) + 
-  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  stat_smooth() + theme_bw() + 
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="Time spent in the shock zone") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
@@ -202,13 +192,14 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~genoYear) 
 
-
-## ggpots of time to 1st entrance ----
+## ggpots of time to 1st entrance
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time1stEntr, color=APA)) + 
-  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  stat_smooth() + theme_bw() + 
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="Time to 1st Entrance") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
@@ -217,13 +208,14 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~genoYear) 
 
-
-## ggpots of time to 2nd entrance ----
+## ggpots of time to 2nd entrance 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
-  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  stat_smooth() + theme_bw() + 
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="Time to 2nd Entrance") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
@@ -232,12 +224,14 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~genoYear) 
 
-## num entrances ----
+## num entrances 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=NumEntrances, color=APA)) + 
-  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  stat_smooth() + theme_bw() + 
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="Number of Entrances") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
@@ -246,12 +240,14 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~ genoYear) 
 
-## pTimeOpp ----
+## pTimeOpp 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeOPP, color=APA)) + 
-  stat_smooth() + theme_bw() + scale_colour_manual(values=APApalette) + 
+  stat_smooth() + theme_bw() + 
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="pTimeOPP") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
@@ -260,17 +256,53 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~ genoYear)
 
-## correlation matrices and plots ----
+## heatmap of data (not correlations, but raw/scaled data) ----
+### melt to make long 
+behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
+                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay",
+                               "TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                               "ShockOnOff","Year","PairedPartner","Experimenter",
+                               "Housing","TestLocation","filename", "pair1", "pair2"))
+behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% droplevels()
+behav_long <- filter(behav_long, !grepl("Retention|Retest", genoAPAsession )) %>% droplevels()
+str(behav_long)
+
+## now widen then lengthen to get group averages
+behav_long_genoAPA <- dcast(behav_long, genoAPA ~ variable, value.var= "value", fun.aggregate=mean)
+head(behav_long_genoAPA)
+
+## scale columns
+rownames(behav_long_genoAPA) <- behav_long_genoAPA$genoAPA    # set $genoAPAsession as rownames
+behav_long_genoAPA[1] <- NULL
+behav_long_genoAPA <- scale(behav_long_genoAPA)
+head(behav_long_genoAPA)
+
+## heatmap clusterd
+heatpalette <- colorRampPalette(c("#67a9cf","#f7f7f7","#ef8a62"))(n = 100)
+heatmap.2(behav_long_genoAPA,
+          notecol="black",      # change font color of cell labels to black
+          density.info="none",  # turns off density plot inside color legend
+          trace="none",         # turns off trace lines inside the heat map
+          margins =c(9,13),     # widens margins around plot
+          col=heatpalette,       # use on color palette defined earlier
+          dendrogram="both",     # only draw a row dendrogram
+          #scale = c("column"),
+          RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b",
+                                   "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"))
+
+## correlation matrix and plots ----
+ggplot(behav_long_genoAPA, aes(x = genoAPA, y = variable, fill = value)) + 
+  geom_tile() + coord_equal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ## first, make the data a matrix with genoAPAsessionInd as the row names
 behav_matrix <- behav   #create new dataframe
 rownames(behav_matrix) <- behav_matrix$genoAPAsessionDayInd     # set $genoAPAsessionInd as rownames
 names(behav_matrix)
-behav_matrix <- behav_matrix[-c(1:25)] #delete all non-numeric columns and TotalTime
+behav_matrix <- behav_matrix[-c(1:27)] #delete all non-numeric columns and p.miss and TotalTime
 head(behav_matrix)
 str(behav_matrix)
 
-## next, compute a correlation matrix and melt
 behav_matrix_cormat <- round(cor(behav_matrix),2) # compute correlations
 
 ##  some necessary functions
