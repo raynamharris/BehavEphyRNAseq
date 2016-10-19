@@ -149,7 +149,7 @@ FMR1Palette <- c('grey50','darkorange')
 
 ## ggplots across sessions!! -----
 
-## ggpots of TimeTarget 
+## ggpots of TimeTarget - saved as beahv_TimeTarget_6 or _3
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
@@ -181,7 +181,7 @@ behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear) 
 
-## ggpots of time to 2nd entrance 
+## ggpots of time to 2nd entrance - saved as beahv_Time2ndEntrance_6 or _3
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
@@ -213,7 +213,7 @@ behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear)
 
-## num entrances 
+## num entrances - saved as beahv_NumEntrance_6 or _3
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
@@ -245,7 +245,7 @@ behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear)
 
-## pTimeOpp 
+## pTimeOpp - saved as beahv_pTimeOpp_6 or _3
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
@@ -265,11 +265,11 @@ behav %>%
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TotalPath.m., color=APA)) + 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeOPP, color=APA)) + 
   stat_smooth() + theme_bw() +
   theme(panel.grid.minor = element_blank()) + 
   scale_colour_manual(values=APApaletteSlim) + 
-  scale_y_continuous(name="Total Path") + 
+  scale_y_continuous(name="pTimeOPP") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
@@ -277,37 +277,6 @@ behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear)
 
-## pTimeOpp 
-behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TotalPath.m., color=APA)) + 
-  stat_smooth() + theme_bw() + 
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApalette) + 
-  scale_y_continuous(name="Total Path") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "T4/C1",
-                              "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_wrap(~ genoYear)
-
-behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
-  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Speed1stEntr.cm.s., color=APA)) + 
-  stat_smooth() + theme_bw() +
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApaletteSlim) + 
-  scale_y_continuous(name="Speed to 1st Entrance") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
-                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear)
 
 ## heatmap of data (not correlations, but raw/scaled data) ----
 ### melt to make long 
@@ -330,7 +299,7 @@ behav_long_genoAPA[1] <- NULL
 behav_long_genoAPA <- scale(behav_long_genoAPA)
 head(behav_long_genoAPA)
 
-## heatmap clusterd
+## heatmap clusterd - saved as behav_heatmap.png
 heatpalette <- colorRampPalette(c("#67a9cf","#f7f7f7","#ef8a62"))(n = 100)
 heatmap.2(behav_long_genoAPA,
           notecol="black",      # change font color of cell labels to black
@@ -339,7 +308,6 @@ heatmap.2(behav_long_genoAPA,
           margins =c(9,13),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
-          #scale = c("column"),
           RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b",
                                    "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"))
 
