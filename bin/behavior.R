@@ -181,22 +181,6 @@ behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear) 
 
-## ggpots of time to 1st entrance
-behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time1stEntr, color=APA)) + 
-  stat_smooth() + theme_bw() + 
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApalette) + 
-  scale_y_continuous(name="Time to 1st Entrance") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "T4/C1",
-                              "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_wrap(~genoYear) 
-
 ## ggpots of time to 2nd entrance 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
@@ -212,6 +196,22 @@ behav %>%
                               "4" = "T3", "5" = "T4/C1",
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~genoYear) 
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
+  stat_smooth() + theme_bw() +
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Time to 2nd Entrance") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear)
 
 ## num entrances 
 behav %>% 
@@ -229,6 +229,22 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~ genoYear) 
 
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=NumEntrances, color=APA)) + 
+  stat_smooth() + theme_bw() +
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Number of Entrances") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear)
+
 ## pTimeOpp 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
@@ -245,6 +261,54 @@ behav %>%
                               "6" = "T5/C2", "7" = "T6/C3")) +
   facet_wrap(~ genoYear)
 
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TotalPath.m., color=APA)) + 
+  stat_smooth() + theme_bw() +
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Total Path") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear)
+
+## pTimeOpp 
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TotalPath.m., color=APA)) + 
+  stat_smooth() + theme_bw() + 
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApalette) + 
+  scale_y_continuous(name="Total Path") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "T4/C1",
+                              "6" = "T5/C2", "7" = "T6/C3")) +
+  facet_wrap(~ genoYear)
+
+behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Speed1stEntr.cm.s., color=APA)) + 
+  stat_smooth() + theme_bw() +
+  theme(panel.grid.minor = element_blank()) + 
+  scale_colour_manual(values=APApaletteSlim) + 
+  scale_y_continuous(name="Speed to 1st Entrance") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear)
+
 ## heatmap of data (not correlations, but raw/scaled data) ----
 ### melt to make long 
 behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
@@ -253,7 +317,7 @@ behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAses
                                "ShockOnOff","Year","PairedPartner","Experimenter",
                                "Housing","TestLocation","filename", "pair1", "pair2"))
 behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% droplevels()
-behav_long <- filter(behav_long, !grepl("Retention|Retest", genoAPAsession )) %>% droplevels()
+#behav_long <- filter(behav_long, !grepl("Retention|Retest", genoAPAsession )) %>% droplevels()
 str(behav_long)
 
 ## now widen then lengthen to get group averages
