@@ -149,38 +149,6 @@ FMR1Palette <- c('grey50','darkorange')
 
 ## ggplots across sessions!! -----
 
-## ggplots of probability time in target
-behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
-  stat_smooth() + theme_bw() +
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApalette) + 
-  scale_y_continuous(name="Probability of being in the shock zone") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "T4/C1",
-                              "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_wrap(~genoYear) 
-
-behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
-  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
-  stat_smooth() + theme_bw() +
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApaletteSlim) + 
-  scale_y_continuous(name="Probability of being in the shock zone") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
-                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear) 
-
 ## ggpots of TimeTarget 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
