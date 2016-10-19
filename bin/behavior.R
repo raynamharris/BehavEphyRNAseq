@@ -132,17 +132,6 @@ yokedyokedpair <- yokedyokedpair %>%
 
 ## create the ggplot color palettes ----
 
-## for maddy and other? palette
-#543005 brown wt train conflict
-#8c510a brown wt train train
-#bf812d brown wt train
-#dfc27d brown wt untrained
-#80cdc1 blue frmr1 untrained
-#35978f blue frmr1 train 
-#01665e blue frmr1 train train
-#003c30 blue frmr1 train conflict
-MaddyPalette <- (values=c("#dfc27d", "#bf812d","#8c510a", "#543005", "#80cdc1","#35978f","#01665e", "#003c30"))
-
 ## for APA palette
 #40004b purple train conflict
 #762a83 purple train train
