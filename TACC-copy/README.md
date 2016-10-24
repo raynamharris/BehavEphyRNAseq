@@ -223,12 +223,6 @@ launcher_creator.py -t 1:00:00 -q normal -j 03_kallistoquantcandidategenes.cmds 
 sbatch 03_kallistoquantcandidategenes.slurm
 ~~~
 
-Create a file with all the sample names. This will be used later in R to create a sample information sheet that tells us all about the animal and the 
-
-~~~ {.bash}
-ls > sample.csv
-~~~
-
 Now, save the data locally
 
 In a new terminal window:
@@ -332,13 +326,44 @@ launcher_creator.py -t 1:00:00 -j 05_kallistoquant_L003.cmds -n kallistoquant -l
 sbatch 05_kallistoquant_L003.slurm
 ~~~
 
+
+### 06_kallistoquantcandidategenes
+
+Quanitify gene expression with kallisto quant using the "candidate genes transcriptome".
+
+Create the directory for storing the output. 
+
+~~~ {.bash}
+mkdir ../06_kallistoquantcandidategenes
+~~~
+
+Create the commands file. 
+
+~~~ {.bash}
+for R1 in *R1_001.filtrim.fastq.gz
+do
+    R2=$(basename $R1 R1_001.filtrim.fastq.gz)R2_001.filtrim.fastq.gz
+    samp=$(basename $R1 _R1_001.filtrim.fastq.gz)
+    echo $R1 $R2 $samp
+    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM7.transcripts_candidategenes_kallisto.idx  -o ../06_kallistoquantcandidategenes/${samp} $R1 $R2" >> 06_kallistoquantcandidategenes.cmds
+done
+~~~
+
+Create the launcher script and run. 
+
+~~~ {.bash}
+launcher_creator.py -t 1:00:00 -q normal -j 06_kallistoquantcandidategenes.cmds -n kallistoquantcandidategenes -l 06_kallistoquantcandidategenes.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+sbatch 06_kallistoquantcandidategenes.slurm
+~~~
+
 Now, save the data locally
 
 In a new terminal window:
 
 ~~~ {.bash}
 cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy/JA16444/
-scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/02_kallistoquant_largemem .
+scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/06_kallistoquantcandidategenes .
+cd 06_kallistoquantcandidategenes
 ~~~
 
 Now, remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
@@ -352,7 +377,7 @@ do
 done
 ~~~
 
-Then, replace the `_` with `-`
+To match the folder name with the sample name, we must replace the `_` with `-`.
 
 ~~~ {.bash}
 for file in *
@@ -362,6 +387,12 @@ do
     mv $file $sample
 done
 ~~~
+
+
+
+
+
+
 
 
 
