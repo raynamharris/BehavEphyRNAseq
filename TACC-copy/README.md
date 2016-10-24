@@ -260,30 +260,6 @@ do
 done
 ~~~
 
-### 04 Trimming Reads
-
-Okay, so kallisto is awesome because you can do it on unprocessed data. But, let's clean up our reads some. 
-
-First, lets remove adapters with cutadapt.
-
-
-~~~ {.bash}
-cd $SCRATCH/BehavEphyRNAseq/JA16444/00_rawdata
-mkdir ../04_trimmedreads
-for R1 in *R1_001.fastq.gz
-do
-    R2=$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz
-    R1trim=$(basename $R1 fastq.gz)trim.fastq.gz
-    R2trim=$(basename $R2 fastq.gz)trim.fastq.gz
-    echo $R1 $R2 $R1trim $R2trim
-    echo "cutadapt -a GATCGGAAGAGCACACGTCTGAACTCCA -A ATCGTCGGACTGTAGAACTCTGAACGTG -m 22 -o $R1trim -p $R2trim $R1 $R2" >> 04_trimreads.cmds
-done
-~~~
-
-~~~ {.bash}
-launcher_creator.py -t 2:00:00 -j 04_trimreads.cmds -n trimreads -l 04_trimreads.slurm -A NeuroEthoEvoDevo -e rayna.harris@utexas.edu
-sbatch 04_trimreads.slurm
-~~~
 
 ### 04 Filter and Trimming Reads (filtrimmedreads)
 
@@ -310,6 +286,82 @@ launcher_creator.py -t 4:00:00 -j 04_filtrimmedreads.cmds -n filtrimreads -l 04_
 sbatch 04_trimreads.slurm
 ~~~
 
+### 05_kallistoquant_largemem
+
+Quanitify gene expression with kallisto quant.
+See https://pachterlab.github.io/kallisto/manual for details.
+
+Note: This program needs to be run on the largemem node, which has some compute limitations. I have too many samples to process them all as one job, so I need to split it up in two.  I'll use the lane identifies (L002 and L003) to process the samples in two batches. 
+
+~~~ {.bash}
+## first make a directory for the collective output
+mkdir ../05_kallistoquant_largemem
+~~~
+
+Create the L002 commands file and launcher. 
+
+~~~ {.bash}
+for R1 in *L002_R1_001.filtrim.fastq.gz
+do
+    R2=$(basename $R1 L002_R1_001.filtrim.fastq.gz)L002_R2_001.filtrim.fastq.gz
+    samp=$(basename $R1 _L002_R1_001.filtrim.fastq.gz)
+    echo $R1 $R2 $samp
+    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../05_kallistoquant_largemem/${samp} $R1 $R2" >> 05_kallistoquant_L002.cmds
+done
+~~~
+
+~~~ {.bash}
+launcher_creator.py -t 1:00:00 -j 05_kallistoquant_L002.cmds -n kallistoquant -l 05_kallistoquant_L002.slurm -A NeuroEthoEvoDevo -q largemem -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+sbatch 05_kallistoquant_L002.slurm
+~~~
+
+Create the L003 commands file and launcher. 
+
+~~~ {.bash}
+for R1 in *L003_R1_001.filtrim.fastq.gz
+do
+    R2=$(basename $R1 L003_R1_001.filtrim.fastq.gz)L003_R2_001.filtrim.fastq.gz
+    samp=$(basename $R1 _L003_R1_001.filtrim.fastq.gz)
+    echo $R1 $R2 $samp
+    echo "kallisto quant -b 100 -i $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../05_kallistoquant_largemem/${samp} $R1 $R2" >> 05_kallistoquant_L003.cmds
+done
+~~~
+
+~~~ {.bash}
+launcher_creator.py -t 1:00:00 -j 05_kallistoquant_L003.cmds -n kallistoquant -l 05_kallistoquant_L003.slurm -A NeuroEthoEvoDevo -q largemem -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+sbatch 05_kallistoquant_L003.slurm
+~~~
+
+Now, save the data locally
+
+In a new terminal window:
+
+~~~ {.bash}
+cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy/JA16444/
+scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/02_kallistoquant_largemem .
+~~~
+
+Now, remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_S*/}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
+Then, replace the `_` with `-`
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_/-}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
 
 
 
