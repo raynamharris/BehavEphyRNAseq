@@ -71,6 +71,8 @@ behav$genoAPA <- factor(behav$genoAPA,
                                    "FMR1-KO_yoked_trained", "FMR1-KO_trained_trained",
                                    "FMR1-KO_yoked_conflict", "FMR1-KO_trained_conflict"))
 
+behav$genoAPAyear <- as.factor(paste(behav$genoAPA,behav$Year, sep="_"))
+
 behav$genoAPAsession  <- as.factor(paste(behav$genoAPA,behav$TrainSession, sep="_"))
 behav$genoAPAsessionDay  <- as.factor(paste(behav$genoAPAsession,behav$Day, sep="_"))
 behav$genoAPAsessionDayInd <- as.factor(paste(behav$genoAPAsessionDay,behav$ID, sep="_"))
@@ -102,7 +104,7 @@ behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, s
 
 ## reorders dataframe 
 names(behav)
-behav <- behav[c(2,59:69,3:9,1,10:58)]  
+behav <- behav[c(2,59:70,3:9,1,10:58)]  
 names(behav)
 
 ## subset the data -----
@@ -281,7 +283,7 @@ behav %>%
 ## heatmap of data (not correlations, but raw/scaled data) ----
 ### melt to make long 
 behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
-                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay",
+                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
                                "TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
                                "ShockOnOff","Year","PairedPartner","Experimenter",
                                "Housing","TestLocation","filename", "pair1", "pair2"))
@@ -310,6 +312,60 @@ heatmap.2(behav_long_genoAPA,
           dendrogram="both",     # only draw a row dendrogram
           RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b",
                                    "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"))
+
+## now widen then lengthen to get group averages by year (omit WT 2014)
+behav_long_genoAPAyear <- dcast(behav_long, genoAPAyear ~ variable, value.var= "value", fun.aggregate=mean)
+behav_long_genoAPAyear <- filter(behav_long_genoAPAyear, genoAPAyear != "WT_trained_2014")
+behav_long_genoAPAyear$genoAPAyear
+
+## scale columns
+rownames(behav_long_genoAPAyear) <- behav_long_genoAPAyear$genoAPA    # set $genoAPAsession as rownames
+behav_long_genoAPAyear[1] <- NULL
+behav_long_genoAPAyear <- scale(behav_long_genoAPAyear)
+head(behav_long_genoAPAyear)
+
+## heatmap clusterd - saved as behav_heatmap.png
+heatpalette <- colorRampPalette(c("#67a9cf","#f7f7f7","#ef8a62"))(n = 100)
+heatmap.2(behav_long_genoAPAyear,
+          notecol="black",      # change font color of cell labels to black
+          density.info="none",  # turns off density plot inside color legend
+          trace="none",         # turns off trace lines inside the heat map
+          margins =c(9,14),     # widens margins around plot
+          col=heatpalette,       # use on color palette defined earlier
+          dendrogram="both",     # only draw a row dendrogram
+          RowSideColors = c("#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
+                            "#00441b", "#1b7837", "#af8dc3", "#40004b",
+                            "#40004b", "#762a83", "#762a83", "#7fbf7b",
+                            "#00441b", "#00441b", "#1b7837", "#1b7837"))
+
+"#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
+"#00441b", "#1b7837", "#af8dc3", "#40004b"
+"#40004b" "#762a83", "#762a83", "#7fbf7b",
+"#00441b", "#00441b", "#1b7837", "#1b7837"
+
+"#af8dc3",
+"#40004b"
+"#762a83",
+"#7fbf7b",
+"#00441b",
+"#1b7837",
+"#af8dc3",
+"#40004b"
+"#40004b"
+"#762a83",
+"#762a83",
+"#7fbf7b",
+"#00441b",
+"#00441b",
+"#1b7837",
+"#1b7837",
+
+
+
+
+
+
+
 
 ## correlation matrix and plots ----
 ggplot(behav_long_genoAPA, aes(x = genoAPA, y = variable, fill = value)) + 
