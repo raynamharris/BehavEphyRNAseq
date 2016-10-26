@@ -7,7 +7,9 @@ library(ggplot2) ## for awesome plots!
 library(reshape2) #@ for melting dataframe
 library(ggdendro) ## for dendrograms!!
 library(magrittr) ## to use the weird pipe
-library(gplots)
+library(gplots) ##for making awesome plots
+library(cowplot) ## for some easy to use themes
+
 
 ## read and wrangle the data ----
 
@@ -47,8 +49,13 @@ behav$TrainSequence <- as.factor(behav$TrainSequence)
 ## create combinatorial factor columns 
 behav$genoYear <- as.factor(paste(behav$Genotype,behav$Year,sep="_"))
 behav$genoYear <- factor(behav$genoYear, 
-                    levels = c("WT_2013", "WT_2014", "FMR1-KO_2014", 
-                               "WT_2015", "WT_2016", "FMR1-KO_2016"))
+                    levels = c("WT_2013", "FMR1-KO_2014", "WT_2014", "WT_2015", 
+                               "FMR1-KO_2016", "WT_2016"))
+
+behav$genoYear <- factor(behav$genoYear, 
+                         levels = c("WT_2013", "WT_2014", "WT_2015", "WT_2016",
+                                    "FMR1-KO_2014", "FMR1-KO_2016"))
+
 
 behav$APA <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
 behav$APA <- revalue(behav$APA, c("train_trained" = "trained")) 
@@ -134,15 +141,32 @@ yokedyokedpair <- yokedyokedpair %>%
 
 ## create the ggplot color palettes ----
 
-## for APA palette
+## for APApalette
 #40004b purple train conflict
 #762a83 purple train train
 #af8dc3 purpletrain 
+
 #7fbf7b green untrained
-#1b7837 greenuntrained trained
+#1b7837 green untrained trained
 #00441b green untrained conflict
+
+## for APApalette2
+
+#40004b purple train conflict
+#9970ab purple train train
+#c2a5cf purpletrain 
+
+#fdb863 orange untrained
+#f1a340 orange untrained trained
+#b35806 orange untrained conflict
+
+
 APApalette <- (values=c("#7fbf7b","#1b7837","#00441b","#af8dc3", "#762a83","#40004b"))
 APApaletteSlim <- (values=c("#1b7837","#00441b","#762a83","#40004b"))
+
+APApalette2 <- (values=c("#fdb863","#f1a340","#b35806","#c2a5cf", "#9970ab","#40004b"))
+APApaletteSlim2 <- (values=c("#f1a340","#b35806","#9970ab","#40004b"))
+
 
 ## using the same red black orange grey scale JMA used
 JMPalette <- c('black','grey50','red','darkorange')
@@ -155,41 +179,50 @@ FMR1Palette <- c('grey50','darkorange')
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  filter(genoYear != "WT_2014") %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=TimeTarget, color=APA)) + 
-  stat_smooth() + theme_bw() + 
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApalette) + 
+  stat_smooth(alpha=0.3, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +
+  scale_colour_manual(values=APApalette2) + 
   scale_y_continuous(name="Time spent in the shock zone") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "T4/C1",
                               "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_wrap(~genoYear) 
+  facet_grid(.~genoYear, margins=TRUE) 
 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=TimeTarget, color=APA)) + 
-  stat_smooth() + theme_bw() +
+  stat_smooth(alpha=0.3, size=2) + theme_bw()  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
   theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApaletteSlim) + 
+  scale_colour_manual(values=APApaletteSlim2) + 
   scale_y_continuous(name="Time spent in the shock zone") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear) 
+  facet_grid(.~genoYear, margins=TRUE) 
 
 ## ggpots of time to 2nd entrance - saved as beahv_Time2ndEntrance_6 or _3
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
+  filter(genoYear != "WT_2014") %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
-  stat_smooth() + theme_bw() + 
-  theme(panel.grid.minor = element_blank()) + 
+  stat_smooth(alpha=0.3, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +
   scale_colour_manual(values=APApalette) + 
   scale_y_continuous(name="Time to 2nd Entrance") + 
   scale_x_continuous(name =NULL, 
@@ -197,7 +230,7 @@ behav %>%
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "T4/C1",
                               "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_wrap(~genoYear) 
+  facet_grid(.~genoYear) 
 
 behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
