@@ -39,9 +39,13 @@ behav[,cols2] %<>% lapply(function(x) as.numeric(as.character(x)))
 str(behav)
 names(behav)
 
-## rename some values -----
+## rename and revalue some values -----
 behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1-KO")) 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1?WT?" = "FMR1-KO")) 
+behav$genoYear <- factor(behav$Genotype, 
+                         levels = c("WT", "FMR1-KO"))
+levels(behav$genoYear)
+
 behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained")) 
 behav$TrainSequence[is.na(behav$TrainSequence)] <- "untrained" ## make NA more meaningful
 behav$TrainSequence <- as.factor(behav$TrainSequence)
@@ -218,7 +222,8 @@ behav %>%
                                   "T5_C2", "T6_C3"))  %>%  droplevels() %>%
   filter(genoYear != "WT_2014") %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
-  stat_smooth(alpha=0.3, size=2)  +
+  geom_point(size=2) + geom_jitter() +
+  stat_smooth(alpha=0.1, size=2)  +
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
@@ -230,23 +235,52 @@ behav %>%
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "T4/C1",
                               "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_grid(.~genoYear) 
+  facet_wrap(~genoYear) 
 
-behav %>% 
+two <- behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
-  stat_smooth() + theme_bw() +
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApaletteSlim) + 
-  scale_y_continuous(name="Time to 2nd Entrance") + 
+  geom_point(size=2) + geom_jitter() +
+  stat_smooth(alpha=0, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +  scale_colour_manual(values=APApaletteSlim2) + 
+  scale_y_continuous(name="Time to 2nd Entrance", limits = c(0, 600)) + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear)
+
+one <- behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time1stEntr, color=APA)) + 
+  geom_point(size=2) + geom_jitter() +
+  stat_smooth(alpha=0, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +  scale_colour_manual(values=APApaletteSlim2) + 
+  scale_y_continuous(name="Time to 1st Entrance", limits = c(0, 600)) + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear)
+
+save_plot("one.pdf", one,
+          base_aspect_ratio = 3 # make room for figure legend
+)
+save_plot("two.pdf", two,
+          base_aspect_ratio = 3 # make room for figure legend
+)
 
 ## num entrances - saved as beahv_NumEntrance_6 or _3
 behav %>% 
