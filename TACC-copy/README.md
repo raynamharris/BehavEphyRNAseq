@@ -326,6 +326,37 @@ launcher_creator.py -t 1:00:00 -j 05_kallistoquant_L003.cmds -n kallistoquant -l
 sbatch 05_kallistoquant_L003.slurm
 ~~~
 
+Now, save the data locally
+
+In a new terminal window:
+
+~~~ {.bash}
+cd /Users/raynamharris/Github/BehavEphyRNAseq/TACC-copy/JA16444/
+scp -r rmharris@stampede.tacc.utexas.edu:/scratch/02189/rmharris/BehavEphyRNAseq/JA16444/05_kallistoquant_largemem .
+~~~
+
+Now, remove the uninformative bits of the "sample name" so they match up with the actual sample name. 
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_S*/}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
+Then, replace the `_` with `-`
+
+~~~ {.bash}
+for file in *
+do
+    sample=${file//_/-}
+    echo $file $sample
+    mv $file $sample
+done
+~~~
+
 
 ### 06_kallistoquantcandidategenes
 
