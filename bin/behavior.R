@@ -140,21 +140,27 @@ yoked <- behav %>%
   filter(grepl("yoked", APA) ) %>%
   select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence,TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Time1stShock, entranceshockequal, firstentranceshockequal) %>% 
   droplevels()
-yokedpair <- behav %>% 
+trainedpair <- behav %>% 
   filter(Experimenter == "Maddy") %>%
   select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence, TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Time1stShock, entranceshockequal, firstentranceshockequal) %>% 
   droplevels()
 ## rename columns 
 names(yoked)[1] <- "yoked"
 names(yoked)[2] <- "trained"
-names(yokedpair)[1] <- "trained"
-names(yokedpair)[2] <- "yoked"
+names(trainedpair)[1] <- "trained"
+names(trainedpair)[2] <- "yoked"
 ## join an caluclate some values
-yokedyokedpair <- left_join(yoked, yokedpair, by = "yoked")
-yokedyokedpair <- yokedyokedpair %>%  
-  arrange(NumShock.x)
+yokedtrainedpair <- left_join(yoked, trainedpair, by = "yoked")
+yokedtrainedpair <- yokedtrainedpair %>%  
+  mutate(NumShockXYequal = ifelse(NumShock.x == NumShock.y, "equal", "not equal")) %>%  
+  arrange(NumShock.x) %>% 
+  select(Genotype.x,Year.x,TrainSequence.x,TrainSessionCombo.x,
+         ID.x, TrainGroup.x, NumShock.x, NumEntrances.x, TimeTarget.x, Time1stEntr.x, Time1stShock.x,
+         ID.y, TrainGroup.y, NumShock.y, NumEntrances.y, TimeTarget.y, Time1stEntr.y, Time1stShock.y)
 
-#write.csv(yokedyokedpair, "yokedyokedpair.csv", row.names = FALSE)
+names(yokedtrainedpair)
+
+#write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
 
 
 ## color palettes tips ----
@@ -295,51 +301,6 @@ entrances <- behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
 
-entranceshockdiff <- behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
-  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=entranceshockdiff, color=APA)) + 
-  geom_point(size=2) + geom_jitter() +
-  stat_smooth(alpha=0.2, size=2)  +
-  theme_cowplot(font_size = 20, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
-  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +  
-  scale_colour_manual(values=APApaletteSlim2,
-                      name="APA Training",
-                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
-  scale_y_continuous(name="No. Shocks - No. Entrances") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
-                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
-
-entranceshockratio <- behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
-  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=entranceshockratio, color=APA)) + 
-  geom_point(size=2) + geom_jitter() +
-  stat_smooth(alpha=0.2, size=2)  +
-  theme_cowplot(font_size = 20, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
-  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +  
-  scale_colour_manual(values=APApaletteSlim2,
-                      name="APA Training",
-                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
-  scale_y_continuous(name="Ratio Shocks to Entrances") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
-                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
 
 
 ## save plots ----
@@ -353,6 +314,21 @@ save_plot("entrances.pdf", entrances, base_aspect_ratio = 3)
 
 save_plot("one.png", one, base_aspect_ratio = 3)
 save_plot("two.png", two, base_aspect_ratio = 3 )
+
+
+NumEntrancesTimeTarget <- plot_grid(entrances, timespent, ncol = 1)
+save_plot("NumEntrancesTimeTarget.pdf", entrantime, 
+          ncol = 1, # we're saving a grid plot of 2 columns
+          nrow = 2, # and 2 rows
+          # each individual subplot should have an aspect ratio of 1.3
+          base_aspect_ratio = 3)
+
+save_plot("NumEntrancesTimeTarget.png", entrantime, 
+          ncol = 1, # we're saving a grid plot of 2 columns
+          nrow = 2, # and 2 rows
+          # each individual subplot should have an aspect ratio of 1.3
+          base_aspect_ratio = 3)
+
 
 ## pTimeOpp - saved as beahv_pTimeOpp_6 or _3
 behav %>% 
