@@ -5,51 +5,111 @@
 #install.packages("flashClust")
 library(WGCNA)
 library(flashClust)
+library(magrittr) ## to use the weird pipe
+
 options(stringsAsFactors=FALSE)
 allowWGCNAThreads()
 
 ########################################################    
 #                     Load data
 ########################################################    
-# Load behavior data, melt, remove some rows, make sesssionbehavior column, then widen ----
-datExpr0 <- maddy_long_wide 
-names(datExpr0)
-rownames(datExpr0) <- datExpr0$ID     # set $genoAPAsessionInd as rownames
-datExpr0 <- datExpr0[-c(1:7)] #delete all non-numeric columns 
-head(datExpr0)
-names(datExpr0)
+setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 
+datExpr0 <- read.csv("tpmswgcna.csv", header=TRUE, check.names=FALSE, row.names = 1)
+rownames(datExpr0) 
+str(datExpr0)
+
+## make values numbers not integers
+cols = c(1:67)
+datExpr0[,cols] %<>% lapply(function(x) as.numeric(as.integer(x)))
+str(datExpr0)
+## 58,716 transcripts, 67 samples
+
+## remove rows with rowsum > some value
+datExpr0 <- datExpr0[rowSums(datExpr0[, -1])>2000, ]
+head(datExpr0)
+
+## transpose data
+datExpr0 <- t(datExpr0)
+datExpr0 <- as.data.frame(datExpr0)
+head(datExpr0)
+
+
+# test that all samples good to go
 gsg=goodSamplesGenes(datExpr0, verbose = 1)
 gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
 head(gsg)
 
-## removing bad measures
-gsg
-#datExpr0 <- datExpr0[-c(44:88,133:264,308,352,396,440)]  #remove columns measures with NAs
-datExpr0 <- datExpr0[-c(5,6),]
-gsg=goodSamplesGenes(datExpr0, verbose = 1)
-gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
-gsg
-
 #-----Make a trait data frame
-datTraits <- maddy_long_wide
-rownames(datTraits) <- datTraits$ID    # set $genoAPAsessionInd as rownames
-datTraits <- datTraits[-c(5,6),]
-names(datTraits)
-datTraits <- datTraits[c(2:7)] #keep only trait columns 
+datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
+rownames(datTraits) <- datTraits$RNAseqID    # set $genoAPAsessionInd as rownames
+datTraits <- datTraits[c(3:13)] #keep only trait columns 
 head(datTraits)
 str(datTraits)
+
+## making NAs more meaningful
+datTraits$APA[is.na(datTraits$APA)] <- "noAPA" 
+datTraits$Behavior[is.na(datTraits$Behavior)] <- "noAPA" 
+datTraits$E.phy[is.na(datTraits$E.phy)] <- "noAPA" 
+datTraits$Conflict[is.na(datTraits$Conflict)] <- "noAPA" 
+head(datTraits)
+
+## adding combinatorial traits
+datTraits$Group <- as.factor(paste(datTraits$Genotype, datTraits$Conflict, datTraits$APA, sep=" ")) 
+datTraits$APAconflict <- as.factor(paste(datTraits$APA, datTraits$Conflict, sep="_")) 
+datTraits$APApunch <- as.factor(paste(datTraits$APA, datTraits$Punch, sep="_")) 
+datTraits$ConflictPunch <- as.factor(paste(datTraits$Conflict, datTraits$Punch, sep="_")) 
+datTraits$APAconflictPunch <- as.factor(paste(datTraits$APA, datTraits$Conflict, datTraits$Punch, sep="_")) 
 
 ## making it a numeric
+datTraits$Mouse <- as.integer(factor(datTraits$Mouse))
 datTraits$Genotype <- as.integer(factor(datTraits$Genotype))
+datTraits$Conflict <- as.integer(factor(datTraits$Conflict))
 datTraits$APA <- as.integer(factor(datTraits$APA))
-datTraits$genoAPA <- as.integer(factor(datTraits$genoAPA))
-datTraits$TrainSequence <- as.integer(factor(datTraits$TrainSequence))
-datTraits$TrainGroup <- as.integer(factor(datTraits$TrainGroup))
-datTraits$Year <- as.integer(factor(datTraits$TrainGroup))
-
-str(datTraits)
+datTraits$Group <- as.integer(factor(datTraits$Group))
+datTraits$Behavior <- as.integer(factor(datTraits$Behavior))
+datTraits$E.phy <- as.integer(factor(datTraits$E.phy))
+datTraits$Punch <- as.integer(factor(datTraits$Punch))
+datTraits$Slice <- as.integer(factor(datTraits$Slice))
+datTraits$Date <- as.integer(factor(datTraits$Date))
+datTraits$jobnumber <- as.integer(factor(datTraits$jobnumber))
+datTraits$APAconflict <- as.integer(factor(datTraits$APAconflict))
+datTraits$APApunch <- as.integer(factor(datTraits$APApunch))
+datTraits$APAconflictPunch <- as.integer(factor(datTraits$APAconflictPunch))
+datTraits$ConflictPunch <- as.integer(factor(datTraits$ConflictPunch))
 head(datTraits)
+str(datTraits)
+
+##remove some columns
+datTraits$Date <- NULL
+datTraits$jobnumber <- NULL
+datTraits$Genotype <- NULL
+datTraits$Behavior <- NULL
+datTraits$E.phy <- NULL
+
+## remove mice 100 and 101
+datTraits <- datTraits[-c(1:14), ]
+datExpr0 <- datExpr0[-c(1:14), ]
+
+## remove mice 147D_CA1_1 and 145B_CA3_1
+datTraits$names<-rownames(datTraits)
+datExpr0$names<-rownames(datExpr0)
+
+datTraits <- datTraits %>%
+  arrange(names)
+datExpr0 <- datExpr0 %>%
+  arrange(names)
+
+datTraits <- datTraits[-c(22,42), ]
+datExpr0 <- datExpr0[-c(22,42), ]
+
+rownames(datTraits) <- datTraits$names
+rownames(datExpr0) <- datExpr0$names
+
+
+datExpr0$names <- NULL
+datTraits$names <- NULL
+
 
 
 #######   #################    ################   #######    
@@ -60,9 +120,10 @@ head(datTraits)
 A=adjacency(t(datExpr0),type="signed")
 #-----Calculate whole network connectivity
 k=as.numeric(apply(A,2,sum))-1
+
 #-----Standardized connectivity
 Z.k=scale(k)
-thresholdZ.k=3 
+thresholdZ.k=0.7
 outlierColor=ifelse(Z.k<thresholdZ.k,"red","black")
 sampleTree = flashClust(as.dist(1-A), method = "average")
 #-----Convert traits to colors
@@ -115,7 +176,7 @@ abline(h=0.90, col="red")
 plot(sft$fitIndices[,1], sft$fitIndices[,5], xlab= "Soft Threshold (power)", ylab="Mean Connectivity", type="n", main = paste("Mean connectivity"))
 text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1, col="red")
 dev.off()
-#softPower=24
+softPower=14
 
 #######   #################    ################   #######    
 #                    Construct network
@@ -131,7 +192,7 @@ plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarit
 #                    Make modules
 #######   #################    ################   ####### 
 
-minModuleSize=10
+minModuleSize=50
 dynamicMods= cutreeDynamic(dendro= geneTree, distM= dissTOM, deepSplit=2, pamRespectsDendro= FALSE, minClusterSize= minModuleSize)
 table(dynamicMods)
 dynamicColors= labels2colors(dynamicMods)
@@ -141,13 +202,13 @@ plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels= F
 MEList= moduleEigengenes(datExpr0, colors= dynamicColors)
 MEs= MEList$eigengenes
 #Calculate dissimilarity of module eigenegenes
-MEDiss= 1-cor(MEs, use = 'pairwise.complete.obs')
+MEDiss= 1-cor(MEs)
 #Cluster module eigengenes
 METree= flashClust(as.dist(MEDiss), method= "average")
 
 #quartz()
 plot(METree, main= "Clustering of module eigengenes", xlab= "", sub= "")
-MEDissThres = 0.35
+MEDissThres = 0.1
 abline(h=MEDissThres, col="red")
 merge= mergeCloseModules(datExpr0, dynamicColors, cutHeight= MEDissThres, verbose =3)
 
@@ -176,10 +237,10 @@ MEs0 = moduleEigengenes(datt, moduleColors)$eigengenes
 MEs = orderMEs(MEs0)
 
 #-----Correlations of genes with eigengenes
-moduleGeneCor=cor(MEs, datt, use = 'pairwise.complete.obs')
+moduleGeneCor=cor(MEs, datt)
 moduleGenePvalue = corPvalueStudent(moduleGeneCor, nSamples);
 
-moduleTraitCor = cor(MEs, datTraits, use = 'pairwise.complete.obs');
+moduleTraitCor = cor(MEs, datTraits);
 moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
 
 
@@ -234,62 +295,31 @@ barplot(ME, col=which.module, main="", names.arg=(datTraits$genoAPA), cex.names=
 
 blue <- as.data.frame(colnames(datExpr0)[moduleColors=='blue'])
 blue$module <- "blue"
-colnames(blue)[1] <- "sessionbeahvior"
+colnames(blue)[1] <- "trainscript_length"
 red <- as.data.frame(colnames(datExpr0)[moduleColors=='red'])
 red$module <- "red"
-colnames(red)[1] <- "sessionbeahvior"
+colnames(red)[1] <- "trainscript_length"
 green <- as.data.frame(colnames(datExpr0)[moduleColors=='green'])
 green$module <- "green"
-colnames(green)[1] <- "sessionbeahvior"
+colnames(green)[1] <- "trainscript_length"
 yellow <- as.data.frame(colnames(datExpr0)[moduleColors=='yellow'])
 yellow$module <- "yellow"
-colnames(yellow)[1] <- "sessionbeahvior"
+colnames(yellow)[1] <- "trainscript_length"
 brown <- as.data.frame(colnames(datExpr0)[moduleColors=='brown'])
 brown$module <- "brown"
-colnames(brown)[1] <- "sessionbeahvior"
+colnames(brown)[1] <- "trainscript_length"
 turquoise <- as.data.frame(colnames(datExpr0)[moduleColors=='turquoise'])
 turquoise$module <- "turquoise"
-colnames(turquoise)[1] <- "sessionbeahvior"
+colnames(turquoise)[1] <- "trainscript_length"
 black <- as.data.frame(colnames(datExpr0)[moduleColors=='black'])
 black$module <- "black"
-colnames(black)[1] <- "sessionbeahvior"
+colnames(black)[1] <- "trainscript_length"
 magenta <- as.data.frame(colnames(datExpr0)[moduleColors=='magenta'])
 magenta$module <- "magenta"
-colnames(magenta)[1] <- "sessionbeahvior"
+colnames(magenta)[1] <- "trainscript_length"
 pink <- as.data.frame(colnames(datExpr0)[moduleColors=='pink'])
 pink$module <- "pink"
-colnames(pink)[1] <- "sessionbeahvior"
+colnames(pink)[1] <- "trainscript_length"
 purple <- as.data.frame(colnames(datExpr0)[moduleColors=='purple'])
 purple$module <- "purple"
-colnames(purple)[1] <- "sessionbeahvior"
-
-## merged data frame 
-MM <- dplyr::bind_rows(blue,turquoise, brown,yellow,red, black, magenta, pink, purple, green)
-MM
-## new column to pull out major data structures
-MM$session <- ifelse(grepl("Hab", MM$sessionbeahvior), "Hab", 
-                         ifelse(grepl("T1", MM$sessionbeahvior), "T1",
-                                ifelse(grepl("T2", MM$sessionbeahvior), "T2",
-                                       ifelse(grepl("T3", MM$sessionbeahvior), "T3",
-                                              ifelse(grepl("T4", MM$sessionbeahvior), "T4_C1", 
-                                                     ifelse(grepl("T5", MM$sessionbeahvior), "T5_C2", 
-                                                            ifelse(grepl("T6", MM$sessionbeahvior), "T6_C3",
-                                                                   ifelse(grepl("Retest", MM$sessionbeahvior), "Retest",
-                                                                          ifelse(grepl("Retention", MM$sessionbeahvior), "Retention","other")))))))))
-MM$session  ## check that all names good with no NAs                                 
-MM$session <- as.factor(MM$session)  
-MM_session <- dcast(MM, module ~ session, value.var = 'session')
-MM_session
-blue
-turquoise
-brown
-yellow
-red
-black
-brown
-green
-pink
-magenta
-
-
-#write.csv(MM_session, "MM_session.csv" , row.names = F)
+colnames(purple)[1] <- "trainscript_length"

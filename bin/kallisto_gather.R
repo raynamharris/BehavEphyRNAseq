@@ -1,10 +1,11 @@
 ## Kallisto Gather was created by Dennis Wylie and edited by Rayna
 ## original kallisto gater script found here:
 ## location of script "/Volumes/HofmannLab/rmharris/singlecellseq/scripts.dennis"
+library("dplyr")
 
-setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/06_kallistoquantcandidategenes/")
+setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/05_kallistoquant_largemem/")
 ## this will create lists of all the samples
-kallistoDirs = dir("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/06_kallistoquantcandidategenes/")
+kallistoDirs = dir("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/05_kallistoquant_largemem/")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
         kallistoDirs, ignore.case=TRUE)]
 
@@ -36,57 +37,37 @@ if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
     )
 }
 
-# view transcripts per million dataframe
-head(tpm)
-tail(tpm)
+## make a dataframe with the parts of the gene id as columns
+geneids <- count[c(1)] 
+geneids$ENSMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 1)
+geneids$ENSMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 2)
+geneids$OTTMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 3)
+geneids$OTTMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 4)
+geneids$transcript <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 5)
+geneids$gene <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 6)
+geneids$length <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 7)
+geneids$structure1 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 8)
+geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
+geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
+geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
 
-## summarys: col and row sums
-names(tpm)
-str(tpm)
-tpmsummary <- tpm %>% 
-  mutate(sum = rowSums(.[2:29])) %>% 
-  select(id, sum) %>% 
-  filter(sum > 0)
-tpmcolsums <- colSums(tpm[,-1])
-tpmcolsums <- as.data.frame(tpmcolsums)
+## prep data for wgcna
+countswgcna <- count
+row.names(countswgcna) <- geneids$transcript_lenght
+countswgcna[1] <- NULL
+countswgcna <- round(countswgcna)
+summary(countswgcna)
 
-## summarys: col and row sums
-names(counts)
-str(counts)
-countssummary <- counts %>% 
-  mutate(sum = rowSums(.[2:29])) %>% 
-  select(id, sum) %>% 
-  filter(sum > 0)
-countscolsums <- colSums(counts[,-1])
-countscolsums <- as.data.frame(countscolsums)
+## prep data for wgcna
+tpmswgcna <- tpm
+row.names(tpmswgcna) <- geneids$transcript_lenght
+tpmswgcna[1] <- NULL
+tpmswgcna <- round(tpmswgcna)
+summary(tpmswgcna)
 
-
-## separating the compentents of the gene name
-count$ENSMUST <- sapply(strsplit(as.character(count$id),'\\|'), "[", 1)
-count$ENSMUSG <- sapply(strsplit(as.character(count$id),'\\|'), "[", 2)
-count$OTTMUSG <- sapply(strsplit(as.character(count$id),'\\|'), "[", 3)
-count$OTTMUST <- sapply(strsplit(as.character(count$id),'\\|'), "[", 4)
-count$transcript <- sapply(strsplit(as.character(count$id),'\\|'), "[", 5)
-count$gene <- sapply(strsplit(as.character(count$id),'\\|'), "[", 6)
-count$length <- sapply(strsplit(as.character(count$id),'\\|'), "[", 7)
-count$type <- sapply(strsplit(as.character(count$id),'\\|'), "[", 8)
-
-## separating the compentents of the gene name
-tpm$ENSMUST <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 1)
-tpm$ENSMUSG <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 2)
-tpm$OTTMUSG <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 3)
-tpm$OTTMUST <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 4)
-tpm$transcript <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 5)
-tpm$gene <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 6)
-tpm$length <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 7)
-tpm$type <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 8)
-
-head(tpm)
-
-## summary by transcript
-tpmsummary <- tpm %>% 
-  mutate(sum = rowSums(.[2:29])) %>% 
-  select(transcript, type, sum) %>% 
-  filter(sum > 0)
-
-
+## save output file for easy loading later
+setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
+#write.csv(count, "count.csv", row.names = TRUE)
+#write.csv(countswgcna, "countswgcna.csv", row.names = TRUE)
+#write.csv(tpm, "tpm.csv", row.names = TRUE)
+#write.csv(tpmswgcna, "tpmswgcna.csv", row.names = TRUE)
