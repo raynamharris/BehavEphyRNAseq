@@ -39,7 +39,7 @@ behav[,cols2] %<>% lapply(function(x) as.numeric(as.character(x)))
 str(behav)
 names(behav)
 
-## rename and revalue some values -----
+## rename and revalue some values 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1-KO")) 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1?WT?" = "FMR1-KO")) 
 behav$genoYear <- factor(behav$Genotype, 
@@ -118,30 +118,44 @@ names(behav)
 behav <- behav[c(2,59:70,3:9,1,10:58)]  
 names(behav)
 
+## create so QC columns with mutate and ifelse
+
+behav <- behav %>% 
+  mutate(entranceshockdiff = NumShock - NumEntrances) %>% 
+  mutate(entranceshockratio = NumShock / NumEntrances) %>%
+  mutate(entranceshockequal = ifelse(NumShock == NumEntrances, "equal", "not equal")) %>%
+  mutate(firstentranceshockequal = ifelse(Time1stShock == Time1stEntr, "equal", "not equal")) 
+
+
 ## subset the data -----
 maddy <- behav %>% filter(Experimenter == "Maddy") 
 jma <- behav %>% filter(Experimenter != "Maddy") 
 wt <- behav %>% filter(Genotype == "WT")
 frmr1 <- behav %>% filter(Genotype != "WT")  
 
-## make a df to look at number of shock actually received by the yoked animals 
+## make a df to look at number of shock actually received by the yoked animals  ----
 names(behav)
 yoked <- behav %>% 
-  select(pair1, pair2, TrainGroup, Experimenter, NumShock, NumEntrances) %>% 
-  filter(Experimenter == "Maddy") %>% droplevels()
+  filter(Experimenter == "Maddy") %>%
+  filter(grepl("yoked", APA) ) %>%
+  select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence,TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Time1stShock, entranceshockequal, firstentranceshockequal) %>% 
+  droplevels()
 yokedpair <- behav %>% 
-  select(pair1, pair2, TrainGroup, Experimenter, NumShock, NumEntrances) %>% 
-  filter(Experimenter == "Maddy") %>% droplevels()
+  filter(Experimenter == "Maddy") %>%
+  select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence, TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Time1stShock, entranceshockequal, firstentranceshockequal) %>% 
+  droplevels()
 ## rename columns 
-names(yoked)[1] <- "train"
-names(yoked)[2] <- "yoke"
-names(yokedpair)[1] <- "yoke"
-names(yokedpair)[2] <- "train"
+names(yoked)[1] <- "yoked"
+names(yoked)[2] <- "trained"
+names(yokedpair)[1] <- "trained"
+names(yokedpair)[2] <- "yoked"
 ## join an caluclate some values
-yokedyokedpair <- full_join(yoked, yokedpair, by = "yoke")
+yokedyokedpair <- left_join(yoked, yokedpair, by = "yoked")
 yokedyokedpair <- yokedyokedpair %>%  
-  mutate(shockdiff = NumShock.x - NumShock.y) %>%  
-  mutate(entrdiff = NumEntrances.x - NumEntrances.y)
+  arrange(NumShock.x)
+
+#write.csv(yokedyokedpair, "yokedyokedpair.csv", row.names = FALSE)
+
 
 ## color palettes tips ----
 
@@ -172,7 +186,6 @@ APApaletteSlim <- (values=c("#1b7837","#00441b","#762a83","#40004b"))
 APApalette2 <- (values=c("#fdb863","#f1a340","#b35806","#c2a5cf", "#9970ab","#40004b"))
 APApaletteSlim2 <- (values=c("#f1a340","#b35806","#9970ab","#40004b"))
 
-
 ## using the same red black orange grey scale JMA used-----
 JMPalette <- c('black','grey50','red','darkorange')
 WTPalette <- c('black','red')
@@ -180,46 +193,38 @@ FMR1Palette <- c('grey50','darkorange')
 
 ## ggplots across sessions!! -----
 
+## creating better facet label names
+genoAPAnames <- c(
+  "WT_2015" = "WT 2015", 
+  "WT_2016" = "WT 2016",
+  "FMR1-KO_2016" = "FMR1-KO 2015"
+)
+
 ## ggpots of TimeTarget - saved as beahv_TimeTarget_6 or _3
-timespent <- behav %>% 
+ptime <- behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=TimeTarget, color=APA)) + 
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
   geom_point(size=2) + geom_jitter() +
   stat_smooth(alpha=0.1, size=2)  +
   theme_cowplot(font_size = 20, line_size = 1) + 
-  theme(panel.grid.minor = element_blank()) + 
-  scale_colour_manual(values=APApaletteSlim2) + 
-  scale_y_continuous(name="Time spent in the shock zone", limits = c(0, 150)) + 
+  theme(strip.background = element_blank()) +  
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="Probability of being in the Shock Zone") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_grid(~genoYear) 
+  facet_grid(~genoYear, labeller = as_labeller(genoAPAnames))
 
 ## ggpots of time to 2nd entrance - saved as beahv_Time2ndEntrance_6 or _3
-behav %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3"))  %>%  droplevels() %>%
-  filter(genoYear != "WT_2014") %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
-  geom_point(size=2) + geom_jitter() +
-  stat_smooth(alpha=0.1, size=2)  +
-  theme_cowplot(font_size = 20, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
-  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +
-  scale_colour_manual(values=APApalette) + 
-  scale_y_continuous(name="Time to 2nd Entrance") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "T4/C1",
-                              "6" = "T5/C2", "7" = "T6/C3")) +
-  facet_wrap(~genoYear) 
-
 two <- behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
                                   "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
@@ -230,14 +235,18 @@ two <- behav %>%
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +  scale_colour_manual(values=APApaletteSlim2) + 
-  scale_y_continuous(name="Time to 2nd Entrance", limits = c(0, 600)) + 
+  theme(strip.background = element_blank()) +  
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="Time to 2nd Entrance (s)", limits = c(0, 600)) + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear)
+  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames))
 
 one <- behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
@@ -249,28 +258,19 @@ one <- behav %>%
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +  scale_colour_manual(values=APApaletteSlim2) + 
-  scale_y_continuous(name="Time to 1st Entrance", limits = c(0, 600)) + 
+  theme(strip.background = element_blank()) +  
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="Time to 1st Entrance (s)", limits = c(0, 600)) + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear)
+  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames))
 
-save_plot("one.pdf", one,
-          base_aspect_ratio = 3 # make room for figure legend
-)
-save_plot("two.pdf", two,
-          base_aspect_ratio = 3 # make room for figure legend
-)
-save_plot("timespent.pdf", timespent,
-          base_aspect_ratio = 3 # make room for figure legend
-)
-
-save_plot("entrances.pdf", entrances,
-          base_aspect_ratio = 3 # make room for figure legend
-)
 ## num entrances - saved as beahv_NumEntrance_6 or _3
 entrances <- behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
@@ -282,14 +282,77 @@ entrances <- behav %>%
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +  scale_colour_manual(values=APApaletteSlim2) + 
-  scale_y_continuous(name="Number of Entrances") + 
+  theme(strip.background = element_blank()) +  
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="Total Entrances") + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear)
+  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
+
+entranceshockdiff <- behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=entranceshockdiff, color=APA)) + 
+  geom_point(size=2) + geom_jitter() +
+  stat_smooth(alpha=0.2, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +  
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="No. Shocks - No. Entrances") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
+
+entranceshockratio <- behav %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=entranceshockratio, color=APA)) + 
+  geom_point(size=2) + geom_jitter() +
+  stat_smooth(alpha=0.2, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +  
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="Ratio Shocks to Entrances") + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
+
+
+## save plots ----
+setwd("/Users/raynamharris/Github/BehavEphyRNAseq/results/2016_10_24_sfnposter/")
+save_plot("one.pdf", one,
+          base_aspect_ratio = 3 # make room for figure legend
+)
+save_plot("two.pdf", two, base_aspect_ratio = 3 )
+save_plot("timespent.pdf", timespent, base_aspect_ratio = 3)
+save_plot("entrances.pdf", entrances, base_aspect_ratio = 3)
+
+save_plot("one.png", one, base_aspect_ratio = 3)
+save_plot("two.png", two, base_aspect_ratio = 3 )
 
 ## pTimeOpp - saved as beahv_pTimeOpp_6 or _3
 behav %>% 
@@ -382,35 +445,6 @@ heatmap.2(behav_long_genoAPAyear,
                             "#40004b", "#762a83", "#762a83", "#7fbf7b",
                             "#00441b", "#00441b", "#1b7837", "#1b7837"))
 
-"#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
-"#00441b", "#1b7837", "#af8dc3", "#40004b"
-"#40004b" "#762a83", "#762a83", "#7fbf7b",
-"#00441b", "#00441b", "#1b7837", "#1b7837"
-
-"#af8dc3",
-"#40004b"
-"#762a83",
-"#7fbf7b",
-"#00441b",
-"#1b7837",
-"#af8dc3",
-"#40004b"
-"#40004b"
-"#762a83",
-"#762a83",
-"#7fbf7b",
-"#00441b",
-"#00441b",
-"#1b7837",
-"#1b7837",
-
-
-
-
-
-
-
-
 ## correlation matrix and plots ----
 ggplot(behav_long_genoAPA, aes(x = genoAPA, y = variable, fill = value)) + 
   geom_tile() + coord_equal() +
@@ -456,7 +490,6 @@ ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
   theme(axis.text.x = element_text(angle = 45, vjust = 1, 
                                    size = 12, hjust = 1))+
   coord_fixed() 
-
 
 ### unused plots ----
 behav %>% 
