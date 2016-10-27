@@ -2,11 +2,9 @@
 ## original kallisto gater script found here:
 ## location of script "/Volumes/HofmannLab/rmharris/singlecellseq/scripts.dennis"
 
-
-
-setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/03_kallistoquantcandidategenes/")
+setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/06_kallistoquantcandidategenes/")
 ## this will create lists of all the samples
-kallistoDirs = dir("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/03_kallistoquantcandidategenes/")
+kallistoDirs = dir("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/06_kallistoquantcandidategenes/")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
         kallistoDirs, ignore.case=TRUE)]
 
@@ -24,7 +22,7 @@ if(file.exists(kallistoFiles))
 ## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
 ids = Reduce(f=union, x=lapply(kallistoData, rownames))
 if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
-    counts = data.frame(
+    count = data.frame(
         id = ids,
         sapply(kallistoData, function(x) {x$est_counts}),
         check.names = FALSE,
@@ -62,6 +60,17 @@ countssummary <- counts %>%
 countscolsums <- colSums(counts[,-1])
 countscolsums <- as.data.frame(countscolsums)
 
+
+## separating the compentents of the gene name
+count$ENSMUST <- sapply(strsplit(as.character(count$id),'\\|'), "[", 1)
+count$ENSMUSG <- sapply(strsplit(as.character(count$id),'\\|'), "[", 2)
+count$OTTMUSG <- sapply(strsplit(as.character(count$id),'\\|'), "[", 3)
+count$OTTMUST <- sapply(strsplit(as.character(count$id),'\\|'), "[", 4)
+count$transcript <- sapply(strsplit(as.character(count$id),'\\|'), "[", 5)
+count$gene <- sapply(strsplit(as.character(count$id),'\\|'), "[", 6)
+count$length <- sapply(strsplit(as.character(count$id),'\\|'), "[", 7)
+count$type <- sapply(strsplit(as.character(count$id),'\\|'), "[", 8)
+
 ## separating the compentents of the gene name
 tpm$ENSMUST <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 1)
 tpm$ENSMUSG <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 2)
@@ -72,6 +81,7 @@ tpm$gene <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 6)
 tpm$length <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 7)
 tpm$type <- sapply(strsplit(as.character(tpm$id),'\\|'), "[", 8)
 
+head(tpm)
 
 ## summary by transcript
 tpmsummary <- tpm %>% 

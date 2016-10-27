@@ -11,9 +11,9 @@ library("dplyr")
 ## set paths to sample info and kallisto data
 setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 base_dir <- "~/Github/BehavEphyRNAseq/TACC-copy/JA16444"
-sample_id <- dir(file.path(base_dir,"02_kallistoquant_largemem"))
+sample_id <- dir(file.path(base_dir,"06_kallistoquantcandidategenes"))
 sample_id
-kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "02_kallistoquant_largemem", id))
+kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "06_kallistoquantcandidategenes", id))
 kal_dirs
 
 ## read in the sample info, rename and revalue things
@@ -39,18 +39,22 @@ print(s2c)
 names(s2c)
 
 ## remove bad files
-#s2c <- s2c %>% filter(!grepl("147D-CA1-1", path)) 
-#s2c <- s2c %>% filter(!grepl("145B-CA3-1", path)) 
+s2c <- s2c %>% filter(!grepl("147D-CA1-1", path)) 
+s2c <- s2c %>% filter(!grepl("145B-CA3-1", path)) 
 
 
 ## subset the data 
-noAPA <- filter(s2c, APA == "noAPA")
-withAPA <- filter(s2c, APA != "noAPA")
-CA1 <- filter(s2c, Punch == "CA1", Conflict != "noAPA")
-DG <- filter(s2c, Punch == "DG")
-CA3 <- filter(s2c, Punch == "CA3")
-conflict <- filter(s2c, Conflict == "Conflict")
+noAPA <- filter(s2c, APA == "noAPA") %>% droplevels()
+withAPA <- filter(s2c, APA != "noAPA") %>% droplevels()
+CA1 <- filter(s2c, Punch == "CA1", Conflict != "noAPA") %>% droplevels()
+DG <- filter(s2c, Punch == "DG", Conflict != "noAPA") %>% droplevels()
+CA3 <- filter(s2c, Punch == "CA3", Conflict != "noAPA") %>% droplevels()
+conflict <- filter(s2c, Conflict == "Conflict") %>% droplevels()
 
+
+## subset the data 
+str(withAPA)
+str(CA1apa)
 
 ## looking at just the tissue dilution samples
 
@@ -59,9 +63,9 @@ conflict <- filter(s2c, Conflict == "Conflict")
 ## (1) load the kallisto processed data into the object 
 ## (2) estimate parameters for the sleuth response error measurement model and 
 ## (3) perform differential analysis (testing). On a laptop the three steps should take about 2 minutes altogether.
-so <- sleuth_prep(CA1, ~ APA + Conflict)
+so <- sleuth_prep(CA3, ~ APAconflict)
 so <- sleuth_fit(so)
-so <- sleuth_wt(so, 'ConflictNoConflict') 
+so <- sleuth_wt(so, 'APAconflictTrained_NoConflict') 
 models(so)
 sleuth_live(so)
 results_table <- sleuth_results(so, 'ConflictNoConflict')
