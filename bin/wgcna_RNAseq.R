@@ -40,8 +40,10 @@ gsg=goodSamplesGenes(datExpr0, verbose = 1)
 gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
 head(gsg)
 
-#-----Make a trait data frame
-datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
+#-----Make a trait data frame from just sample info without beahvior
+#datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
+datTraits <- read.csv("yokedtrainedpair.csv" , sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
+head(datTraits)
 rownames(datTraits) <- datTraits$RNAseqID    # set $genoAPAsessionInd as rownames
 datTraits <- datTraits[c(3:13)] #keep only trait columns 
 head(datTraits)
