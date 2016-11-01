@@ -6,6 +6,7 @@
 library(WGCNA)
 library(flashClust)
 library(magrittr) ## to use the weird pipe
+library("dplyr")
 
 options(stringsAsFactors=FALSE)
 allowWGCNAThreads()
@@ -26,13 +27,13 @@ str(datExpr0)
 ## 58,716 transcripts, 67 samples
 
 ## remove rows with rowsum > some value
-datExpr0 <- datExpr0[rowSums(datExpr0[, -1])>2000, ]
-head(datExpr0)
+datExpr0 <- datExpr0[rowSums(datExpr0[, -1])>335, ]
+str(datExpr0)
 
 ## transpose data
 datExpr0 <- t(datExpr0)
 datExpr0 <- as.data.frame(datExpr0)
-head(datExpr0)
+rownames(datExpr0)
 
 
 # test that all samples good to go
@@ -41,13 +42,12 @@ gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
 head(gsg)
 
 #-----Make a trait data frame from just sample info without beahvior
-#datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
-datTraits <- behav_long
+datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
 str(datTraits)
 tail(datTraits)
 
 rownames(datTraits) <- datTraits$RNAseqID    # set $genoAPAsessionInd as rownames
-#datTraits <- datTraits[c(3:13)] #keep only trait columns 
+datTraits <- datTraits[c(3:13)] #keep only trait columns 
 tail(datTraits)
 str(datTraits)
 
@@ -90,31 +90,32 @@ datTraits$jobnumber <- NULL
 datTraits$Genotype <- NULL
 datTraits$Behavior <- NULL
 datTraits$E.phy <- NULL
+datTraits$RNAseqID <- NULL
+datTraits$Tube <- NULL
 
 ## remove mice 100 and 101
 datTraits <- datTraits[-c(1:14), ]
 datExpr0 <- datExpr0[-c(1:14), ]
+rownames(datExpr0)
 
-## remove mice 147D_CA1_1 and 145B_CA3_1
+## remove mice 147D_CA1_1 and 145B_CA3_1 because they produced almost 0 zeros
+## remove 147 and 148 because they are home cage animals
 datTraits$names<-rownames(datTraits)
-datExpr0$names<-rownames(datExpr0)
-
-datTraits <- datTraits %>%
-  arrange(names)
-datExpr0 <- datExpr0 %>%
-  arrange(names)
-
-datTraits <- datTraits[-c(22,42), ]
-datExpr0 <- datExpr0[-c(22,42), ]
-
+datTraits <- datTraits %>% arrange(names)
+datTraits <- datTraits[-c(22,42,36:38,45:47), ] 
 rownames(datTraits) <- datTraits$names
-rownames(datExpr0) <- datExpr0$names
-
-
-datExpr0$names <- NULL
 datTraits$names <- NULL
 
+datExpr0$names<-rownames(datExpr0)
+datExpr0 <- datExpr0 %>% arrange(names)
+datExpr0 <- datExpr0[-c(22,42,36:38,45:47), ]  
+rownames(datExpr0) <- datExpr0$names
+datExpr0$names <- NULL
 
+## make values numbers not integers
+cols = c(1:19482)
+datExpr0[,cols] %<>% lapply(function(x) as.numeric(as.integer(x)))
+str(datExpr0)
 
 #######   #################    ################   #######    
 #                 Call sample outliers
@@ -127,7 +128,7 @@ k=as.numeric(apply(A,2,sum))-1
 
 #-----Standardized connectivity
 Z.k=scale(k)
-thresholdZ.k=0.7
+thresholdZ.k=-2.5 
 outlierColor=ifelse(Z.k<thresholdZ.k,"red","black")
 sampleTree = flashClust(as.dist(1-A), method = "average")
 #-----Convert traits to colors
@@ -159,17 +160,6 @@ dim(datTraits)
 powers= c(seq(1,10,by=1), seq(from =12, to=20, by=2)) #choosing a set of soft-thresholding powers
 sft = pickSoftThreshold(datExpr0, powerVector=powers, verbose =5,networkType="signed") #call network topology analysis function
 
-sft <- pickSoftThreshold(
-  datExpr0, 
-  dataIsExpr = TRUE,
-  RsquaredCut = 0.90, 
-  powerVector = c(seq(1, 10, by = 1), seq(12, 20, by = 2)), 
-  removeFirst = FALSE, nBreaks = 10, blockSize = NULL, 
-  corFnc = cor, corOptions = list(use = 'p'), 
-  networkType = "unsigned",
-  moreNetworkConcepts = FALSE,
-  verbose = 0, indent = 0)
-sft
 
 #quartz()
 par(mfrow= c(1,2))
@@ -180,13 +170,13 @@ abline(h=0.90, col="red")
 plot(sft$fitIndices[,1], sft$fitIndices[,5], xlab= "Soft Threshold (power)", ylab="Mean Connectivity", type="n", main = paste("Mean connectivity"))
 text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1, col="red")
 dev.off()
-softPower=14
+softPower=12
 
 #######   #################    ################   #######    
 #                    Construct network
 #######   #################    ################   #######     
 
-adjacency=adjacency(datExpr0, type="signed") 
+adjacency=adjacency(datExpr0, power=softPower, type="signed" ) 
 TOM= TOMsimilarity(adjacency, TOMType="signed")
 dissTOM= 1-TOM
 geneTree= flashClust(as.dist(dissTOM), method="average")
