@@ -42,11 +42,13 @@ head(gsg)
 
 #-----Make a trait data frame from just sample info without beahvior
 #datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
-datTraits <- read.csv("yokedtrainedpair.csv" , sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
-head(datTraits)
+datTraits <- behav_long
+str(datTraits)
+tail(datTraits)
+
 rownames(datTraits) <- datTraits$RNAseqID    # set $genoAPAsessionInd as rownames
-datTraits <- datTraits[c(3:13)] #keep only trait columns 
-head(datTraits)
+#datTraits <- datTraits[c(3:13)] #keep only trait columns 
+tail(datTraits)
 str(datTraits)
 
 ## making NAs more meaningful
