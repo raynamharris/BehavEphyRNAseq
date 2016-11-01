@@ -29,7 +29,7 @@ head(behav)
 behav <- behav %>% dplyr::filter(Year %in% c("2012", "2013", "2014", "2015", "2016", "2017")) ## remove extra headers
 behav <- behav %>% dplyr::filter(TrainSession != "C4?") ## remove ?C in train train animal
 behav <- behav %>% dplyr::filter(!is.na(TotalTime.s.)) ## remove file with no data
-
+behav <- behav %>% dplyr::filter(!grepl("16-357A|16-357B|16-357D", ID)) 
 
 ## make characters either factors or numbers, as appropriate
 cols = c(1:4,6:14)
@@ -42,9 +42,9 @@ names(behav)
 ## rename and revalue some values 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1-KO")) 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1?WT?" = "FMR1-KO")) 
-behav$genoYear <- factor(behav$Genotype, 
+behav$Genotype <- factor(behav$Genotype, 
                          levels = c("WT", "FMR1-KO"))
-levels(behav$genoYear)
+levels(behav$Genotype)
 
 behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained")) 
 behav$TrainSequence[is.na(behav$TrainSequence)] <- "untrained" ## make NA more meaningful
@@ -83,7 +83,6 @@ behav$genoAPA <- factor(behav$genoAPA,
                                    "FMR1-KO_yoked_conflict", "FMR1-KO_trained_conflict"))
 
 behav$genoAPAyear <- as.factor(paste(behav$genoAPA,behav$Year, sep="_"))
-
 behav$genoAPAsession  <- as.factor(paste(behav$genoAPA,behav$TrainSession, sep="_"))
 behav$genoAPAsessionDay  <- as.factor(paste(behav$genoAPAsession,behav$Day, sep="_"))
 behav$genoAPAsessionDayInd <- as.factor(paste(behav$genoAPAsessionDay,behav$ID, sep="_"))
@@ -101,30 +100,37 @@ behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T8" = "T+_C+"))
 behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C4" = "T+_C+"))
 behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C5" = "T+_C+")) 
 behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C6" = "T+_C+")) 
-levels(behav$TrainSessionCombo)
+
+## remove T+_C+"
+behav <- behav %>% dplyr::filter(TrainSessionCombo != "T+_C+") 
+
+## set levels
 behav$TrainSessionCombo <- factor(behav$TrainSessionCombo, 
                         levels = c("Hab", "T1","T2","T3","Retest",
                                    "T4_C1","T5_C2","T6_C3","T+_C+","Retention"))
 
+
+
 behav$TrainSessionComboDay <- as.factor(paste(behav$TrainSessionCombo, behav$Day, sep="_"))
 
 behav$genoAPAsessionCombo <- as.factor(paste(behav$genoAPA, behav$TrainSessionCombo, sep="_"))
+behav$genoAPAsessionComboInd <- as.factor(paste(behav$genoAPAsessionCombo, behav$ID, sep="_"))
 
 behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionComboDay, sep="_"))
 behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, sep="_"))
 
-## reorders dataframe 
-names(behav)
-behav <- behav[c(2,59:70,3:9,1,10:58)]  
-names(behav)
 
 ## create so QC columns with mutate and ifelse
-
 behav <- behav %>% 
   mutate(entranceshockdiff = NumShock - NumEntrances) %>% 
   mutate(entranceshockratio = NumShock / NumEntrances) %>%
   mutate(entranceshockequal = ifelse(NumShock == NumEntrances, "equal", "not equal")) %>%
   mutate(firstentranceshockequal = ifelse(Time1stShock == Time1stEntr, "equal", "not equal")) 
+
+## reorders dataframe 
+names(behav)
+behav <- behav[c(2,59:75,3:9,1,10:58)]  
+names(behav)
 
 
 ## subset the data -----
@@ -132,6 +138,9 @@ maddy <- behav %>% filter(Experimenter == "Maddy")
 jma <- behav %>% filter(Experimenter != "Maddy") 
 wt <- behav %>% filter(Genotype == "WT")
 frmr1 <- behav %>% filter(Genotype != "WT")  
+y2015 <- behav %>%  filter(Year == "2015")
+maddyWT <- behav %>%  filter(Genotype == "WT", Experimenter == "Maddy")
+maddyWTtrained <- behav %>%  filter(Genotype == "WT", Experimenter == "Maddy", TrainGroup == "trained") 
 
 ## make a df to look at number of shock actually received by the yoked animals  ----
 names(behav)
@@ -161,7 +170,6 @@ yokedtrainedpair <- yokedtrainedpair %>%
 names(yokedtrainedpair)
 
 #write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
-
 
 ## color palettes tips ----
 
@@ -194,7 +202,6 @@ APApaletteSlim2 <- (values=c("#f1a340","#b35806","#9970ab","#40004b"))
 
 APApaletteSlim3 <- (values=c("#9970ab","#40004b"))
 
-
 ## using the same red black orange grey scale JMA used-----
 JMPalette <- c('black','grey50','red','darkorange')
 WTPalette <- c('black','red')
@@ -208,6 +215,7 @@ genoAPAnames <- c(
   "WT_2016" = "WT 2016",
   "FMR1-KO_2016" = "FMR1-KO 2015"
 )
+
 
 ## ggpots of TimeTarget - saved as beahv_TimeTarget_6 or _3
 ptime <- behav %>% 
@@ -243,7 +251,7 @@ two <- behav %>%
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time2ndEntr, color=APA)) + 
   geom_point(size=2) + geom_jitter() +
-  stat_smooth(alpha=0, size=2)  +
+  stat_smooth(alpha=0.2, size=2)  +
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
@@ -258,7 +266,7 @@ two <- behav %>%
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames))
+  facet_grid(~genoYear, labeller = as_labeller(genoAPAnames))
 
 one <- behav %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
@@ -267,7 +275,7 @@ one <- behav %>%
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=Time1stEntr, color=APA)) + 
   geom_point(size=2) + geom_jitter() +
-  stat_smooth(alpha=0, size=2)  +
+  stat_smooth(alpha=0.2, size=2)  +
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
@@ -282,7 +290,7 @@ one <- behav %>%
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
                               "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames))
+  facet_grid(~genoYear, labeller = as_labeller(genoAPAnames))
 
 ## num entrances - saved as beahv_NumEntrance_6 or _3
 entrances <- behav %>% 
@@ -361,8 +369,6 @@ pTimeOPP <- behav %>%
   facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
 
 
-
-
 ## save plots ----
 setwd("/Users/raynamharris/Github/BehavEphyRNAseq/results/2016_10_24_sfnposter/")
 save_plot("one.pdf", one,
@@ -393,14 +399,39 @@ save_plot("NumEntrancesTimeTarget.png", entrantime,
 
 ## heatmap of data (not correlations, but raw/scaled data) ----
 ### melt to make long 
+
+
+
 behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
                                "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
-                               "TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                               "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
                                "ShockOnOff","Year","PairedPartner","Experimenter",
                                "Housing","TestLocation","filename", "pair1", "pair2"))
-behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% droplevels()
+
+behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% 
+  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  droplevels() 
+  
+
 #behav_long <- filter(behav_long, !grepl("Retention|Retest", genoAPAsession )) %>% droplevels()
+behav_long$value <- as.numeric(behav_long$value)
 str(behav_long)
+
+
+##widen to get individual values by session
+behav_long_genoAPAsessionComboInd <- dcast(behav_long, genoAPAsessionComboInd ~ variable, value.var= "value", fun.aggregate=mean)
+names(behav_long_genoAPAsessionComboInd)
+head(behav_long_genoAPAsessionComboInd)
+behav_long_genoAPAsessionComboInd <- behav_long_genoAPAsessionComboInd[c(1:43)] #drop non-numeric colums 
+
+##widen to get one animal per row!!
+behav_long_oneanimal <- behav_long
+behav_long_oneanimal$measure <- as.factor(paste(behav_long_oneanimal$variable, behav_long_oneanimal$TrainSessionCombo, sep="_"))
+behav_long_oneanimalwide <- dcast(behav_long_oneanimal, ID ~ measure, value.var= "value", fun.aggregate=mean)
+str(behav_long_oneanimalwide)
+head(behav_long_oneanimalwide)
 
 ## now widen then lengthen to get group averages
 behav_long_genoAPA <- dcast(behav_long, genoAPA ~ variable, value.var= "value", fun.aggregate=mean)
@@ -408,6 +439,8 @@ head(behav_long_genoAPA)
 
 ## scale columns
 rownames(behav_long_genoAPA) <- behav_long_genoAPA$genoAPA    # set $genoAPAsession as rownames
+behav_long_genoAPA <- behav_long_genoAPA[-c(4:5)]
+
 behav_long_genoAPA[1] <- NULL
 behav_long_genoAPA <- scale(behav_long_genoAPA)
 head(behav_long_genoAPA)
@@ -418,11 +451,13 @@ heatmap.2(behav_long_genoAPA,
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
           trace="none",         # turns off trace lines inside the heat map
-          margins =c(9,13),     # widens margins around plot
+          margins =c(9,25),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
           RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b",
-                                   "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"))
+                            "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"),
+          srtCol=45,  adjCol = c(1,1), # angled column label
+          cexRow = 2, cexCol = 1.1)      # font size
 
 ## now widen then lengthen to get group averages by year (omit WT 2014)
 behav_long_genoAPAyear <- dcast(behav_long, genoAPAyear ~ variable, value.var= "value", fun.aggregate=mean)
@@ -431,23 +466,51 @@ behav_long_genoAPAyear$genoAPAyear
 
 ## scale columns
 rownames(behav_long_genoAPAyear) <- behav_long_genoAPAyear$genoAPA    # set $genoAPAsession as rownames
+behav_long_genoAPAyear <- behav_long_genoAPAyear[-c(4:5)]
 behav_long_genoAPAyear[1] <- NULL
 behav_long_genoAPAyear <- scale(behav_long_genoAPAyear)
 head(behav_long_genoAPAyear)
+str(behav_long_genoAPAyear)
 
 ## heatmap clusterd - saved as behav_heatmap.png
 heatpalette <- colorRampPalette(c("#67a9cf","#f7f7f7","#ef8a62"))(n = 100)
-heatmap.2(behav_long_genoAPAyear,
+heatmap.2(behav_long_genoAPAyear, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
           trace="none",         # turns off trace lines inside the heat map
-          margins =c(9,14),     # widens margins around plot
+          margins =c(9,30),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
           RowSideColors = c("#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
                             "#00441b", "#1b7837", "#af8dc3", "#40004b",
                             "#40004b", "#762a83", "#762a83", "#7fbf7b",
-                            "#00441b", "#00441b", "#1b7837", "#1b7837"))
+                            "#00441b", "#00441b", "#1b7837", "#1b7837"),
+          srtCol=45,  adjCol = c(1,1), # angled column label
+          cexRow = 2, cexCol = 1.1)      # font size
+
+
+head(behav_long_oneanimalwide)
+is.data.frame(behav_long_oneanimalwide)
+rownames(behav_long_oneanimalwide) <- behav_long_oneanimalwide$ID    # set $genoAPAsession as rownames
+behav_long_oneanimalwide[1] <- NULL
+behav_long_oneanimalwide <- scale(behav_long_oneanimalwide)
+head(behav_long_oneanimalwide)
+behav_long_oneanimalwide <- na.omit(behav_long_oneanimalwide)
+
+heatmap.2(behav_long_oneanimalwide, 
+          notecol="black",      # change font color of cell labels to black
+          density.info="none",  # turns off density plot inside color legend
+          trace="none",         # turns off trace lines inside the heat map
+          margins =c(9,15),     # widens margins around plot
+          col=heatpalette,       # use on color palette defined earlier
+          dendrogram="both",     # only draw a row dendrogram
+          RowSideColors = c("#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
+                            "#00441b", "#1b7837", "#af8dc3", "#40004b",
+                            "#40004b", "#762a83", "#762a83", "#7fbf7b",
+                            "#00441b", "#00441b", "#1b7837", "#1b7837"),
+          srtCol=45,  adjCol = c(1,1), # angled column label
+          cexRow = 2, cexCol = 1.1)      # font size
+
 
 ## correlation matrix and plots ----
 ggplot(behav_long_genoAPA, aes(x = genoAPA, y = variable, fill = value)) + 
@@ -458,7 +521,7 @@ ggplot(behav_long_genoAPA, aes(x = genoAPA, y = variable, fill = value)) +
 behav_matrix <- behav   #create new dataframe
 rownames(behav_matrix) <- behav_matrix$genoAPAsessionDayInd     # set $genoAPAsessionInd as rownames
 names(behav_matrix)
-behav_matrix <- behav_matrix[-c(1:27)] #delete all non-numeric columns and p.miss and TotalTime
+behav_matrix <- behav_matrix[-c(1:32)] #delete all non-numeric columns and p.miss and TotalTime
 head(behav_matrix)
 str(behav_matrix)
 
@@ -509,4 +572,5 @@ behav %>%
   geom_boxplot() + theme_bw() + scale_fill_manual(values=APApaletteSlim) +
   facet_wrap(~Genotype+Year) +
   scale_y_continuous(name="Probability of being in the shock zone") 
+
 
