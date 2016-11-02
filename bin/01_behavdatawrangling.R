@@ -151,3 +151,42 @@ names(yokedtrainedpair)
 
 #write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
 
+
+### melt to make long 
+behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
+                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
+                               "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                               "ShockOnOff","Year","PairedPartner","Experimenter",
+                               "Housing","TestLocation","filename", "pair1", "pair2"))
+
+behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% 
+  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  droplevels() 
+
+
+##widen to get individual values by session
+behav_long_genoAPAsessionComboInd <- dcast(behav_long, genoAPAsessionComboInd ~ variable, value.var= "value", fun.aggregate=mean)
+names(behav_long_genoAPAsessionComboInd)
+head(behav_long_genoAPAsessionComboInd)
+behav_long_genoAPAsessionComboInd <- behav_long_genoAPAsessionComboInd[c(1:43)] #drop non-numeric colums 
+
+##widen to get one animal per row!!
+behav_long_oneanimal <- behav_long
+behav_long_oneanimal$measure <- as.factor(paste(behav_long_oneanimal$variable, behav_long_oneanimal$TrainSessionCombo, sep="_"))
+behav_long_oneanimalwide <- dcast(behav_long_oneanimal, ID ~ measure, value.var= "value", fun.aggregate=mean)
+str(behav_long_oneanimalwide)
+head(behav_long_oneanimalwide)
+
+## now widen then lengthen to get group averages
+behav_long_genoAPA <- dcast(behav_long, genoAPA ~ variable, value.var= "value", fun.aggregate=mean)
+head(behav_long_genoAPA)
+
+## scale columns
+rownames(behav_long_genoAPA) <- behav_long_genoAPA$genoAPA    # set $genoAPAsession as rownames
+behav_long_genoAPA <- behav_long_genoAPA[-c(4:5)]
+
+behav_long_genoAPA[1] <- NULL
+behav_long_genoAPA <- scale(behav_long_genoAPA)
+head(behav_long_genoAPA)
