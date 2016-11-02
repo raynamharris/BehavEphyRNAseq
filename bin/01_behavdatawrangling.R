@@ -14,10 +14,13 @@ setwd("~/Github/BehavEphyRNAseq/data/sample_info/")
 behav <- read.csv("APA_2013-2016.csv", header=TRUE, stringsAsFactors = FALSE, na.strings = c("", "ND", "N/A"))
 str(behav)
 
+behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C1" = "T4_C1")) 
+
+
 ## rename columns 
-names(behav)[18] <- "NumEntrances"
-names(behav)[23] <- "NumShock"
-names(behav)[26] <- "Speed_cm_s"
+names(behav)[18] <- "NumEntrances" # previously  X.Entrances 
+names(behav)[23] <- "NumShock"    # previously X.Shock 
+names(behav)[26] <- "Speed.cm.s" # Speed..cm.s.
 names(behav) # check all good
 head(behav)
 
@@ -106,7 +109,6 @@ behav$genoAPAsessionComboInd <- as.factor(paste(behav$genoAPAsessionCombo, behav
 behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionComboDay, sep="_"))
 behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, sep="_"))
 
-
 ## reorders dataframe 
 names(behav)
 behav <- behav[c(2,59:71,3:9,1,10:58)]  
@@ -114,15 +116,24 @@ names(behav)
 
 
 ## subset the data -----
+# by experimenter
 maddy <- behav %>% filter(Experimenter == "Maddy") 
 jma <- behav %>% filter(Experimenter != "Maddy") 
+
+# by genotype
 wt <- behav %>% filter(Genotype == "WT")
 frmr1 <- behav %>% filter(Genotype != "WT")  
-y2015 <- behav %>%  filter(Year == "2015")
-maddyWT <- behav %>%  filter(Genotype == "WT", Experimenter == "Maddy")
-maddyWTtrained <- behav %>%  filter(Genotype == "WT", Experimenter == "Maddy", TrainGroup == "trained") 
 
-## make a df to look at number of shock actually received by the yoked animals  ----
+# by year
+y2015 <- behav %>%  filter(Year == "2015")
+
+# by experiement by genotype experimenter training
+maddyWT <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT")
+maddyWTtrained <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT",  TrainGroup == "trained") 
+
+## Create novel dataframes
+
+## make a df to look at number of shock actually received by the yoked animals
 names(behav)
 yoked <- behav %>% 
   filter(Experimenter == "Maddy") %>%
@@ -152,41 +163,25 @@ names(yokedtrainedpair)
 #write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
 
 
-### melt to make long 
-behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
+### For heat map melt to make long  ## goes with a heatmap in next script ----
+behavbysession <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
                                "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
                                "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
                                "ShockOnOff","Year","PairedPartner","Experimenter",
-                               "Housing","TestLocation","filename", "pair1", "pair2"))
-
-behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% 
+                               "Housing","TestLocation", "filename", "pair1", "pair2"))
+behavbysession <- filter(behavbysession, !grepl("TotalTime.s|p.miss", variable )) %>% 
   filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
-  droplevels() 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>%  droplevels() 
+## create the bysession column and wide
+behavbysession$bysession <- as.factor(paste(behavbysession$TrainSessionCombo, behavbysession$variable, sep="_"))
+behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainSequence + TrainGroup ~ bysession, value.var= "value", fun.aggregate = mean)
+summary(behavbysession) 
+head(behavbysession)
 
 
-##widen to get individual values by session
-behav_long_genoAPAsessionComboInd <- dcast(behav_long, genoAPAsessionComboInd ~ variable, value.var= "value", fun.aggregate=mean)
-names(behav_long_genoAPAsessionComboInd)
-head(behav_long_genoAPAsessionComboInd)
-behav_long_genoAPAsessionComboInd <- behav_long_genoAPAsessionComboInd[c(1:43)] #drop non-numeric colums 
 
-##widen to get one animal per row!!
-behav_long_oneanimal <- behav_long
-behav_long_oneanimal$measure <- as.factor(paste(behav_long_oneanimal$variable, behav_long_oneanimal$TrainSessionCombo, sep="_"))
-behav_long_oneanimalwide <- dcast(behav_long_oneanimal, ID ~ measure, value.var= "value", fun.aggregate=mean)
-str(behav_long_oneanimalwide)
-head(behav_long_oneanimalwide)
 
-## now widen then lengthen to get group averages
-behav_long_genoAPA <- dcast(behav_long, genoAPA ~ variable, value.var= "value", fun.aggregate=mean)
-head(behav_long_genoAPA)
 
-## scale columns
-rownames(behav_long_genoAPA) <- behav_long_genoAPA$genoAPA    # set $genoAPAsession as rownames
-behav_long_genoAPA <- behav_long_genoAPA[-c(4:5)]
 
-behav_long_genoAPA[1] <- NULL
-behav_long_genoAPA <- scale(behav_long_genoAPA)
-head(behav_long_genoAPA)
+

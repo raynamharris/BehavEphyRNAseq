@@ -6,8 +6,6 @@ library(magrittr) ## to use the weird pipe
 library(gplots) ##for making awesome plots
 library(cowplot) ## for some easy to use themes
 
-
-
 ## color palettes tips ----
 
 ## for APApalette
@@ -236,8 +234,30 @@ save_plot("NumEntrancesTimeTarget.png", entrantime,
 
 ## heatmap of data (not correlations, but raw/scaled data) ----
 
+#melt that data
+behav_long <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
+                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
+                               "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                               "ShockOnOff","Year","PairedPartner","Experimenter",
+                               "Housing","TestLocation","filename", "pair1", "pair2"))
 
+behav_long <- filter(behav_long, !grepl("TotalTime.s|p.miss", variable )) %>% 
+  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
+                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>% 
+  droplevels() 
 
+## now widen then lengthen to get group averages
+behav_long_genoAPA <- dcast(behav_long, genoAPA ~ variable, value.var= "value", fun.aggregate=mean)
+head(behav_long_genoAPA)
+
+## scale columns
+rownames(behav_long_genoAPA) <- behav_long_genoAPA$genoAPA    # set $genoAPAsession as rownames
+behav_long_genoAPA <- behav_long_genoAPA[-c(4:5)]
+
+behav_long_genoAPA[1] <- NULL
+behav_long_genoAPA <- scale(behav_long_genoAPA)
+head(behav_long_genoAPA)
 
 
 ## heatmap clusterd - saved as behav_heatmap.png
@@ -284,27 +304,83 @@ heatmap.2(behav_long_genoAPAyear,
           cexRow = 2, cexCol = 1.1)      # font size
 
 
-head(behav_long_oneanimalwide)
-is.data.frame(behav_long_oneanimalwide)
-rownames(behav_long_oneanimalwide) <- behav_long_oneanimalwide$ID    # set $genoAPAsession as rownames
-behav_long_oneanimalwide[1] <- NULL
-behav_long_oneanimalwide <- scale(behav_long_oneanimalwide)
-head(behav_long_oneanimalwide)
-behav_long_oneanimalwide <- na.omit(behav_long_oneanimalwide)
-
-heatmap.2(behav_long_oneanimalwide, 
+## behavbysessionHabT3
+behavbysessionHabT3 <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
+                                        "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
+                                        "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                                        "ShockOnOff","Year","PairedPartner","Experimenter",
+                                        "Housing","TestLocation", "filename", "pair1", "pair2"))
+behavbysessionHabT3 <- filter(behavbysessionHabT3, !grepl("TotalTime.s|p.miss", variable )) %>% 
+  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
+  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3"))  %>%  droplevels() 
+## create the bysession column and wide
+names(behavbysessionHabT3)
+head(behavbysessionHabT3)
+behavbysessionHabT3$bysession <- as.factor(paste(behavbysessionHabT3$ShockOnOff, behavbysessionHabT3$TrainSessionCombo, behavbysessionHabT3$Genotype, behavbysessionHabT3$TrainGroup, sep="_"))
+behavbysessionHabT3 <- dcast(behavbysessionHabT3, bysession   ~ variable, value.var= "value", fun.aggregate = mean)
+summary(behavbysessionHabT3) 
+head(behavbysessionHabT3)
+## makin' it a matrix
+is.data.frame(behavbysessionHabT3)
+rownames(behavbysessionHabT3) <- behavbysessionHabT3$bysession    # set $genoAPAsession as rownames
+names(behavbysessionHabT3)
+behavbysessionHabT3 <- behavbysessionHabT3[-c(1)]
+## send the factors to 
+behavbysessionHabT3 <- scale(behavbysessionHabT3)
+head(behavbysessionHabT3)
+behavbysessionHabT3 <- na.omit(behavbysessionHabT3)
+dev.off()
+heatmap.2(behavbysessionHabT3, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
           trace="none",         # turns off trace lines inside the heat map
-          margins =c(9,15),     # widens margins around plot
+          margins =c(5,10),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
-          RowSideColors = c("#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
-                            "#00441b", "#1b7837", "#af8dc3", "#40004b",
-                            "#40004b", "#762a83", "#762a83", "#7fbf7b",
-                            "#00441b", "#00441b", "#1b7837", "#1b7837"),
           srtCol=45,  adjCol = c(1,1), # angled column label
-          cexRow = 2, cexCol = 1.1)      # font size
+          cexRow = 0.8, cexCol = 0.6)      # font size
+# saved as behavbysessionHabT3.png
+
+
+## behavbysessionT1C4T5T6
+behavbysessionT1C4T5T6 <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
+                                        "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
+                                        "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
+                                        "ShockOnOff","Year","PairedPartner","Experimenter",
+                                        "Housing","TestLocation", "filename", "pair1", "pair2"))
+behavbysessionT1C4T5T6 <- filter(behavbysessionT1C4T5T6, !grepl("TotalTime.s|p.miss", variable )) %>% 
+  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
+  filter(TrainSessionCombo %in% c("T1","T2","T3","T4_C1", "T5_C2", "T6_C3"))  %>%  droplevels() 
+## create the bysession column and wide
+names(behavbysessionT1C4T5T6)
+head(behavbysessionT1C4T5T6)
+behavbysessionT1C4T5T6$bysession <- as.factor(paste(behavbysessionT1C4T5T6$TrainSessionCombo, behavbysessionT1C4T5T6$Genotype, behavbysessionT1C4T5T6$TrainGroup, sep="_"))
+behavbysessionT1C4T5T6 <- dcast(behavbysessionT1C4T5T6, bysession   ~ variable, value.var= "value", fun.aggregate = mean)
+summary(behavbysessionT1C4T5T6) 
+head(behavbysessionT1C4T5T6)
+## makin' it a matrix
+is.data.frame(behavbysessionT1C4T5T6)
+rownames(behavbysessionT1C4T5T6) <- behavbysessionT1C4T5T6$bysession    # set $genoAPAsession as rownames
+names(behavbysessionT1C4T5T6)
+behavbysessionT1C4T5T6 <- behavbysessionT1C4T5T6[-c(1)]
+## send the factors to 
+behavbysessionT1C4T5T6 <- scale(behavbysessionT1C4T5T6)
+head(behavbysessionT1C4T5T6)
+behavbysessionT1C4T5T6 <- na.omit(behavbysessionT1C4T5T6)
+dev.off()
+heatmap.2(behavbysessionT1C4T5T6, 
+          notecol="black",      # change font color of cell labels to black
+          density.info="none",  # turns off density plot inside color legend
+          trace="none",         # turns off trace lines inside the heat map
+          margins =c(5,10),     # widens margins around plot
+          col=heatpalette,       # use on color palette defined earlier
+          dendrogram="both",     # only draw a row dendrogram
+          srtCol=45,  adjCol = c(1,1), # angled column label
+          cexRow = 0.8, cexCol = 0.6)      # font size
+# saved as behavbysessionT1C4T5T6.png
+
+
+
 
 
 ## correlation matrix and plots ----
