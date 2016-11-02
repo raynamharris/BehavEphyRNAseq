@@ -182,6 +182,7 @@ head(behavbysession)
 
 
 
+summary(behav)
 
 
 
