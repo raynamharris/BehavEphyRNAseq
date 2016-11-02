@@ -1,5 +1,6 @@
 # WGCNA ----
 # Install and Load WGCNA package
+# https://labs.genetics.ucla.edu/horvath/CoexpressionNetwork/Rpackages/WGCNA/faq.html
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("WGCNA")
 #install.packages("flashClust")
@@ -16,19 +17,22 @@ allowWGCNAThreads()
 ########################################################    
 setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 
-datExpr0 <- read.csv("tpmswgcna.csv", header=TRUE, check.names=FALSE, row.names = 1)
+datExpr0 <- tpmbygeneCA3
 rownames(datExpr0) 
 str(datExpr0)
 
 ## make values numbers not integers
-cols = c(1:67)
+cols = c(1:15)
 datExpr0[,cols] %<>% lapply(function(x) as.numeric(as.integer(x)))
 str(datExpr0)
-## 58,716 transcripts, 67 samples
+summary(datExpr0)
+## 58,716 transcripts in tpmforwgcna
+## 22,485 genes in tpmbygene
 
 ## remove rows with rowsum > some value
-datExpr0 <- datExpr0[rowSums(datExpr0[, -1])>335, ]
+datExpr0 <- datExpr0[rowSums(datExpr0[, -1])>20, ]
 str(datExpr0)
+summary(datExpr0)
 
 ## transpose data
 datExpr0 <- t(datExpr0)
@@ -42,80 +46,11 @@ gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
 head(gsg)
 
 #-----Make a trait data frame from just sample info without beahvior
-datTraits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
-str(datTraits)
-tail(datTraits)
-
-rownames(datTraits) <- datTraits$RNAseqID    # set $genoAPAsessionInd as rownames
-datTraits <- datTraits[c(3:13)] #keep only trait columns 
-tail(datTraits)
-str(datTraits)
-
-## making NAs more meaningful
-datTraits$APA[is.na(datTraits$APA)] <- "noAPA" 
-datTraits$Behavior[is.na(datTraits$Behavior)] <- "noAPA" 
-datTraits$E.phy[is.na(datTraits$E.phy)] <- "noAPA" 
-datTraits$Conflict[is.na(datTraits$Conflict)] <- "noAPA" 
-head(datTraits)
-
-## adding combinatorial traits
-datTraits$Group <- as.factor(paste(datTraits$Genotype, datTraits$Conflict, datTraits$APA, sep=" ")) 
-datTraits$APAconflict <- as.factor(paste(datTraits$APA, datTraits$Conflict, sep="_")) 
-datTraits$APApunch <- as.factor(paste(datTraits$APA, datTraits$Punch, sep="_")) 
-datTraits$ConflictPunch <- as.factor(paste(datTraits$Conflict, datTraits$Punch, sep="_")) 
-datTraits$APAconflictPunch <- as.factor(paste(datTraits$APA, datTraits$Conflict, datTraits$Punch, sep="_")) 
-
-## making it a numeric
-datTraits$Mouse <- as.integer(factor(datTraits$Mouse))
-datTraits$Genotype <- as.integer(factor(datTraits$Genotype))
-datTraits$Conflict <- as.integer(factor(datTraits$Conflict))
-datTraits$APA <- as.integer(factor(datTraits$APA))
-datTraits$Group <- as.integer(factor(datTraits$Group))
-datTraits$Behavior <- as.integer(factor(datTraits$Behavior))
-datTraits$E.phy <- as.integer(factor(datTraits$E.phy))
-datTraits$Punch <- as.integer(factor(datTraits$Punch))
-datTraits$Slice <- as.integer(factor(datTraits$Slice))
-datTraits$Date <- as.integer(factor(datTraits$Date))
-datTraits$jobnumber <- as.integer(factor(datTraits$jobnumber))
-datTraits$APAconflict <- as.integer(factor(datTraits$APAconflict))
-datTraits$APApunch <- as.integer(factor(datTraits$APApunch))
-datTraits$APAconflictPunch <- as.integer(factor(datTraits$APAconflictPunch))
-datTraits$ConflictPunch <- as.integer(factor(datTraits$ConflictPunch))
+datTraits <- TraitsCA3
 head(datTraits)
 str(datTraits)
 
-##remove some columns
-datTraits$Date <- NULL
-datTraits$jobnumber <- NULL
-datTraits$Genotype <- NULL
-datTraits$Behavior <- NULL
-datTraits$E.phy <- NULL
-datTraits$RNAseqID <- NULL
-datTraits$Tube <- NULL
 
-## remove mice 100 and 101
-datTraits <- datTraits[-c(1:14), ]
-datExpr0 <- datExpr0[-c(1:14), ]
-rownames(datExpr0)
-
-## remove mice 147D_CA1_1 and 145B_CA3_1 because they produced almost 0 zeros
-## remove 147 and 148 because they are home cage animals
-datTraits$names<-rownames(datTraits)
-datTraits <- datTraits %>% arrange(names)
-datTraits <- datTraits[-c(22,42,36:38,45:47), ] 
-rownames(datTraits) <- datTraits$names
-datTraits$names <- NULL
-
-datExpr0$names<-rownames(datExpr0)
-datExpr0 <- datExpr0 %>% arrange(names)
-datExpr0 <- datExpr0[-c(22,42,36:38,45:47), ]  
-rownames(datExpr0) <- datExpr0$names
-datExpr0$names <- NULL
-
-## make values numbers not integers
-cols = c(1:19482)
-datExpr0[,cols] %<>% lapply(function(x) as.numeric(as.integer(x)))
-str(datExpr0)
 
 #######   #################    ################   #######    
 #                 Call sample outliers
@@ -170,7 +105,7 @@ abline(h=0.90, col="red")
 plot(sft$fitIndices[,1], sft$fitIndices[,5], xlab= "Soft Threshold (power)", ylab="Mean Connectivity", type="n", main = paste("Mean connectivity"))
 text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1, col="red")
 dev.off()
-softPower=12
+softPower=20
 
 #######   #################    ################   #######    
 #                    Construct network
@@ -202,7 +137,7 @@ METree= flashClust(as.dist(MEDiss), method= "average")
 
 #quartz()
 plot(METree, main= "Clustering of module eigengenes", xlab= "", sub= "")
-MEDissThres = 0.1
+MEDissThres = 0.4
 abline(h=MEDissThres, col="red")
 merge= mergeCloseModules(datExpr0, dynamicColors, cutHeight= MEDissThres, verbose =3)
 
@@ -244,9 +179,10 @@ moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nSamples);
 textMatrix = paste(signif(moduleTraitCor, 2), "\n(",
                    signif(moduleTraitPvalue, 1), ")", sep = "");
 dim(textMatrix) = dim(moduleTraitCor)
+
+# Display the correlation values within a heatmap plot
 dev.off()
 par(mar = c(6, 8.5, 3, 3));
-# Display the correlation values within a heatmap plot
 labeledHeatmap(Matrix = moduleTraitCor,
                xLabels = names(datTraits),
                yLabels = names(MEs),
@@ -264,7 +200,7 @@ labeledHeatmap(Matrix = moduleTraitCor,
 
 
 #---------------------Eigengene heatmap
-which.module="turquoise" #replace with module of interest
+which.module="lightgreen" #replace with module of interest
 datME=MEs
 datExpr=datt
 #quartz()
