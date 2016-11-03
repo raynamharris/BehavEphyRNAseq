@@ -171,19 +171,14 @@ rm(trainedpair) # only need to keep yokedtrainedpair
 #write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
 
 
-### Making the data long ----
-names(behav)
+### Making the data long then wide----
 behavbysession <- melt(behav, id = c(1:21))
-
-behavbysession <- filter(behavbysession, !grepl("TotalTime.s|p.miss", variable )) %>% 
-  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
-                                  "T5_C2", "T6_C3", "Retest", "Retention"))  %>%  droplevels() 
-## create the bysession column and wide
 behavbysession$bysession <- as.factor(paste(behavbysession$TrainSessionCombo, behavbysession$variable, sep="_"))
-behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainSequence + TrainGroup ~ bysession, value.var= "value", fun.aggregate = mean)
+behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainProtocol + TrainSequence + TrainGroup + 
+                          PairedPartner + Experimenter + Housing + TestLocation + genoYear + APA + 
+                          genoAPA + pair1 + pair2 ~ bysession, value.var= "value", fun.aggregate = mean)
 summary(behavbysession) 
-head(behavbysession)
+tail(behavbysession)
 
 
 #write.csv(behav, "behav.csv", row.names = FALSE)
