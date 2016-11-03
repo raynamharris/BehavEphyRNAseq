@@ -10,11 +10,9 @@ library(reshape2) #@ for melting dataframe
 ## read and wrangle the data ----
 
 ## read the data 
-setwd("~/Github/BehavEphyRNAseq/data/sample_info/")
-behav <- read.csv("APA_2013-2016.csv", header=TRUE, stringsAsFactors = FALSE, na.strings = c("", "ND", "N/A"))
+setwd("~/Github/BehavEphyRNAseq/data/behavior/")
+behav <- read.csv("Data2013_2016_forAnalysis.csv", header=TRUE, stringsAsFactors = FALSE, na.strings = c("", "ND", "N/A"))
 str(behav)
-
-behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C1" = "T4_C1")) 
 
 
 ## rename columns 
