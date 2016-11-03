@@ -55,17 +55,23 @@ behav$Speed2ndEntr <-ifelse((behav$Speed2ndEntr != -1), behav$Speed2ndEntr, NA)
 behav$Path2ndEntr <-ifelse((behav$Path2ndEntr != -1), behav$Path2ndEntr, NA)
 summary(behav)
 
+## recalculate speed 1 and speed 2
+behav <- behav %>% mutate(Speed1 = Path1stEntr / Time1stEntr)
+behav <- behav %>% mutate(Speed2 = Path2ndEntr / Time2ndEntr)
+select(behav, Speed1, Speed2, Speed1stEntr.cm.s., Speed2ndEntr) ## shows definately not the same thign!!!
+
+## create a entra shock diff
+behav <- behav %>% mutate(EntrShockDiff = NumShock - NumEntrances)
+
 ## rename and revalue some values 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1-KO")) 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1?" = "FMR1-KO")) 
 behav$Genotype <- factor(behav$Genotype, levels = c("WT", "FMR1-KO"))
+levels(behav$Genotype)
 
 behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained")) 
-behav$TrainGroup <- factor(behav$Genotype, levels = c("control?", "untrained"))
-
-behav$TrainSequence[is.na(behav$TrainSequence)] <- "untrained" ## make NA more meaningful
-behav$TrainSequence <- as.factor(behav$TrainSequence)
-
+behav$TrainGroup <- revalue(behav$TrainGroup, c("control?" = "untrained")) 
+levels(behav$TrainGroup)
 
 ## create combinatorial factor columns 
 behav$genoYear <- as.factor(paste(behav$Genotype,behav$Year,sep="_"))
