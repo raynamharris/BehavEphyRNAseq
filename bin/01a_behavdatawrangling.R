@@ -23,9 +23,9 @@ behav <- behav %>%
 names(behav)
 
 ## rename columns 
-names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPath.m"
+names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPathArena.m"
 names(behav)[names(behav)=="sd.Speed.Arena."] <- "SdevSpeedArena."
-names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPath.m"
+names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPathArena.m"
 names(behav)[names(behav)=="X.Shock"] <- "NumShock"
 names(behav)[names(behav)=="X.Entrances"] <- "NumEntrances"
 names(behav)[names(behav)=="Speed..Arena."] <- "SpeedArena.cm.s"
@@ -36,12 +36,6 @@ names(behav) # check all good
 ## remove bad/extra rows
 behav <- behav %>% dplyr::filter(Year %in% c("2012", "2013", "2014", "2015", "2016", "2017")) ## remove extra headers
 behav <- behav %>% dplyr::filter(!(TrainSession %in% c("C4", "T7"))) ## remove extra sessions
-behav <- behav %>% dplyr::filter(Path2ndEntr != "-1") ## bad data, not possible 
-
-#behav <- behav %>% dplyr::filter(!grepl("16-357A|16-357B|16-357D", ID)) ## remove yoked animals that are still bad
-
-inconsistent <- behav %>% dplyr::filter(Path1stEntr == "0")
-
 
 ## make characters either factors or numbers, as appropriate
 colsfactor = c(1:13)
@@ -50,6 +44,15 @@ behav[,colsfactor] %<>% lapply(function(x) as.factor(as.character(x)))
 behav[,colsnumeric] %<>% lapply(function(x) as.numeric(as.character(x)))
 str(behav)
 names(behav)
+summary(behav)
+
+## some aniamls have a 0 for path to 1st entrance because they were dropped into the schock zone. THose are replaced with NA. 
+## all values of -1 are removed because they really mean, couldnt be calculated.
+
+behav$Path1stEntr <-ifelse((behav$Path1stEntr != 0), behav$Path1stEntr, NA)
+behav$Speed1stEntr.cm.s. <-ifelse((behav$Speed1stEntr.cm.s. != -1), behav$Speed1stEntr.cm.s., NA)
+behav$Speed2ndEntr <-ifelse((behav$Speed2ndEntr != -1), behav$Speed2ndEntr, NA)
+behav$Path2ndEntr <-ifelse((behav$Path2ndEntr != -1), behav$Path2ndEntr, NA)
 summary(behav)
 
 ## rename and revalue some values 
@@ -62,11 +65,6 @@ behav$TrainGroup <- factor(behav$Genotype, levels = c("control?", "untrained"))
 
 behav$TrainSequence[is.na(behav$TrainSequence)] <- "untrained" ## make NA more meaningful
 behav$TrainSequence <- as.factor(behav$TrainSequence)
-
-
-## speed was calculated in excell, but I'm not sure its that great. 
-behav$Speed1stEntr.cm.s. <- gsub("-1", "NA", behav$Speed1stEntr.cm.s.)
-
 
 
 ## create combinatorial factor columns 
