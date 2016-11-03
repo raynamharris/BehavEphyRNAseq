@@ -23,9 +23,13 @@ behav <- behav %>%
 names(behav)
 
 ## rename columns 
-names(behav)[18] <- "NumEntrances" # previously  X.Entrances 
-names(behav)[23] <- "NumShock"    # previously X.Shock 
-names(behav)[26] <- "Speed.cm.s" # Speed..cm.s.
+names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPath.m"
+names(behav)[names(behav)=="sd.Speed.Arena."] <- "SdevSpeedArena."
+names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPath.m"
+names(behav)[names(behav)=="X.Shock"] <- "NumShock"
+names(behav)[names(behav)=="Speed..Arena."] <- "SpeedArena.cm.s"
+names(behav)[names(behav)=="Entr.Dist.1.m."] <- "Dist1stEntr.m."
+names(behav)[names(behav)=="Speed..Arena."] <- "SpeedArena.cm.s"
 names(behav) # check all good
 head(behav)
 
