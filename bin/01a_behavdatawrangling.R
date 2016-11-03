@@ -5,7 +5,7 @@ library(dplyr) ## for filtering and selecting rows
 library(plyr) ## for renmaing factors
 library(ggplot2) ## for awesome plots!
 library(reshape2) #@ for melting dataframe
-
+library(magrittr)
 
 ## read and wrangle the data ----
 
@@ -27,34 +27,47 @@ names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPath.m"
 names(behav)[names(behav)=="sd.Speed.Arena."] <- "SdevSpeedArena."
 names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPath.m"
 names(behav)[names(behav)=="X.Shock"] <- "NumShock"
+names(behav)[names(behav)=="X.Entrances"] <- "NumEntrances"
 names(behav)[names(behav)=="Speed..Arena."] <- "SpeedArena.cm.s"
 names(behav)[names(behav)=="Entr.Dist.1.m."] <- "Dist1stEntr.m."
 names(behav)[names(behav)=="Speed..Arena."] <- "SpeedArena.cm.s"
 names(behav) # check all good
-head(behav)
 
 ## remove bad/extra rows
 behav <- behav %>% dplyr::filter(Year %in% c("2012", "2013", "2014", "2015", "2016", "2017")) ## remove extra headers
-behav <- behav %>% dplyr::filter(TrainSession != "C4?") ## remove ?C in train train animal
-behav <- behav %>% dplyr::filter(!is.na(TotalTime.s.)) ## remove file with no data
-behav <- behav %>% dplyr::filter(!grepl("16-357A|16-357B|16-357D", ID)) ## 3 bad yoked animals
+behav <- behav %>% dplyr::filter(!(TrainSession %in% c("C4", "T7"))) ## remove extra sessions
+behav <- behav %>% dplyr::filter(Path2ndEntr != "-1") ## bad data, not possible 
+
+#behav <- behav %>% dplyr::filter(!grepl("16-357A|16-357B|16-357D", ID)) ## remove yoked animals that are still bad
+
+inconsistent <- behav %>% dplyr::filter(Path1stEntr == "0")
+
 
 ## make characters either factors or numbers, as appropriate
-cols = c(1:4,6:14)
-cols2 = c(15:58)
-behav[,cols] %<>% lapply(function(x) as.factor(as.character(x)))
-behav[,cols2] %<>% lapply(function(x) as.numeric(as.character(x)))
+colsfactor = c(1:13)
+colsnumeric = c(14:52)
+behav[,colsfactor] %<>% lapply(function(x) as.factor(as.character(x)))
+behav[,colsnumeric] %<>% lapply(function(x) as.numeric(as.character(x)))
 str(behav)
 names(behav)
+summary(behav)
 
 ## rename and revalue some values 
 behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1-KO")) 
-behav$Genotype <- revalue(behav$Genotype, c("FMR1?WT?" = "FMR1-KO")) 
+behav$Genotype <- revalue(behav$Genotype, c("FMR1?" = "FMR1-KO")) 
 behav$Genotype <- factor(behav$Genotype, levels = c("WT", "FMR1-KO"))
 
 behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained")) 
+behav$TrainGroup <- factor(behav$Genotype, levels = c("control?", "untrained"))
+
 behav$TrainSequence[is.na(behav$TrainSequence)] <- "untrained" ## make NA more meaningful
 behav$TrainSequence <- as.factor(behav$TrainSequence)
+
+
+## speed was calculated in excell, but I'm not sure its that great. 
+behav$Speed1stEntr.cm.s. <- gsub("-1", "NA", behav$Speed1stEntr.cm.s.)
+
+
 
 ## create combinatorial factor columns 
 behav$genoYear <- as.factor(paste(behav$Genotype,behav$Year,sep="_"))
