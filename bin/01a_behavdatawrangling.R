@@ -11,9 +11,16 @@ library(reshape2) #@ for melting dataframe
 
 ## read the data 
 setwd("~/Github/BehavEphyRNAseq/data/behavior/")
-behav <- read.csv("Data2013_2016_forAnalysis.csv", header=TRUE, stringsAsFactors = FALSE, na.strings = c("", "ND", "N/A"))
+behav <- read.csv("Data2013_2016_forAnalysis.csv", header=TRUE, 
+                  stringsAsFactors = FALSE, na.strings = c("", "ND", "N/A"))
 str(behav)
 
+## drop columns that are not behaviorally relevant
+## see apameasurementnotes.doc from maddy
+behav <- behav %>%
+  select(-p.miss, -TotalTime.s., -filename, -TotalPath.m., -Time1stShock, 
+         -Path1stShock, -Speed..cm.s., -SdSpeed, -Linearity,- MaxPathAvoid)
+names(behav)
 
 ## rename columns 
 names(behav)[18] <- "NumEntrances" # previously  X.Entrances 
