@@ -73,6 +73,9 @@ behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained"))
 behav$TrainGroup <- revalue(behav$TrainGroup, c("control?" = "untrained")) 
 levels(behav$TrainGroup)
 
+#reaplace NAs in trainSequence with train
+behav$TrainSequence[is.na(behav$TrainSequence)] <- "train"
+
 ## create combinatorial factor columns 
 behav$genoYear <- as.factor(paste(behav$Genotype,behav$Year,sep="_"))
 behav$genoYear <- factor(behav$genoYear, 
@@ -82,7 +85,7 @@ levels(behav$genoYear)
 behav$APA <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
 levels(behav$APA)
 behav$APA <- revalue(behav$APA, c("train_trained" = "trained")) 
-behav$APA <- revalue(behav$APA, c("NA_untrained" = "untrained")) 
+behav$APA <- revalue(behav$APA, c("train_untrained" = "untrained")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "trained_conflict")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_yoked" = "yoked_conflict")) 
 behav$APA <- revalue(behav$APA, c("train-train_trained" = "trained_trained")) 
@@ -110,83 +113,68 @@ behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C2" = "T5_C2"))
 behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T5" = "T5_C2")) 
 behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C3" = "T6_C3")) 
 behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T6" = "T6_C3")) 
-behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T7" = "T+_C+")) 
-behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("T8" = "T+_C+"))
-behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C4" = "T+_C+"))
-behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C5" = "T+_C+")) 
-behav$TrainSessionCombo <- revalue(behav$TrainSessionCombo, c("C6" = "T+_C+")) 
 behav$TrainSessionCombo <- factor(behav$TrainSessionCombo, ## set levels
                         levels = c("Hab", "T1","T2","T3","Retest",
-                                   "T4_C1","T5_C2","T6_C3","T+_C+","Retention"))
-behav <- behav %>% dplyr::filter(TrainSessionCombo != "T+_C+")  ## remove T+_C+"
+                                   "T4_C1","T5_C2","T6_C3","Retention"))
+levels(behav$TrainSessionCombo)
 
-behav$TrainSessionComboDay <- as.factor(paste(behav$TrainSessionCombo, behav$Day, sep="_"))
-behav$genoAPAsessionCombo <- as.factor(paste(behav$genoAPA, behav$TrainSessionCombo, sep="_"))
-behav$genoAPAsessionComboInd <- as.factor(paste(behav$genoAPAsessionCombo, behav$ID, sep="_"))
+behav$genoAPATrainSessionCombo <- as.factor(paste(behav$genoAPA, behav$TrainSessionCombo, sep="_"))
+behav$genoAPATrainSessionComboInd <- as.factor(paste(behav$genoAPAsessionCombo, behav$ID, sep="_"))
 
 behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionComboDay, sep="_"))
 behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, sep="_"))
 
 ## reorders dataframe 
 names(behav)
-behav <- behav[c(2,59:71,3:9,1,10:58)]  
+behav <- behav[c(2,1,3:13,56:63,14:55)]  
 names(behav)
 
 
 ## subset the data -----
 # by experimenter
-maddy <- behav %>% filter(Experimenter == "Maddy") 
-jma <- behav %>% filter(Experimenter != "Maddy") 
+#maddy <- behav %>% filter(Experimenter == "Maddy") 
+#jma <- behav %>% filter(Experimenter != "Maddy") 
 
 # by genotype
-wt <- behav %>% filter(Genotype == "WT")
-frmr1 <- behav %>% filter(Genotype != "WT")  
+#wt <- behav %>% filter(Genotype == "WT")
+#frmr1 <- behav %>% filter(Genotype != "WT")  
 
 # by year
-y2015 <- behav %>%  filter(Year == "2015")
+#y2015 <- behav %>%  filter(Year == "2015")
 
 # by experiement by genotype experimenter training
-maddyWT <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT")
-maddyWTtrained <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT",  TrainGroup == "trained") 
+#maddyWT <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT")
+#maddyWTtrained <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT",  TrainGroup == "trained") 
+
 
 ## Create novel dataframes
-
 ## make a df to look at number of shock actually received by the yoked animals
 names(behav)
 yoked <- behav %>% 
   filter(Experimenter == "Maddy") %>%
   filter(grepl("yoked", APA) ) %>%
-  select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence,TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Time1stShock) %>% 
+  select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence,TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Speed1, Speed2, EntrShockDiff) %>% 
   droplevels()
 trainedpair <- behav %>% 
   filter(Experimenter == "Maddy") %>%
-  select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence, TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Time1stShock) %>% 
+  select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence, TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Speed1, Speed2, EntrShockDiff) %>% 
   droplevels()
 ## rename columns 
 names(yoked)[1] <- "yoked"
 names(yoked)[2] <- "trained"
 names(trainedpair)[1] <- "trained"
 names(trainedpair)[2] <- "yoked"
-## join an caluclate some values
-yokedtrainedpair <- left_join(yoked, trainedpair, by = "yoked")
-yokedtrainedpair <- yokedtrainedpair %>%  
-  mutate(NumShockXYequal = ifelse(NumShock.x == NumShock.y, "equal", "not equal")) %>%  
-  arrange(NumShock.x) %>% 
-  select(Genotype.x,Year.x,TrainSequence.x,TrainSessionCombo.x,
-         ID.x, TrainGroup.x, NumShock.x, NumEntrances.x, TimeTarget.x, Time1stEntr.x, Time1stShock.x,
-         ID.y, TrainGroup.y, NumShock.y, NumEntrances.y, TimeTarget.y, Time1stEntr.y, Time1stShock.y)
-
-names(yokedtrainedpair)
+yokedtrainedpair <- left_join(yoked, trainedpair, by = "yoked") ## join an caluclate some values
+rm(yoked)  # only need to keep yokedtrainedpair
+rm(trainedpair) # only need to keep yokedtrainedpair
 
 #write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
 
 
-### For heat map melt to make long  ## goes with a heatmap in next script ----
-behavbysession <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
-                               "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
-                               "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
-                               "ShockOnOff","Year","PairedPartner","Experimenter",
-                               "Housing","TestLocation", "filename", "pair1", "pair2"))
+### Making the data long ----
+names(behav)
+behavbysession <- melt(behav, id = c(1:21))
+
 behavbysession <- filter(behavbysession, !grepl("TotalTime.s|p.miss", variable )) %>% 
   filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
   filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3","T4_C1", 
