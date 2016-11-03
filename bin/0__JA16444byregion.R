@@ -28,10 +28,16 @@ head(Traits)
 str(Traits)
 summary(Traits)
 
+#make a column that thas id without the dash
+Traits$ID <- gsub("[[:punct:]]", "", Traits$Mouse)
+
+
+
 ## Subset by punch
-TraitsCA1 <- Traits %>% filter(Punch == "CA1") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict)
-TraitsCA3 <- Traits %>% filter(Punch == "CA3") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict)
-TraitsDG <- Traits %>% filter(Punch == "DG") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict)
+TraitsCA1 <- Traits %>% filter(Punch == "CA1") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID))
+TraitsCA3 <- Traits %>% filter(Punch == "CA3") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID))
+TraitsDG <- Traits %>% filter(Punch == "DG") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID))
+TraitsTrained <- Traits %>% filter(APA == "Trained") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID)
 
 
 ## make gene the row name then round all value to nearest 1s place

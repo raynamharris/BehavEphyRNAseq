@@ -17,7 +17,8 @@ allowWGCNAThreads()
 ########################################################    
 setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 
-datExpr0 <- tpmbygeneCA3
+tpmbygene <- read.csv("tpmswgcna.csv", header=TRUE, check.names = FALSE)
+datExpr0 <- tpmbygene
 rownames(datExpr0) 
 str(datExpr0)
 
@@ -46,7 +47,7 @@ gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
 head(gsg)
 
 #-----Make a trait data frame from just sample info without beahvior
-datTraits <- TraitsCA3
+datTraits <- FactorsBeahavPCA
 head(datTraits)
 str(datTraits)
 

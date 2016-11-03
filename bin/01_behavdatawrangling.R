@@ -180,9 +180,5 @@ summary(behavbysession)
 head(behavbysession)
 
 
-
-
-summary(behav)
-
-
+#write.csv(behav, "behav.csv", row.names = FALSE)
 
