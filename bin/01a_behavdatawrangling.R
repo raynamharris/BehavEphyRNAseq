@@ -64,9 +64,9 @@ select(behav, Speed1, Speed2, Speed1stEntr.cm.s., Speed2ndEntr) ## shows definat
 behav <- behav %>% mutate(EntrShockDiff = NumShock - NumEntrances)
 
 ## rename and revalue some values 
-behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1-KO")) 
-behav$Genotype <- revalue(behav$Genotype, c("FMR1?" = "FMR1-KO")) 
-behav$Genotype <- factor(behav$Genotype, levels = c("WT", "FMR1-KO"))
+behav$Genotype <- revalue(behav$Genotype, c("FMR1" = "FMR1KO")) 
+behav$Genotype <- revalue(behav$Genotype, c("FMR1?" = "FMR1KO")) 
+behav$Genotype <- factor(behav$Genotype, levels = c("WT", "FMR1KO"))
 levels(behav$Genotype)
 
 behav$TrainGroup <- revalue(behav$TrainGroup, c("control" = "untrained")) 
@@ -76,17 +76,13 @@ levels(behav$TrainGroup)
 ## create combinatorial factor columns 
 behav$genoYear <- as.factor(paste(behav$Genotype,behav$Year,sep="_"))
 behav$genoYear <- factor(behav$genoYear, 
-                    levels = c("WT_2013", "FMR1-KO_2014", "WT_2014", "WT_2015", 
-                               "FMR1-KO_2016", "WT_2016"))
-
-behav$genoYear <- factor(behav$genoYear, 
-                         levels = c("WT_2013", "WT_2014", "WT_2015", "WT_2016",
-                                    "FMR1-KO_2014", "FMR1-KO_2016"))
-
+                    levels = c("WT_2013", "WT_2015", "WT_2016", "FMR1KO_2013","FMR1KO_2016"))
+levels(behav$genoYear)
 
 behav$APA <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
+levels(behav$APA)
 behav$APA <- revalue(behav$APA, c("train_trained" = "trained")) 
-behav$APA <- revalue(behav$APA, c("untrained_untrained" = "untrained")) 
+behav$APA <- revalue(behav$APA, c("NA_untrained" = "untrained")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "trained_conflict")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_yoked" = "yoked_conflict")) 
 behav$APA <- revalue(behav$APA, c("train-train_trained" = "trained_trained")) 
@@ -95,20 +91,16 @@ behav$APA <- factor(behav$APA,
                         levels = c("untrained", "yoked_trained", 
                                    "yoked_conflict", "trained", 
                                    "trained_trained", "trained_conflict"))
+levels(behav$APA)
 
 behav$genoAPA <- as.factor(paste(behav$Genotype,behav$APA, sep="_"))
 behav$genoAPA <- factor(behav$genoAPA, 
                         levels = c("WT_untrained", "WT_trained", 
                                    "WT_yoked_trained", "WT_trained_trained", 
                                    "WT_yoked_conflict", "WT_trained_conflict", 
-                                   "FMR1-KO_untrained", "FMR1-KO_trained",
-                                   "FMR1-KO_yoked_trained", "FMR1-KO_trained_trained",
-                                   "FMR1-KO_yoked_conflict", "FMR1-KO_trained_conflict"))
-
-behav$genoAPAyear <- as.factor(paste(behav$genoAPA,behav$Year, sep="_"))
-behav$genoAPAsession  <- as.factor(paste(behav$genoAPA,behav$TrainSession, sep="_"))
-behav$genoAPAsessionDay  <- as.factor(paste(behav$genoAPAsession,behav$Day, sep="_"))
-behav$genoAPAsessionDayInd <- as.factor(paste(behav$genoAPAsessionDay,behav$ID, sep="_"))
+                                   "FMR1KO_untrained", "FMR1KO_trained",
+                                   "FMR1KO_yoked_trained", "FMR1KO_trained_trained",
+                                   "FMR1KO_yoked_conflict", "FMR1KO_trained_conflict"))
 
 behav$TrainSessionCombo <- behav$TrainSession
 levels(behav$TrainSessionCombo)
