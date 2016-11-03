@@ -46,6 +46,7 @@ str(behav)
 names(behav)
 summary(behav)
 
+## remove bad data
 ## some aniamls have a 0 for path to 1st entrance because they were dropped into the schock zone. THose are replaced with NA. 
 ## all values of -1 are removed because they really mean, couldnt be calculated.
 
@@ -53,7 +54,16 @@ behav$Path1stEntr <-ifelse((behav$Path1stEntr != 0), behav$Path1stEntr, NA)
 behav$Speed1stEntr.cm.s. <-ifelse((behav$Speed1stEntr.cm.s. != -1), behav$Speed1stEntr.cm.s., NA)
 behav$Speed2ndEntr <-ifelse((behav$Speed2ndEntr != -1), behav$Speed2ndEntr, NA)
 behav$Path2ndEntr <-ifelse((behav$Path2ndEntr != -1), behav$Path2ndEntr, NA)
-summary(behav)
+behav$Time1stEntr <- ifelse((behav$Time1stEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time1stEntr < 599.97), behav$Time1stEntr, NA)
+behav$Dist1stEntr.m. <- ifelse((behav$Dist1stEntr.m. < 0.01 & behav$NumEntrances == 0) | (behav$Dist1stEntr.m. > 0.1), behav$Dist1stEntr.m., NA)
+behav$Time2ndEntr <- ifelse((behav$Time2ndEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time2ndEntr < 599.97), behav$Time2ndEntr, NA)
+behav$MaxTimeAvoid <- ifelse((behav$MaxTimeAvoid == 599 & behav$NumEntrances == 0) | (behav$MaxTimeAvoid < 599), behav$MaxTimeAvoid, NA)
+behav$Path2ndEntr <- ifelse((behav$Time2ndEntr != "NA"), behav$Path2ndEntr, NA)
+
+
+# badyoked
+badyoked <- behav %>% filter(grepl("16-357A|16-357B|16-357D", ID))
+
 
 ## recalculate speed 1 and speed 2
 behav <- behav %>% mutate(Speed1 = Path1stEntr / Time1stEntr)
@@ -132,7 +142,7 @@ names(behav)
 
 ## subset the data -----
 # by experimenter
-#maddy <- behav %>% filter(Experimenter == "Maddy") 
+#maddy <- behav %>% filter(Experimenter == "Maddy")  
 #jma <- behav %>% filter(Experimenter != "Maddy") 
 
 # by genotype
