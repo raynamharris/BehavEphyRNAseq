@@ -1,11 +1,19 @@
 
-
+behav <- read.csv("behav.csv", header = T, check.names = F)
+summary(behav)
 ## load libraries -----
 library(ggdendro) ## for dendrograms!!
 library(magrittr) ## to use the weird pipe
 library(gplots) ##for making awesome plots
 library(cowplot) ## for some easy to use themes
 library(tidyr)
+library(dplyr) ## for filtering and selecting rows
+library(reshape2) #@ for melting dataframe
+library(plyr) ## for renmaing factors
+library(ggplot2) ## for awesome plots!
+
+
+
 
 ## color palettes tips ----
 
