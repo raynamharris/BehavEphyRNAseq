@@ -96,28 +96,6 @@ one <- behav %>%
                               "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
   facet_grid(~genoYear, labeller = as_labeller(genoAPAnames))
 
-## num entrances - saved as beahv_NumEntrance_6 or _3
-entrances <- behav %>% 
-  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
-  ggplot(aes(as.numeric(x=TrainSessionCombo), y=NumEntrances, color=APA)) + 
-  geom_point(size=2) + geom_jitter() +
-  stat_smooth(alpha=0.2, size=2)  +
-  theme_cowplot(font_size = 20, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
-  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-  theme(strip.background = element_blank()) +  
-  scale_colour_manual(values=APApaletteSlim2,
-                      name="APA Training",
-                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
-  scale_y_continuous(name="Total Entrances") + 
-  scale_x_continuous(name =NULL, 
-                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
-                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
-                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
-  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
-
 
 ## pTimeOpp - saved as beahv_pTimeOpp_6 or _3
 pTimeOPP <- behav %>% 
@@ -133,7 +111,28 @@ pTimeOPP <- behav %>%
                       name="APA Training",
                       breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
                       labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
-  scale_y_continuous(name="pTimeOPP") + 
+  scale_y_continuous(name="pTimeOPP", limits = c(0, 1)) + 
+  scale_x_continuous(name =NULL, 
+                     breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                     labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
+                              "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                              "7" = "T5/C2", "8" = "T6/C3", "9"= "Retention")) +
+  facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
+
+pTimeTarget <- behav %>% 
+  filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
+  ggplot(aes(as.numeric(x=TrainSessionCombo), y=pTimeTarget, color=APA)) + 
+  geom_point(size=2) + geom_jitter() +
+  stat_smooth(alpha=0.2, size=2)  +
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  background_grid(major = "xy", minor = "none") + 
+  theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
+  theme(strip.background = element_blank()) +  
+  scale_colour_manual(values=APApaletteSlim2,
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained", "Conflict")) + 
+  scale_y_continuous(name="pTimeTarget", limits = c(0, 1)) + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                      labels=c("1" = "Hab", "2" = "T1", "3" = "T2", 
@@ -142,7 +141,7 @@ pTimeOPP <- behav %>%
   facet_wrap(~genoYear, labeller = as_labeller(genoAPAnames)) 
 
 
-behav %>% 
+RayleigLength <- behav %>% 
   filter(Experimenter %in% c("Maddy"))  %>%  droplevels() %>%
   ggplot(aes(as.numeric(x=TrainSessionCombo), y=RayleigLength, color=APA)) + 
   geom_point(size=2) + geom_jitter() +
@@ -166,105 +165,93 @@ behav %>%
 
 
 ## save plots ----
-setwd("/Users/raynamharris/Github/BehavEphyRNAseq/results/2016_10_24_sfnposter/")
-save_plot("one.pdf", one,
-          base_aspect_ratio = 3 # make room for figure legend
-)
-save_plot("two.pdf", two, base_aspect_ratio = 3 )
+setwd("/Users/raynamharris/Github/BehavEphyRNAseq/results/2016-11-01_sfnposter/")
 save_plot("timespent.pdf", timespent, base_aspect_ratio = 3)
 save_plot("entrances.pdf", entrances, base_aspect_ratio = 3)
 
 save_plot("one.png", one, base_aspect_ratio = 3)
 save_plot("two.png", two, base_aspect_ratio = 3 )
+save_plot("pTimeTarget.png", pTimeTarget, base_aspect_ratio = 3 )
+save_plot("pTimeOPP.png", pTimeOPP, base_aspect_ratio = 3 )
+save_plot("RayleigLength.png", RayleigLength, base_aspect_ratio = 3 )
 
 
-NumEntrancesTimeTarget <- plot_grid(entrances, timespent, ncol = 1)
-save_plot("NumEntrancesTimeTarget.pdf", entrantime, 
-          ncol = 1, # we're saving a grid plot of 2 columns
-          nrow = 2, # and 2 rows
-          # each individual subplot should have an aspect ratio of 1.3
-          base_aspect_ratio = 3)
-
-save_plot("NumEntrancesTimeTarget.png", entrantime, 
-          ncol = 1, # we're saving a grid plot of 2 columns
-          nrow = 2, # and 2 rows
-          # each individual subplot should have an aspect ratio of 1.3
-          base_aspect_ratio = 3)
 
 
 
 ## heatmap of data (not correlations, but raw/scaled data) ----
 
-#melt that data
+#melt the data
 behav_long  <- melt(behav, id = c(1:21))
 behav_long <- behav_long %>% drop_na()
-
 ## now widen then lengthen to get group averages
 behav_long_genoAPA <- dcast(behav_long, genoAPA ~ variable, value.var= "value", fun.aggregate=mean)
 head(behav_long_genoAPA)
-
-
-
 ## scale columns
 rownames(behav_long_genoAPA) <- behav_long_genoAPA$genoAPA    # set $genoAPAsession as rownames
 behav_long_genoAPA[1] <- NULL
 behav_long_genoAPA <- scale(behav_long_genoAPA)
 head(behav_long_genoAPA)
-
-
 ## heatmap clusterd - saved as behav_heatmap.png
-heatpalette <- colorRampPalette(c("#67a9cf","#f7f7f7","#ef8a62"))(n = 100)
+heatpalette <- colorRampPalette(c("#2166ac","#f7f7f7","#b2182b"))(n = 100)
 heatmap.2(behav_long_genoAPA, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
           trace="none",         # turns off trace lines inside the heat map
-          margins =c(9,25),     # widens margins around plot
+          margins =c(9,18),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
           #RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b",
           #                  "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"),
           srtCol=45,  adjCol = c(1,1), # angled column label
-          cexRow = 2, cexCol = 1.1)      # font size
+          cexRow = 1.5, cexCol = 1)      # font size
 
-## now widen then lengthen to get group averages by year (omit WT 2014)
-behav_long_genoAPAyear <- dcast(behav_long, genoAPAyear ~ variable, value.var= "value", fun.aggregate=mean)
-behav_long_genoAPAyear <- filter(behav_long_genoAPAyear, genoAPAyear != "WT_trained_2014")
-behav_long_genoAPAyear$genoAPAyear
 
+#melt the data
+behav_long_year  <- melt(behav, id = c(1:21))
+behav_long_year <- behav_long_year %>% drop_na()
+## now widen then lengthen to get group averages
+behav_long_year$genoAPAyear <- as.factor(paste(behav_long_year$APA,behav_long_year$Genotype, behav_long_year$Year, sep="_"))
+behav_long_year <- dcast(behav_long_year, genoAPAyear ~ variable, value.var= "value", fun.aggregate=mean)
+head(behav_long_year)
 ## scale columns
-rownames(behav_long_genoAPAyear) <- behav_long_genoAPAyear$genoAPA    # set $genoAPAsession as rownames
-behav_long_genoAPAyear <- behav_long_genoAPAyear[-c(4:5)]
-behav_long_genoAPAyear[1] <- NULL
-behav_long_genoAPAyear <- scale(behav_long_genoAPAyear)
-head(behav_long_genoAPAyear)
-str(behav_long_genoAPAyear)
-
+rownames(behav_long_year) <- behav_long_year$genoAPA    # set $genoAPAsession as rownames
+behav_long_year[1] <- NULL
+behav_long_year <- scale(behav_long_year)
+head(behav_long_year)
 ## heatmap clusterd - saved as behav_heatmap.png
-heatpalette <- colorRampPalette(c("#67a9cf","#f7f7f7","#ef8a62"))(n = 100)
-heatmap.2(behav_long_genoAPAyear, 
+heatpalette <- colorRampPalette(c("#2166ac","#f7f7f7","#b2182b"))(n = 100)
+heatmap.2(behav_long_year, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
           trace="none",         # turns off trace lines inside the heat map
-          margins =c(9,30),     # widens margins around plot
+          margins =c(9,22),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
-          RowSideColors = c("#af8dc3", "#40004b", "#762a83", "#7fbf7b", 
-                            "#00441b", "#1b7837", "#af8dc3", "#40004b",
-                            "#40004b", "#762a83", "#762a83", "#7fbf7b",
-                            "#00441b", "#00441b", "#1b7837", "#1b7837"),
+          RowSideColors = c("#40004b", "#40004b", "#40004b", "#9970ab", "#9970ab", "#9970ab",
+                            "#b35806", "#b35806", "#b35806", "#f1a340", "#f1a340", "#f1a340"),
           srtCol=45,  adjCol = c(1,1), # angled column label
-          cexRow = 2, cexCol = 1.1)      # font size
+          cexRow = 1.5, cexCol = 1)      # font size
+
+
+## for APApalette2
+
+#40004b purple train conflict
+#9970ab purple train train
+#c2a5cf purpletrain 
+
+#fdb863 orange untrained
+#f1a340 orange untrained trained
+#b35806 orange untrained conflict
+
 
 
 ## behavbysessionHabT3
-behavbysessionHabT3 <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
-                                        "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
-                                        "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
-                                        "ShockOnOff","Year","PairedPartner","Experimenter",
-                                        "Housing","TestLocation", "filename", "pair1", "pair2"))
-behavbysessionHabT3 <- filter(behavbysessionHabT3, !grepl("TotalTime.s|p.miss", variable )) %>% 
-  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
-  filter(TrainSessionCombo %in% c("Hab", "T1","T2","T3"))  %>%  droplevels() 
+behavbysessionHabT3 <- behav %>% filter(Experimenter %in% c("Maddy")) %>%
+                                          filter(TrainSessionCombo %in% c("T1","T2","T3","Hab")) %>%  droplevels()
+
+behavbysessionHabT3 <- melt(behavbysessionHabT3, id = c(1:21))
+behavbysessionHabT3 <- behavbysessionHabT3 %>% drop_na()
 ## create the bysession column and wide
 names(behavbysessionHabT3)
 head(behavbysessionHabT3)
@@ -281,7 +268,7 @@ behavbysessionHabT3 <- behavbysessionHabT3[-c(1)]
 behavbysessionHabT3 <- scale(behavbysessionHabT3)
 head(behavbysessionHabT3)
 behavbysessionHabT3 <- na.omit(behavbysessionHabT3)
-dev.off()
+#dev.off()
 heatmap.2(behavbysessionHabT3, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
@@ -295,18 +282,15 @@ heatmap.2(behavbysessionHabT3,
 
 
 ## behavbysessionT1C4T5T6
-behavbysessionT1C4T5T6 <- melt(behav, id=c("ID","APA","genoAPA","genoAPAsession","genoAPAsessionDay", "genoYear", "genoAPAsessionCombo",
-                                        "genoAPAsessionDayInd","TrainSessionCombo" ,"Genotype", "TrainSessionComboDay", "genoAPAyear",
-                                        "genoAPAsessionComboInd","TrainProtocol","TrainSequence","TrainGroup","Day","TrainSession",
-                                        "ShockOnOff","Year","PairedPartner","Experimenter",
-                                        "Housing","TestLocation", "filename", "pair1", "pair2"))
-behavbysessionT1C4T5T6 <- filter(behavbysessionT1C4T5T6, !grepl("TotalTime.s|p.miss", variable )) %>% 
-  filter(!grepl("16-357A|16-357B|16-357D", ID)) %>% 
+behavbysessionT1C4T5T6 <- melt(behav, id = c(1:21))
+behavbysessionT1C4T5T6 <- behavbysessionT1C4T5T6 %>% 
+  filter(Experimenter %in% c("Maddy")) %>%
+  filter(Year == 2015)  %>%
   filter(TrainSessionCombo %in% c("T1","T2","T3","T4_C1", "T5_C2", "T6_C3"))  %>%  droplevels() 
 ## create the bysession column and wide
 names(behavbysessionT1C4T5T6)
 head(behavbysessionT1C4T5T6)
-behavbysessionT1C4T5T6$bysession <- as.factor(paste(behavbysessionT1C4T5T6$TrainSessionCombo, behavbysessionT1C4T5T6$Genotype, behavbysessionT1C4T5T6$TrainGroup, sep="_"))
+behavbysessionT1C4T5T6$bysession <- as.factor(paste(behavbysessionT1C4T5T6$TrainSessionCombo, behavbysessionT1C4T5T6$Genotype, behavbysessionT1C4T5T6$TrainSequence, sep="_"))
 behavbysessionT1C4T5T6 <- dcast(behavbysessionT1C4T5T6, bysession   ~ variable, value.var= "value", fun.aggregate = mean)
 summary(behavbysessionT1C4T5T6) 
 head(behavbysessionT1C4T5T6)
@@ -319,7 +303,7 @@ behavbysessionT1C4T5T6 <- behavbysessionT1C4T5T6[-c(1)]
 behavbysessionT1C4T5T6 <- scale(behavbysessionT1C4T5T6)
 head(behavbysessionT1C4T5T6)
 behavbysessionT1C4T5T6 <- na.omit(behavbysessionT1C4T5T6)
-dev.off()
+#dev.off()
 heatmap.2(behavbysessionT1C4T5T6, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend

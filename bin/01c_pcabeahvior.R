@@ -200,7 +200,7 @@ ggplot(scoresdf, aes(PC1, PC2, colour=forpca$APA)) +
 
 # now plot, using geom_segment() for arrows and geom_text for labels
 rotation_data <- data.frame(pc$rotation, variable=row.names(pc$rotation))
-rotation_data <- subset(rotation_data, PC1 > 0.119 | PC1 < -0.12, select=c(PC1, PC2, variable))
+rotation_data <- subset(rotation_data, PC1 > 0.119 | PC1 < -0.12, select=c(PC1, PC2,))
 PC2 <- subset(rotation_data, PC2 > 0.112 | PC2 < -0.18, select=c(PC2))
 
 

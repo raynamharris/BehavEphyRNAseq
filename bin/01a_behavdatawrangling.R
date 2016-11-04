@@ -58,6 +58,7 @@ behav$Time1stEntr <- ifelse((behav$Time1stEntr == 599.97 & behav$NumEntrances ==
 behav$Dist1stEntr.m. <- ifelse((behav$Dist1stEntr.m. < 0.01 & behav$NumEntrances == 0) | (behav$Dist1stEntr.m. > 0.1), behav$Dist1stEntr.m., NA)
 behav$Time2ndEntr <- ifelse((behav$Time2ndEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time2ndEntr < 599.97), behav$Time2ndEntr, NA)
 behav$MaxTimeAvoid <- ifelse((behav$MaxTimeAvoid == 599 & behav$NumEntrances == 0) | (behav$MaxTimeAvoid < 599), behav$MaxTimeAvoid, NA)
+behav$Path1stEntr <- ifelse((behav$Time1stEntr != "NA"), behav$Path1stEntr, NA)
 behav$Path2ndEntr <- ifelse((behav$Time2ndEntr != "NA"), behav$Path2ndEntr, NA)
 
 
@@ -189,7 +190,3 @@ behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainProtocol + Tr
                           genoAPA + pair1 + pair2 ~ bysession, value.var= "value", fun.aggregate = mean)
 summary(behavbysession) 
 tail(behavbysession)
-
-
-#write.csv(behav, "behav.csv", row.names = FALSE)
-
