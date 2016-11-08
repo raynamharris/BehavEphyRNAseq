@@ -19,6 +19,7 @@ ephys$ID
 scoresdf_ephys <- inner_join(scoresdf, ephys, by="ID")
 str(scoresdf_ephys)
 head(scoresdf_ephys$APA.x)
+
 scoresdf_ephys$training <- ifelse(grepl("trained_conflict", scoresdf_ephys$APA.x), "trained", 
                     ifelse(grepl("trained_trained", scoresdf_ephys$APA.x), "trained",
                            ifelse(grepl("yoked_conflict", scoresdf_ephys$APA.x), "yoked",
@@ -42,11 +43,11 @@ ggplot(scoresdf_ephys, aes(PC1, min, color=APA.x)) +
   theme_cowplot(font_size = 20, line_size = 1) + 
   background_grid(major = "xy", minor = "none") + 
   #theme(strip.background = element_blank()) +
-  scale_colour_manual(name="APA Training",
-                      breaks=c("trained_conflict", "trained_trained", "yoked_conflict", "yoked_trained"),
-                      labels=c("Trained Conflict", "Trained Trained", "Yoked to Conflict", "Yoked to Trained"),
-                      values=c("#7f3b08", "#f1a340", "#40004b","#9970ab"))  
-
+  scale_colour_manual(values=c( "#f1a340", "#7f3b08", "#9970ab","#40004b"),
+                      name="APA Training",
+                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) 
+  
 ## function
 beahvepcaphys <- function(data, xcol, ycol, colorcode){
   print(ycol)
@@ -56,40 +57,19 @@ beahvepcaphys <- function(data, xcol, ycol, colorcode){
     geom_smooth(method = "lm", se = FALSE) + 
     scale_y_continuous(trans = "reverse") +
     ylab("Input Output Slope Maximum") +
-    facet_wrap(~Genotype) +
+    #facet_wrap(~Genotype) +
     theme_cowplot(font_size = 20, line_size = 1) + 
     background_grid(major = "xy", minor = "none") + 
     #theme(strip.background = element_blank()) +
-    scale_colour_manual(name="APA Training",
-                        breaks=c("trained_conflict", "trained_trained", "yoked_conflict", "yoked_trained"),
-                        labels=c("Trained Conflict", "Trained Trained", "Yoked to Conflict", "Yoked to Trained"),
-                        values=c("#7f3b08", "#f1a340", "#40004b","#9970ab"))  
+    scale_colour_manual(values=c( "#f1a340", "#7f3b08", "#9970ab","#40004b"),
+                        name="APA Training",
+                        breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+                        labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) 
   return(plot)
 }
 
 beahvepcaphys(data=scoresdf_ephys, xcol="PC1", ycol="min", colorcode="APA.x")
-beahvepcaphys(data=scoresdf_ephys_wt2015, xcol="PC1", ycol="min", colorcode="APA.x")
-beahvepcaphys(data=scoresdf_ephys_wt2015, xcol="PC2", ycol="min", colorcode="APA.x")
-beahvepcaphys(data=scoresdf_ephys_wt2015, xcol="PC3", ycol="min", colorcode="APA.x")
-beahvepcaphys(data=scoresdf_ephys_wt2015, xcol="PC4", ycol="min", colorcode="APA.x")
 
 #write.csv(loadings, "loadings.csv", row.names = T)
 
 
-
-lm1 <- lm(min ~ APA.x + PC1 + PC2 + PC3 + PC4 + PC5, data = scoresdf_ephys)
-summary(lm1)
-
-## subset to just numeric columsn for corrlation
-names(scoresdf_ephys)
-#scoresdf_ephys_numeric <- scoresdf_ephys[c(1:10,41:44,46,48,50,54)]
-scoresdf_ephys_numeric <- scoresdf_ephys[c(1:5,50,54,55)]
-scoresdf_ephys_numeric <- scale(scoresdf_ephys_numeric)
-
-rownames(scoresdf_ephys_numeric) <- scoresdf_ephys$ID
-
-cormat <- round(cor(scoresdf_ephys_numeric),2)
-melted_cormat <- melt(cormat)
-head(melted_cormat)
-ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
-  geom_tile()
