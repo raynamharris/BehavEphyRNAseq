@@ -66,8 +66,11 @@ tpmswgcna <- round(tpmswgcna)
 summary(tpmswgcna)
 
 ## save output file for easy loading later
-setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
+#setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 #write.csv(count, "count.csv", row.names = TRUE)
 #write.csv(countswgcna, "countswgcna.csv", row.names = TRUE)
 #write.csv(tpm, "tpm.csv", row.names = TRUE)
 #write.csv(tpmswgcna, "tpmswgcna.csv", row.names = TRUE)
+
+# save Rdata for loadinhg
+save.image("~/Github/BehavEphyRNAseq/bin/02b_kallisto_gather.Rdata")

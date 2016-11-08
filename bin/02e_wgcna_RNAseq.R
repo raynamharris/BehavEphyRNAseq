@@ -17,13 +17,13 @@ allowWGCNAThreads()
 ########################################################    
 setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 
-tpmbygene <- read.csv("tpmswgcna.csv", header=TRUE, check.names = FALSE)
-datExpr0 <- tpmbygene
+#tpmbygene <- read.csv("tpmswgcna.csv", header=TRUE, check.names = FALSE, row.names = 1)
+datExpr0 <- tpmbygeneCA1DG
 rownames(datExpr0) 
 str(datExpr0)
 
 ## make values numbers not integers
-cols = c(1:15)
+cols = c(1:31)
 datExpr0[,cols] %<>% lapply(function(x) as.numeric(as.integer(x)))
 str(datExpr0)
 summary(datExpr0)
@@ -31,9 +31,10 @@ summary(datExpr0)
 ## 22,485 genes in tpmbygene
 
 ## remove rows with rowsum > some value
-datExpr0 <- datExpr0[rowSums(datExpr0[, -1])>20, ]
+datExpr0 <- datExpr0[rowMeans(datExpr0[, -1])>1, ]
 str(datExpr0)
 summary(datExpr0)
+## 13,118 genes in tpmbygene
 
 ## transpose data
 datExpr0 <- t(datExpr0)
@@ -47,7 +48,8 @@ gsg$allOK #If the last statement returns TRUE, all genes have passed the cuts
 head(gsg)
 
 #-----Make a trait data frame from just sample info without beahvior
-datTraits <- FactorsBeahavPCA
+datTraits <- Traits
+datTraits[1] <- NULL 
 head(datTraits)
 str(datTraits)
 
@@ -77,6 +79,17 @@ datColors=data.frame(outlier=outlierColor,traitColors)
 #quartz()
 plotDendroAndColors(sampleTree,groupLabels=names(datColors),
                     colors=datColors,main="Sample dendrogram and trait heatmap")
+
+
+# Plot a line to show the cut
+abline(h = 0.7, col = "red");
+# Determine cluster under the line
+clust = cutreeStatic(sampleTree, cutHeight = 0.7, minSize = 10)
+table(clust)
+keepSamples = (clust==1)
+datExpr = datExpr0[keepSamples, ]
+nGenes = ncol(datExpr)
+nSamples = nrow(datExpr)
 
 #-----Remove outlying samples 
 #remove.samples= Z.k<thresholdZ.k | is.na(Z.k)
@@ -122,7 +135,7 @@ plot(geneTree, xlab="", sub="", main= "Gene Clustering on TOM-based dissimilarit
 #                    Make modules
 #######   #################    ################   ####### 
 
-minModuleSize=50
+minModuleSize=100
 dynamicMods= cutreeDynamic(dendro= geneTree, distM= dissTOM, deepSplit=2, pamRespectsDendro= FALSE, minClusterSize= minModuleSize)
 table(dynamicMods)
 dynamicColors= labels2colors(dynamicMods)
@@ -132,7 +145,7 @@ plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels= F
 MEList= moduleEigengenes(datExpr0, colors= dynamicColors)
 MEs= MEList$eigengenes
 #Calculate dissimilarity of module eigenegenes
-MEDiss= 1-cor(MEs)
+MEDiss= 1-cor(MEs, use = 'pairwise.complete.obs')
 #Cluster module eigengenes
 METree= flashClust(as.dist(MEDiss), method= "average")
 
@@ -201,7 +214,7 @@ labeledHeatmap(Matrix = moduleTraitCor,
 
 
 #---------------------Eigengene heatmap
-which.module="lightgreen" #replace with module of interest
+which.module="blue" #replace with module of interest
 datME=MEs
 datExpr=datt
 #quartz()
@@ -216,7 +229,31 @@ barplot(ME, col=which.module, main="", names.arg=(datTraits$genoAPA), cex.names=
 
 ## saved as 4-<color>-alldata 
 
-######--------------------end--------------------#######
+
+
+# Define variable weight containing the weight column of datTrait
+datTraits$names <- rownames(datTraits)
+newdatTraits <- datTraits %>% filter(!grepl("146B-DG-2|146D-DG-3", names))
+datTraits$names <- NULL
+newdatTraits$names <- NULL
+
+punch = as.data.frame(newdatTraits$Punch);
+names(punch) = "punch"
+# names (colors) of the modules
+modNames = substring(names(MEs), 3)
+
+geneModuleMembership = as.data.frame(cor(datExpr, MEs));
+MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples));
+
+names(geneModuleMembership) = paste("MM", modNames, sep="");
+names(MMPvalue) = paste("p.MM", modNames, sep="");
+
+geneTraitSignificance = as.data.frame(cor(datExpr, punch, use = "p"));
+GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples));
+
+names(geneTraitSignificance) = paste("GS.", names(punch), sep="");
+names(GSPvalue) = paste("p.GS.", names(punch), sep="");
+
 
 
 #### output "gene" list ----
