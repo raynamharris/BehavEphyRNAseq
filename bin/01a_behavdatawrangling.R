@@ -95,26 +95,25 @@ levels(behav$genoYear)
 
 behav$APA <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
 levels(behav$APA)
+
 behav$APA <- revalue(behav$APA, c("train_trained" = "trained")) 
 behav$APA <- revalue(behav$APA, c("train_untrained" = "untrained")) 
-behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "trained_conflict")) 
-behav$APA <- revalue(behav$APA, c("train-conflict_yoked" = "yoked_conflict")) 
-behav$APA <- revalue(behav$APA, c("train-train_trained" = "trained_trained")) 
-behav$APA <- revalue(behav$APA, c("train-train_yoked" = "yoked_trained")) 
+behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "Conflict")) 
+behav$APA <- revalue(behav$APA, c("train-conflict_yoked" = "Yoked")) 
+behav$APA <- revalue(behav$APA, c("train-train_trained" = "Trained")) 
+behav$APA <- revalue(behav$APA, c("train-train_yoked" = "Yoked")) 
 behav$APA <- factor(behav$APA, 
-                        levels = c("untrained", "yoked_trained", 
-                                   "yoked_conflict", "trained", 
-                                   "trained_trained", "trained_conflict"))
+                        levels = c("untrained", "trained", 
+                                   "Yoked", "Trained", "Conflict"))
 levels(behav$APA)
 
 behav$genoAPA <- as.factor(paste(behav$Genotype,behav$APA, sep="_"))
+levels(behav$genoAPA)
 behav$genoAPA <- factor(behav$genoAPA, 
                         levels = c("WT_untrained", "WT_trained", 
-                                   "WT_yoked_trained", "WT_trained_trained", 
-                                   "WT_yoked_conflict", "WT_trained_conflict", 
+                                   "WT_Yoked", "WT_Trained", "WT_Conflict",
                                    "FMR1KO_untrained", "FMR1KO_trained",
-                                   "FMR1KO_yoked_trained", "FMR1KO_trained_trained",
-                                   "FMR1KO_yoked_conflict", "FMR1KO_trained_conflict"))
+                                   "FMR1KO_Yoked", "FMR1KO_Trained", "FMR1KO_Conflict"))
 
 behav$TrainSessionCombo <- behav$TrainSession
 levels(behav$TrainSessionCombo)
@@ -190,3 +189,4 @@ behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainProtocol + Tr
                           genoAPA + pair1 + pair2 ~ bysession, value.var= "value", fun.aggregate = mean)
 summary(behavbysession) 
 tail(behavbysession)
+

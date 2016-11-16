@@ -10,7 +10,7 @@ library(plyr) ## for renmaing factors
 library(ggplot2) ## for awesome plots!
 
 
-setwd("~/Github/BehavEphyRNAseq/data/sample_info//")
+setwd("~/Github/BehavEphyRNAseq/data/sample_info/")
 Traits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
 rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as rownames
 names(Traits)
@@ -42,32 +42,20 @@ TraitsCA1DG <- Traits %>% filter(Punch %in% c("DG", "CA1")) %>% select (RNAseqID
 TraitsTrained <- Traits %>% filter(APA == "Trained") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID)
 
 ## pick which data to subset
-Traits <- TraitsCA1DG
-
-## making it a numeric
-Traits$Mouse <- as.integer(factor(Traits$Mouse))
-Traits$Conflict <- as.integer(factor(Traits$Conflict))
-Traits$APA <- as.integer(factor(Traits$APA))
-Traits$Slice <- as.integer(factor(Traits$Slice))
-Traits$APAconflict <- as.integer(factor(Traits$APAconflict))
-Traits$ID <- as.integer(factor(Traits$ID))
-Traits$Punch <- as.integer(factor(Traits$Punch))
-
-Traits$Mouse <- as.numeric(factor(Traits$Mouse))
-Traits$Conflict <- as.numeric(factor(Traits$Conflict))
-Traits$APA <- as.numeric(factor(Traits$APA))
-Traits$Slice <- as.numeric(factor(Traits$Slice))
-Traits$APAconflict <- as.numeric(factor(Traits$APAconflict))
-Traits$ID <- as.numeric(factor(Traits$ID))
-Traits$Punch <- as.integer(factor(Traits$Punch))
-
-head(Traits)
-str(Traits)
-summary(Traits)
+Traits <- Traits
 
 ## make gene the row name then round all value to nearest 1s place
 row.names(Traits) <- Traits$RNAseqID
-Traits[1] <- NULL
+
+
+## relevel APA conflict and rename columsn
+## rename columns 
+names(Traits)[names(Traits)=="APA"] <- "TrainGroup"
+names(Traits)[names(Traits)=="APAconflict "] <- "APA"
+Traits$APA <- revalue(Traits$APA, c("Trained_Conflict" = "Conflict")) 
+Traits$APA <- revalue(Traits$APA, c("Trained_NoConflict" = "Trained")) 
+Traits$APA <- revalue(Traits$APA, c("Yoked_Conflict" = "Yoked")) 
+Traits$APA <- revalue(Traits$APA, c("Yoked_NoConflict" = "Yoked")) 
 
 
 

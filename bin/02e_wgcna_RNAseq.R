@@ -18,7 +18,7 @@ allowWGCNAThreads()
 setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444")
 
 #tpmbygene <- read.csv("tpmswgcna.csv", header=TRUE, check.names = FALSE, row.names = 1)
-datExpr0 <- tpmbygeneCA1DG
+datExpr0 <- tpmbygene
 rownames(datExpr0) 
 str(datExpr0)
 
@@ -52,6 +52,25 @@ datTraits <- Traits
 datTraits[1] <- NULL 
 head(datTraits)
 str(datTraits)
+
+datTraits$Mouse <- as.integer(factor(datTraits$Mouse))
+datTraits$Conflict <- as.integer(factor(datTraits$Conflict))
+datTraits$APA <- as.integer(factor(datTraits$APA))
+datTraits$Slice <- as.integer(factor(datTraits$Slice))
+datTraits$APAconflict <- as.integer(factor(datTraits$APAconflict))
+datTraits$ID <- as.integer(factor(datTraits$ID))
+datTraits$Punch <- as.integer(factor(datTraits$Punch))
+
+datTraits$Mouse <- as.numeric(factor(datTraits$Mouse))
+datTraits$Conflict <- as.numeric(factor(datTraits$Conflict))
+datTraits$APA <- as.numeric(factor(datTraits$APA))
+datTraits$Slice <- as.numeric(factor(datTraits$Slice))
+datTraits$APAconflict <- as.numeric(factor(datTraits$APAconflict))
+datTraits$ID <- as.numeric(factor(datTraits$ID))
+datTraits$Punch <- as.integer(factor(datTraits$Punch))
+str(datTraits)
+
+
 
 
 

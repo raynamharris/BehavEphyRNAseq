@@ -1,6 +1,3 @@
-## integrating behavior and ephys
-## 
-
 library(reshape2)
 scoresdf$ID
 ephys$ID
@@ -35,19 +32,27 @@ scoresdf_ephys_wt2015 <- scoresdf_ephys %>%
 
 
 ## behavpca ephs plot
-ggplot(scoresdf_ephys, aes(PC1, min, color=APA.x)) + 
-  geom_smooth(method = "lm", se = FALSE) + 
+behavephyscorrlationPC2 <- ggplot(scoresdf_ephys, aes(PC2, min, color=APA.x)) + 
+  geom_smooth(method = "lm", se = TRUE, alpha=0.2) + 
   geom_point(size = 8, aes(shape=Genotype)) + 
   scale_y_continuous(trans = "reverse") +
-  #facet_wrap(~Genotype) +
+  facet_wrap(~APA.x) +
   theme_cowplot(font_size = 20, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
+  background_grid(major = "none", minor = "none") + 
   #theme(strip.background = element_blank()) +
-  scale_colour_manual(values=c( "#f1a340", "#7f3b08", "#9970ab","#40004b"),
-                      name="APA Training",
-                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) 
-  
+  scale_colour_manual(values=c( "#f1a340", "#9970ab","#40004b"),
+                      name="APA Training") + 
+  labs(x = "Behavior PC2", y = "Maximum fEPSE Slope")
+
+save_plot("behavephyscorrlationPC2.pdf", behavephyscorrlationPC2, base_aspect_ratio = 1.3, base_height = 8)
+
+
+library(plyr)
+ddply(scoresdf_ephys, .(APA.x), summarise, "corr" = cor.test(PC1, min, method = "spearman"))
+ddply(scoresdf_ephys, .(APA.x), summarise, "corr" = cor.test(PC2, min, method = "spearman"))
+ddply(scoresdf_ephys, .(APA.x), summarise, "corr" = cor.test(PC5, min, method = "spearman"))
+
+
 ## function
 beahvepcaphys <- function(data, xcol, ycol, colorcode){
   print(ycol)

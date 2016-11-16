@@ -30,6 +30,12 @@ behavMaddy$TrainSessionComboNum <- ifelse(grepl("Hab", behavMaddy$TrainSessionCo
  
 behavMaddy$TrainSessionComboNum <- as.numeric(as.character(behavMaddy$TrainSessionComboNum))
 summary(behavMaddy$TrainSessionComboNum) 
+head(behavMaddy)
+
+#behavMaddy$APA <- ifelse(grepl("trained_conflict", behavMaddy$APA), "Conflict", 
+#                                  ifelse(grepl("trained_trained", behavMaddy$APA), "Trained",
+#                                         ifelse(grepl("yoked_conflict", behavMaddy$APA), "Yoked", NA)))
+levels(behavMaddy$APA)
 
 ## color palettes tips ----
 
@@ -92,10 +98,10 @@ behavMaddy %>%
   background_grid(major = "xy", minor = "none") + 
   theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
   #theme(strip.background = element_blank()) +  
-  scale_colour_manual(values=c("#f1a340", "#7f3b08", "#9970ab", "#40004b"),
-                      name="APA Training",
-                      breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                      labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) + 
+  #scale_colour_manual(values=c("#f1a340", "#7f3b08", "#9970ab", "#40004b"),
+  #                    name="APA Training",
+   #                   breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
+   #                   labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) + 
   scale_y_continuous(name="Path to 2nd Entrance (m)", limits = c(0, 17)) + 
   scale_x_continuous(name =NULL, 
                      breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
@@ -110,15 +116,12 @@ behaviorplot <- function(data, xcol, ycol, yaxislabel, colorcode){
   print(yaxislabel)
   plot <- data %>% 
     ggplot(aes_string(x=xcol, y=ycol, color=colorcode)) +
-    geom_point(size=2, aes(shape = Genotype)) + geom_jitter() +
+    geom_point(size=2) + geom_jitter() +
     stat_smooth(alpha=0.2, size=2)  +
     theme_cowplot(font_size = 20, line_size = 1) + 
     background_grid(major = "xy", minor = "none") + 
     theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-    scale_colour_manual(values=c("#f1a340", "#7f3b08", "#9970ab", "#40004b"),
-                        name="APA Training",
-                        breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                        labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) + 
+    scale_colour_manual(name="APA Training", values=c("#f1a340", "#9970ab", "#40004b")) +
     scale_y_continuous(name=yaxislabel) + 
     scale_x_continuous(name =NULL, 
                        breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
@@ -130,7 +133,7 @@ behaviorplot <- function(data, xcol, ycol, yaxislabel, colorcode){
   return(plot)
 }
 
-A4 <- behaviorplot(data=behavMaddy, xcol="TrainSessionComboNum", ycol="Path2ndEntr", yaxislabel="Path to 2nd Entrance (m)", colorcode="APA")
+A4 <-behaviorplot(data=behavMaddy, xcol="TrainSessionComboNum", ycol="Path2ndEntr", yaxislabel="Path to 2nd Entrance (m)", colorcode="APA")
 B4 <- behaviorplot(data=behavMaddy, xcol="TrainSessionComboNum", ycol="Speed2ndEntr", yaxislabel='Speed to 2nd Entrance (cm/s)' , colorcode="APA")
 
 
@@ -140,15 +143,12 @@ behaviorplotnolegend <- function(data, xcol, ycol, yaxislabel, colorcode){
   print(yaxislabel)
   plot <- data %>% 
     ggplot(aes_string(x=xcol, y=ycol, color=colorcode)) +
-    geom_point(size=2, aes(shape = Genotype)) + geom_jitter() +
+    geom_point(size=2) + geom_jitter() +
     stat_smooth(alpha=0.2, size=2)  +
     theme_cowplot(font_size = 20, line_size = 1) + 
     background_grid(major = "xy", minor = "none") + 
     theme(axis.text.x = element_text(angle=70, vjust=0.5)) +
-    scale_colour_manual(values=c("#f1a340", "#7f3b08", "#9970ab", "#40004b"),
-                        name="APA Training",
-                        breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                        labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) +
+    scale_colour_manual(name="APA Training", values=c("#f1a340", "#9970ab", "#40004b")) +
     theme(legend.position="none") +
     scale_y_continuous(name=yaxislabel) + 
     scale_x_continuous(name =NULL, 
@@ -163,31 +163,40 @@ behaviorplotnolegend <- function(data, xcol, ycol, yaxislabel, colorcode){
 
 names(behavMaddy)
 A3 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="Path1stEntr", yaxislabel="Path to 1st Entrance (m)", colorcode="APA")
-A2 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="pTimeTarget", yaxislabel='Time in the "Shock Zone" (s)' , colorcode="APA")
-B1 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="RayleigLength", yaxislabel='Rayleig Length' , colorcode="APA")
-B3 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="Speed1stEntr.cm.s.", yaxislabel='Speed to 1st Entrance (cm/s)' , colorcode="APA")
+A2 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="pTimeTarget", yaxislabel='"Shock Zone" Timespent (s)' , colorcode="APA")
+B1 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="RayleigLength", yaxislabel='Rayleigh Length' , colorcode="APA")
+B3 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="Speed1stEntr.cm.s.", yaxislabel='1st Entrance Speed (cm/s)' , colorcode="APA")
 A1 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="TotalPathArena.m", yaxislabel='Total Path (m)' , colorcode="APA")
 B2 <- behaviorplotnolegend(data=behavMaddy, xcol="TrainSessionComboNum", ycol="AnnularMaxVal", yaxislabel='Maximum Annular Value' , colorcode="APA")
 
-## make a grid plot
-
-plot_grid(A1, A2, A3, B1, B2, B3, nrow = 2)
-plot_grid(A4, B4, nrow = 2)
-
 
 ## save plots ----
-setwd("/Users/raynamharris/Github/BehavEphyRNAseq/results/2016-11-01_sfnposter/")
-save_plot("timespent.pdf", timespent, base_aspect_ratio = 3)
-save_plot("entrances.pdf", entrances, base_aspect_ratio = 3)
+setwd("/Users/raynamharris/Github/BehavEphyRNAseq/results/2016-11-08_sfnposter/")
+save_plot("A1.png", A1, base_aspect_ratio = 1.5)
+save_plot("A4.png", A4, base_aspect_ratio = 2)
+save_plot("B1.png", B1, base_aspect_ratio = 1.5)
+save_plot("B4.png", B4, base_aspect_ratio = 2)
+save_plot("A2.png", A2, base_aspect_ratio = 1.5)
+save_plot("A3.png", A3, base_aspect_ratio = 1.5)
+save_plot("B2.png", B2, base_aspect_ratio = 1.5)
+save_plot("B3.png", B3, base_aspect_ratio = 1.5)
+
+save_plot("A1.pdf", A1, base_aspect_ratio = 1.5)
+save_plot("A4.pdf", A4, base_aspect_ratio = 2)
+save_plot("B1.pdf", B1, base_aspect_ratio = 1.5)
+save_plot("B4.pdf", B4, base_aspect_ratio = 2)
+save_plot("A2.pdf", A2, base_aspect_ratio = 1.5)
+save_plot("A3.pdf", A3, base_aspect_ratio = 1.5)
+save_plot("B2.pdf", B2, base_aspect_ratio = 1.5)
+save_plot("B3.pdf", B3, base_aspect_ratio = 1.5)
+
+
 
 save_plot("one.png", one, base_aspect_ratio = 3)
 save_plot("two.png", two, base_aspect_ratio = 3 )
 save_plot("pTimeTarget.png", pTimeTarget, base_aspect_ratio = 3 )
 save_plot("pTimeOPP.png", pTimeOPP, base_aspect_ratio = 3 )
 save_plot("RayleigLength.png", RayleigLength, base_aspect_ratio = 3 )
-
-
-
 
 
 ## heatmap of data (not correlations, but raw/scaled data) ----
@@ -212,11 +221,30 @@ heatmap.2(behav_long_genoAPA,
           margins =c(9,18),     # widens margins around plot
           col=heatpalette,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
-          #RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b",
-          #                  "#7fbf7b", "#af8dc3", "#1b7837", "#762a83", "#00441b", "#40004b"),
+          #RowSideColors = c("#7fbf7b", "#af8dc3", "#1b7837", "#762a83",  
+          #                  "#7fbf7b", "#af8dc3", "#1b7837", "#762a83"),
           srtCol=45,  adjCol = c(1,1), # angled column label
           cexRow = 1.5, cexCol = 1)      # font size
 
+
+## heatmap
+behav_annot <- as.data.frame(rownames(behav_long_genoAPA))
+levels(behav_annot$`rownames(behav_long_genoAPA)`)
+head(behav_annot)
+head(behav_long_genoAPA)
+behav_colors = list(
+  APA =  c(WT_yoked_trained = (values=c("#f1a340")),WT_yoked_conflict = (values=c("#f1a340")), FMR1KO_yoked_conflict =(values=c("#f1a340")), FMR1KO_yoked_trained = (values=c("#f1a340")),
+            WT_trained_trained = (values=c("#9970ab")), FMR1KO_trained_trained = (values=c("#9970ab")),
+            WT_trained_conflict = (values=c("#40004b", FMR1KO_trained_conflict = (values=c("#40004b"))))))
+pheatmap(behav_long_genoAPA, 
+         show_colnames=TRUE, show_rownames=TRUE,
+         annotation_names_col = T, 
+         annotation_colors = behav_colors,
+         fontsize = 20, fontsize_row = 10, fontsize_col = 10,
+         cellwidth=10, cellheight=10,
+         height = 3,
+         border_color = "grey60"
+)
 
 #melt the data
 behav_long_year  <- melt(behav, id = c(1:21))
@@ -232,19 +260,52 @@ behav_long_year <- scale(behav_long_year)
 head(behav_long_year)
 ## heatmap clusterd - saved as behav_heatmap.png
 heatpalette <- colorRampPalette(c("#2166ac","#f7f7f7","#b2182b"))(n = 100)
+col<- colorRampPalette(c("blue", "white", "red"))(20)
+quartz()
 heatmap.2(behav_long_year, 
           notecol="black",      # change font color of cell labels to black
           density.info="none",  # turns off density plot inside color legend
           trace="none",         # turns off trace lines inside the heat map
           margins =c(9,22),     # widens margins around plot
-          col=heatpalette,       # use on color palette defined earlier
+          col=col,       # use on color palette defined earlier
           dendrogram="both",     # only draw a row dendrogram
-          RowSideColors = c("#40004b", "#40004b", "#40004b", "#9970ab", "#9970ab", "#9970ab",
-                            "#b35806", "#b35806", "#b35806", "#f1a340", "#f1a340", "#f1a340"),
+          #RowSideColors = c("#40004b", "#40004b", "#40004b", "#9970ab", "#9970ab", "#9970ab",
+          #                  "#b35806", "#b35806", "#b35806", "#f1a340", "#f1a340", "#f1a340"),
           srtCol=45,  adjCol = c(1,1), # angled column label
           cexRow = 1.5, cexCol = 1)      # font size
 
+rowlabels <- as.data.frame(rownames(behav_long_year))
+rowlabels$APA = c("Conflict FMR1-KO", "Conflict WT", "Conflict WT",
+                  "Trained FMR1-KO", "Trained WT", "Trained WT",
+                  "Yoked FMR1-KO", "Yoked WT", "Yoked WT")
+rownames(rowlabels) <- rowlabels[1]
+rowlabels[1] <- NULL
 
+ann_colors = list( APA =  c(Yoked_FMR1KO_2016 = (values=c("#f1a340")), 
+           Yoked_WT_2016 = (values=c("#f1a340")),
+           Yoked_WT_2015 = (values=c("#f1a340")),
+           Trained_WT_2015 = (values=c("#9970ab")),
+           Trained_WT_2016 = (values=c("#9970ab")),
+           Trained_FMR1KO_2015 = (values=c("#9970ab")),
+           Conflict_FMR1KO_2015 = (values=c("#40004b")),
+           Conflict_WT_2016 = (values=c("#40004b")),
+          Conflict_WT_2015 = (values=c("#40004b"))))
+  
+quartz()
+pheatmap(behav_long_year, 
+         show_conames=TRUE, show_rownames=TRUE,
+         annotation_names_row = T, 
+         labels_row = rowlabels$APA,
+         #annotation_row = ann_colors,
+         fontsize = 20, fontsize_row = 10, fontsize_col = 10,
+         #cellwidth=15, cellheight=30,
+         #height = 3,
+         legend=F,
+         border_color = "grey60" #, filename = "behavheatmap.png")
+)
+head(behav_long_year)
+min(behav_long_year)
+max(behav_long_year)
 ## for APApalette2
 
 #40004b purple train conflict
@@ -387,4 +448,23 @@ behav %>%
   facet_wrap(~Genotype+Year) +
   scale_y_continuous(name="Probability of being in the shock zone") 
 
+
+#### heatmpa -----
+
+## heatmap
+APA_annot <- scoresdf_ephys_rnaseqpca_factors %>% select(APA)
+APA_colors = list(
+  APA =  c(Yoked = (values=c("#f1a340")), Trained = (values=c("#9970ab")), 
+           Conflict = (values=c("#40004b"))))
+
+quartz()
+pheatmap(scoresdf_ephys_rnaseqpca_matrix, 
+         show_colnames=FALSE, show_rownames=TRUE,
+         annotation_col = APA_annot, 
+         annotation_colors = APA_colors,
+         fontsize = 20, fontsize_row = 10, 
+         cellwidth=10, cellheight=10,
+         width = 7.5,
+         border_color = "grey60", filename = "pheatbehavephy.png"
+)
 

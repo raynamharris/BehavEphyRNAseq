@@ -12,10 +12,10 @@ str(ephys)
 head(ephys)
 
 ## new cols
-ephys$APA <- ifelse(grepl("TTT", ephys$group), "train_trained", 
-                     ifelse(grepl("TCT", ephys$group), "trained_conflict",
-                            ifelse(grepl("TTY", ephys$group), "yoked_trained",
-                                   ifelse(grepl("TCY", ephys$group), "yoked_conflict", NA))))
+ephys$APA <- ifelse(grepl("TTT", ephys$group), "Trained", 
+                     ifelse(grepl("TCT", ephys$group), "Conflict",
+                            ifelse(grepl("TTY", ephys$group), "Yoked",
+                                   ifelse(grepl("TCY", ephys$group), "Yoked", NA))))
                                                                              
 ephys$Year <- ifelse(grepl("151", ephys$ID), "2015", 
                     ifelse(grepl("16-", ephys$ID), "2016", NA))
@@ -59,9 +59,4 @@ summary(ephys)
 ephysnoNA <- ephys[c(-10,-12, -14, -16, -17)]
 head(ephysnoNA)
 
-## make long and tidy
-ephys_long <- melt(ephysnoNA, id = c(1:5))
-iomax_long <- melt(iomax, id = c(12:14))
-ephysnoNA_long <- melt(ephysnoNA, id = c(1:5))
-summary(ephysnoNA_long)
 

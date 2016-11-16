@@ -67,14 +67,25 @@ scoresdf$genoYear <- forpca$genoYear
 
 
 ### ggplotified
-ggplot(scoresdf, aes(PC1, PC2, colour=APA)) + 
-  geom_point(size = 8) +
-  theme_cowplot(font_size = 20, line_size = 1) + 
-  background_grid(major = "xy", minor = "none") + 
-  #theme(strip.background = element_blank()) +
-  facet_grid(~Genotype, labeller = as_labeller(genonames)) + 
+beahvorpc12nolegend <- ggplot(scoresdf, aes(PC1, PC2, colour=APA )) + 
+  geom_point(size = 5, aes(shape = Genotype)) +
+  theme_cowplot(font_size = 20) + 
+  #background_grid(major = "xy", minor = "none") + 
+  theme(strip.background = element_blank()) +
+  #facet_grid(~genoYear) + 
   scale_colour_manual(name="APA Training",
-                      values=c("#f1a340", "#7f3b08", "#9970ab","#40004b")) 
+                      values=c("#f1a340", "#9970ab","#40004b"))+ 
+  labs(x = "Behavior PC1", y = "Behavior PC2") +
+  theme(legend.position="none")
+
+save_plot("beahvorpc12.pdf", beahvorpc12, base_aspect_ratio = 1.8)
+save_plot("beahvorpc12.png", beahvorpc12, base_aspect_ratio = 1.8)
+save_plot("beahvorpc15.pdf", beahvorpc15, base_aspect_ratio = 1.8)
+save_plot("beahvorpc15.png", beahvorpc15, base_aspect_ratio = 1.8)
+
+behav_pc_combo <-  plot_grid(beahvorpc12nolegend, beahvorpc15, rel_widths=c(1,1.5))
+save_plot("behav_pc_combo.pdf", behav_pc_combo, base_aspect_ratio = 3)
+save_plot("behav_pc_combo.png", behav_pc_combo, base_aspect_ratio = 3)
 
 
 genoAPAnames <- c(
@@ -94,10 +105,10 @@ pcaplotgenotypeyear <- function(data, xcol, ycol, colorcode){
     background_grid(major = "xy", minor = "none") + 
     #theme(strip.background = element_blank()) +
     facet_grid(~genoYear, labeller = as_labeller(genoAPAnames)) + 
-    scale_colour_manual(values=c("#f1a340", "#7f3b08", "#9970ab", "#40004b"),
+    scale_colour_manual(values=c("#f1a340",  "#9970ab", "#40004b"),
                         name="APA Training",
-                        breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                        labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) 
+                        breaks=c("Yoked", "Trained", "Conflict"),
+                        labels=c("Yoked",  "Trained", "Conflict")) 
     return(plot)
 }
 
@@ -114,14 +125,18 @@ pcaplotgenotype <- function(data, xcol, ycol, colorcode){
     theme_cowplot(font_size = 20, line_size = 1) + 
     background_grid(major = "xy", minor = "none") + 
     #theme(strip.background = element_blank()) +
-    scale_colour_manual(values=c("#f1a340", "#7f3b08", "#9970ab", "#40004b"),
+    scale_colour_manual(values=c("#f1a340",  "#9970ab", "#40004b"),
                         name="APA Training",
-                        breaks=c("yoked_trained", "yoked_conflict", "trained_trained", "trained_conflict"),
-                        labels=c("Yoked to Trained", "Yoked to Conflict", "Trained Trained", "Trained Conflict")) 
-    return(plot)
+                        breaks=c("Yoked", "Trained", "Conflict"),
+                        labels=c("Yoked",  "Trained", "Conflict") + 
+                        labs(x = "xlab", y = "ylab")) 
+  return(plot)
 }
 
-pcaplotgenotype(data=scoresdf, xcol="PC1", ycol="PC2", colorcode="APA")
+pcaplotgenotype(data=scoresdf, xcol="PC1", ycol="PC2", colorcode=APA, xlab="Behavior PC1", ylab="Behavior PC2" )
 pcaplotgenotype(data=scoresdf, xcol="PC1", ycol="PC5", colorcode="APA")
 
+
 #save.image("~/Github/BehavEphyRNAseq/results/2016-11-07_sfnposter/Nov7.Rdata")
+
+
