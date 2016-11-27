@@ -6,7 +6,7 @@ load("~/Github/BehavEphyRNAseq/bin/deseq.Rdata")
 library("DESeq2")
 library("ggplot2")
 library("dplyr")
-library(magrittr)
+library("magrittr")
 
 
 # 1.3.3 Count matrix input ----
@@ -118,8 +118,6 @@ sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #4511
 resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
 sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #7222
 
-
-
 ##  now bind the table of 
 valsAPACY <- cbind(resAPACY$pvalue, resAPACY$padj)
 valsAPATY <- cbind(resAPATY$pvalue, resAPATY$padj) 
@@ -127,7 +125,6 @@ valsAPACT <- cbind(resAPACT$pvalue, resAPACT$padj)
 valsPunchCA1DG <- cbind(resPunchCA1DG$pvalue, resPunchCA1DG$padj) 
 valsPunchCA1CA3 <- cbind(resPunchCA1CA3$pvalue, resPunchCA1CA3$padj) 
 valsPunchCA3DG <- cbind(resPunchCA3DG$pvalue, resPunchCA3DG$padj) 
-
 
 colnames(valsAPACY)=c("pval.APACY", "padj.APACY")
 colnames(valsAPATY)=c("pval.APATY", "padj.APATY")

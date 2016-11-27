@@ -2,7 +2,7 @@
 title: "Integrative Hippocampus Module"
 author: "Neural Systems & Behavior 2016"
 date: "July 15, 2016"
-output: html_document
+output: md_document
 ---
 ## Overview
 This document will summarize the samples we have available for gene expression analysis during the Integrative Hippocampus Module. We have three datasets that can be combined or sliced as the students see fit. 

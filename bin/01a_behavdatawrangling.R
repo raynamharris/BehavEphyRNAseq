@@ -24,7 +24,7 @@ names(behav)
 
 ## rename columns 
 names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPathArena.m"
-names(behav)[names(behav)=="sd.Speed.Arena."] <- "SdevSpeedArena."
+names(behav)[names(behav)=="sd.Speed.Arena."] <- "SdevSpeedArena"
 names(behav)[names(behav)=="TotalPath.Arena."] <- "TotalPathArena.m"
 names(behav)[names(behav)=="X.Shock"] <- "NumShock"
 names(behav)[names(behav)=="X.Entrances"] <- "NumEntrances"
@@ -50,21 +50,20 @@ summary(behav)
 ## some aniamls have a 0 for path to 1st entrance because they were dropped into the schock zone. THose are replaced with NA. 
 ## all values of -1 are removed because they really mean, couldnt be calculated.
 
-behav$Path1stEntr <-ifelse((behav$Path1stEntr != 0), behav$Path1stEntr, NA)
-behav$Speed1stEntr.cm.s. <-ifelse((behav$Speed1stEntr.cm.s. != -1), behav$Speed1stEntr.cm.s., NA)
-behav$Speed2ndEntr <-ifelse((behav$Speed2ndEntr != -1), behav$Speed2ndEntr, NA)
-behav$Path2ndEntr <-ifelse((behav$Path2ndEntr != -1), behav$Path2ndEntr, NA)
-behav$Time1stEntr <- ifelse((behav$Time1stEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time1stEntr < 599.97), behav$Time1stEntr, NA)
-behav$Dist1stEntr.m. <- ifelse((behav$Dist1stEntr.m. < 0.01 & behav$NumEntrances == 0) | (behav$Dist1stEntr.m. > 0.1), behav$Dist1stEntr.m., NA)
-behav$Time2ndEntr <- ifelse((behav$Time2ndEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time2ndEntr < 599.97), behav$Time2ndEntr, NA)
-behav$MaxTimeAvoid <- ifelse((behav$MaxTimeAvoid == 599 & behav$NumEntrances == 0) | (behav$MaxTimeAvoid < 599), behav$MaxTimeAvoid, NA)
-behav$Path1stEntr <- ifelse((behav$Time1stEntr != "NA"), behav$Path1stEntr, NA)
-behav$Path2ndEntr <- ifelse((behav$Time2ndEntr != "NA"), behav$Path2ndEntr, NA)
+#behav$Path1stEntr <-ifelse((behav$Path1stEntr != 0), behav$Path1stEntr, NA)
+#behav$Speed1stEntr.cm.s. <-ifelse((behav$Speed1stEntr.cm.s. != -1), behav$Speed1stEntr.cm.s., NA)
+#behav$Speed2ndEntr <-ifelse((behav$Speed2ndEntr != -1), behav$Speed2ndEntr, NA)
+#behav$Path2ndEntr <-ifelse((behav$Path2ndEntr != -1), behav$Path2ndEntr, NA)
+#behav$Time1stEntr <- ifelse((behav$Time1stEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time1stEntr < 599.97), behav$Time1stEntr, NA)
+#behav$Dist1stEntr.m. <- ifelse((behav$Dist1stEntr.m. < 0.01 & behav$NumEntrances == 0) | (behav$Dist1stEntr.m. > 0.1), behav$Dist1stEntr.m., NA)
+#behav$Time2ndEntr <- ifelse((behav$Time2ndEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time2ndEntr < 599.97), behav$Time2ndEntr, NA)
+#behav$MaxTimeAvoid <- ifelse((behav$MaxTimeAvoid == 599 & behav$NumEntrances == 0) | (behav$MaxTimeAvoid < 599), behav$MaxTimeAvoid, NA)
+#behav$Path1stEntr <- ifelse((behav$Time1stEntr != "NA"), behav$Path1stEntr, NA)
+#behav$Path2ndEntr <- ifelse((behav$Time2ndEntr != "NA"), behav$Path2ndEntr, NA)
 
 
 # badyoked
-badyoked <- behav %>% filter(grepl("16-357A|16-357B|16-357D", ID))
-
+#badyoked <- behav %>% filter(grepl("16-357A|16-357B|16-357D", ID))
 
 ## recalculate speed 1 and speed 2
 behav <- behav %>% mutate(Speed1 = Path1stEntr / Time1stEntr)
@@ -100,20 +99,21 @@ behav$APA <- revalue(behav$APA, c("train_trained" = "trained"))
 behav$APA <- revalue(behav$APA, c("train_untrained" = "untrained")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "Conflict")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_yoked" = "Yoked")) 
-behav$APA <- revalue(behav$APA, c("train-train_trained" = "Trained")) 
+behav$APA <- revalue(behav$APA, c("train-train_trained" = "Same")) 
 behav$APA <- revalue(behav$APA, c("train-train_yoked" = "Yoked")) 
 behav$APA <- factor(behav$APA, 
                         levels = c("untrained", "trained", 
-                                   "Yoked", "Trained", "Conflict"))
+                                   "Yoked", "Same", "Conflict"))
 levels(behav$APA)
 
 behav$genoAPA <- as.factor(paste(behav$Genotype,behav$APA, sep="_"))
 levels(behav$genoAPA)
 behav$genoAPA <- factor(behav$genoAPA, 
                         levels = c("WT_untrained", "WT_trained", 
-                                   "WT_Yoked", "WT_Trained", "WT_Conflict",
+                                   "WT_Yoked", "WT_Same", "WT_Conflict",
                                    "FMR1KO_untrained", "FMR1KO_trained",
-                                   "FMR1KO_Yoked", "FMR1KO_Trained", "FMR1KO_Conflict"))
+                                   "FMR1KO_Yoked", "FMR1KO_Same", "FMR1KO_Conflict"))
+levels(behav$genoAPA)
 
 behav$TrainSessionCombo <- behav$TrainSession
 levels(behav$TrainSessionCombo)
@@ -129,10 +129,10 @@ behav$TrainSessionCombo <- factor(behav$TrainSessionCombo, ## set levels
 levels(behav$TrainSessionCombo)
 
 behav$genoAPATrainSessionCombo <- as.factor(paste(behav$genoAPA, behav$TrainSessionCombo, sep="_"))
-behav$genoAPATrainSessionComboInd <- as.factor(paste(behav$genoAPAsessionCombo, behav$ID, sep="_"))
+behav$genoAPATrainSessionComboInd <- as.factor(paste(behav$genoAPATrainSessionCombo, behav$ID, sep="_"))
 
-behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionComboDay, sep="_"))
-behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionComboDay, sep="_"))
+behav$pair1 <- as.factor(paste(behav$ID,behav$TrainSessionCombo, sep="_"))
+behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionCombo, sep="_"))
 
 ## reorders dataframe 
 names(behav)
@@ -150,7 +150,30 @@ names(behav)
 #frmr1 <- behav %>% filter(Genotype != "WT")  
 
 # by year
-#y2015 <- behav %>%  filter(Year == "2015")
+y2015 <- behav %>%  filter(Year == "2015")
+y2015 <- y2015 %>%
+  select(-genoYear, -genoAPA, -genoAPATrainSessionCombo, 
+         -genoAPATrainSessionComboInd, -EntrShockDiff)
+names(y2015)
+
+y2015$TrainSessionComboNum <- ifelse(grepl("Hab", y2015$TrainSessionCombo), "1", 
+                                        ifelse(grepl("T1", y2015$TrainSessionCombo), "2",
+                                               ifelse(grepl("T2", y2015$TrainSessionCombo), "3",
+                                                      ifelse(grepl("T3", y2015$TrainSessionCombo), "4", 
+                                                             ifelse(grepl("Retest", y2015$TrainSessionCombo), "5",
+                                                                    ifelse(grepl("T4_C1", y2015$TrainSessionCombo), "6",
+                                                                           ifelse(grepl("T5_C2", y2015$TrainSessionCombo), "7",
+                                                                                  ifelse(grepl("T6_C3", y2015$TrainSessionCombo), "8",
+                                                                                         ifelse(grepl("Retention", y2015$TrainSessionCombo), "9",NA)))))))))
+y2015$TrainSessionComboNum <- as.numeric(as.character(y2015$TrainSessionComboNum))
+summary(y2015$TrainSessionComboNum) 
+head(y2015)
+names(y2015)
+y2015 <- y2015[c(1:17,59,18:58)]  
+names(y2015)
+
+write.csv(y2015, '/Users/raynamharris/Github/IntegrativeProjectWT2015/data/01_behaviordata.csv', row.names = F)
+
 
 # by experiement by genotype experimenter training
 #maddyWT <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT")

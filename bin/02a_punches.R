@@ -46,3 +46,34 @@ str(JA16444samples)
 tail(JA16444samples)
 # write.csv(JA16444samples, "JA16444samples.csv", row.names=FALSE)
 
+
+## for DissociationTest project
+DissociationTest <- full %>%
+  filter(Mouse %in% c("15-100", "15-101")) %>%
+  filter(jobnumber == "JA16444")  %>% droplevels()
+DissociationTest <- DissociationTest[c(1:3, 10:14,16,29:32)] 
+DissociationTest <- DissociationTest[c(11,4,8,7,1:3,5:6,9:10)]
+names(DissociationTest)[names(DissociationTest)=="notes"] <- "Method"
+DissociationTest$Method <- revalue(DissociationTest$Method, c("maddy FACS dissociate" = "dissociated")) 
+DissociationTest$Method <- revalue(DissociationTest$Method, c("maddy punch" = "homogenized")) 
+str(DissociationTest)
+#write.csv(DissociationTest, "/Users/raynamharris/Github/DissociationTest/data/sampleinfo.csv", row.names=FALSE)
+
+## for Bigger DissociationTest project
+## includes some animals for which we have behavior data
+DissociationTest2 <- full %>%
+  filter(grepl("15-100|15-101|15-145|15-146|15-147|15-148", Mouse)) %>%
+  filter(RNAseqID != "146A-CA3-2") %>%
+  filter(jobnumber == "JA16444")  %>% droplevels()
+
+DissociationTest2$Method <- ifelse(grepl("maddy FACS dissociate", DissociationTest2$notes), "Dissociated", 
+                                     ifelse(grepl("maddy punch", DissociationTest2$notes), "Homogenized",
+                                            ifelse(grepl("WT Conflict Trained", DissociationTest2$Group), "Trained",
+                                                   ifelse(grepl("WT Conflict Yoked", DissociationTest2$Group), "Yoked", 
+                                                          ifelse(grepl("WT NoConflict Trained", DissociationTest2$Group), "Trained",
+                                                                 ifelse(grepl("WT NoConflict Yoked", DissociationTest2$Group), "Yoked",
+                                                                        ifelse(grepl("WT NA NA", DissociationTest2$Group), "HomeCage",NA)))))))
+DissociationTest2 <- DissociationTest2[c(1:3,12:14,16,21,29:32,38)] 
+DissociationTest2 <- DissociationTest2[c(10,13,6,5,1:4,7:9)]
+str(DissociationTest2)
+write.csv(DissociationTest2, "/Users/raynamharris/Github/DissociationTest/data/sampleinfo2.csv", row.names=FALSE)
