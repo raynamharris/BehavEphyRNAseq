@@ -46,7 +46,6 @@ str(JA16444samples)
 tail(JA16444samples)
 # write.csv(JA16444samples, "JA16444samples.csv", row.names=FALSE)
 
-
 ## for DissociationTest project
 DissociationTest <- full %>%
   filter(Mouse %in% c("15-100", "15-101")) %>%
@@ -76,4 +75,22 @@ DissociationTest2$Method <- ifelse(grepl("maddy FACS dissociate", DissociationTe
 DissociationTest2 <- DissociationTest2[c(1:3,12:14,16,21,29:32,38)] 
 DissociationTest2 <- DissociationTest2[c(10,13,6,5,1:4,7:9)]
 str(DissociationTest2)
-write.csv(DissociationTest2, "/Users/raynamharris/Github/DissociationTest/data/sampleinfo2.csv", row.names=FALSE)
+#write.csv(DissociationTest2, "/Users/raynamharris/Github/DissociationTest/data/sampleinfo2.csv", row.names=FALSE)
+
+## for WT with mutliple jobs
+WT2015samples <- full %>%
+  filter(jobnumber %in% c("JA16268", "JA16444")) %>%
+  distinct(RNAseqID, Tube, Mouse, Genotype, Conflict, APA, Group, Behavior, E.phy, Punch, Slice, Date, jobnumber) %>% droplevels()
+str(WT2015samples)
+tail(WT2015samples)
+#write.csv(WT2015samples, "WT2015samples.csv", row.names=FALSE)
+
+## 2016 samples for photo analysis
+summer2016 <- full %>%
+  filter(Year == "Summer2016") %>%
+  distinct(Mouse, Genotype, Date) %>%
+  arrange(Mouse)
+#write.csv(summer2016, "summer2016.csv", row.names=FALSE)
+
+
+
