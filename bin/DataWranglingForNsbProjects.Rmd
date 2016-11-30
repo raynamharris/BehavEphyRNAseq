@@ -2,7 +2,7 @@
 title: "Integrative Hippocampus Module"
 author: "Neural Systems & Behavior 2016"
 date: "July 15, 2016"
-output: md_document
+output: html_document
 ---
 ## Overview
 This document will summarize the samples we have available for gene expression analysis during the Integrative Hippocampus Module. We have three datasets that can be combined or sliced as the students see fit. 
@@ -16,7 +16,7 @@ library(dplyr)
 library(plyr)
 library(tidyr)
 
-setwd("~/Github/BehavEphyRNAseq/data/sample_info")
+setwd("~/Github/BehavEphyRNAseq/data/rnaseq")
 punches <- read.csv("punches.csv", header=TRUE, sep="," )
 animals <- read.csv("animals.csv", header=TRUE, sep="," )
 
@@ -32,6 +32,15 @@ NSBpunches <- cleanpunches %>%
          punch.location, slice.location, storagebox, notes.x,
          Genotype, Conflict, APA, Group, collector, Purpose) %>%
   arrange(Mouse)
+
+CherishIsaac <- cleanpunches %>%
+  filter(Purpose == "students", Punch == "slice", Slice.collector == "JMA",
+         Mouse != "???", Mouse != "15-310", Mouse != "15-331", Mouse != "16-261B",
+         Genotype == "WT (FVB/NJ)", Slice %in% c("1", "2")) %>%
+  select(Tube, Mouse, Slice, Punch, Date, 
+         ready.time, storagebox, Genotype, APA, Group, Purpose) %>%
+  arrange(Mouse, Tube)
+
 ```
 
 ## Huntington (Htt) vs Wild Type Samples
