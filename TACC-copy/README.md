@@ -211,7 +211,7 @@ do
 done
 ~~~
 
-Create the launcher script and run. **Note**: We need to use the largemem cluster because this program requires lots of working memory! The largemem cluster has a max core limit that is easy to reach. If you have too many samples, split the job into pieces. 
+Create the launcher script and run. **Note**: We need to use the largemem cluster because this program requires lots of working memory! The largemem cluster has a max core limit that is easy to reach. If you have too many samples, split the job into pieces. Note: This cluster has long wait times! Check first 
 
 ~~~ {.bash}
 launcher_creator.py -t 1:00:00 -j 03_kallistoquant.cmds -n 03_kallistoquant -l 03_kallistoquant.slurm -A NeuroEthoEvoDevo -q largemem -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
