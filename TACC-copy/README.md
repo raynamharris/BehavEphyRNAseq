@@ -252,40 +252,4 @@ done
 
 
 
-############################################################
-
-## Workflow JA16443
-
-These files are NOT paired-end. So we can use a different workflow.
-
-### 01_clean
-
-Here, I'm creating a 3 step cleaning workshop using the fastx_clipper and fastq_quality_filter functions from the fastx toolkit. 
-
-~~~ {.bash}
-for file in *.fastq.gz
-do
-	newfile=${file//.fastq.gz/.trim.fq}
-	echo $file $newfile
-	echo "fastx_clipper -v -a AAAAAAAA -l 20 -Q33 -i $file | fastx_clipper -v  -a TTTTTTTT -l 20 -Q33 | fastq_quality_filter -v  -Q33 -q 20 -p 90 -o $newfile"  >> 01_clean.cmds
-done
-~~~ 
-
-Then, I created and launched a job with this command.
-
-~~~ {.bash}
-launcher_creator.py -t 1:00:00 -j 03_clean.cmds -n clean -l 01_clean.slurm -A NeuroEthoEvoDevo -m 'module load fastx_toolkit/0.0.13.2'
-sbatch 03_clean.slurm
-~~~ 
-
-Now, I can look at a few lines of each to see if indeed things were trimmed (and compare it to the old sequences. 
-
-~~~ {.bash}
-for file in *.fq
-do
-	echo $file
-	head -32 $file | grep -E '^[NACGT]+$'
-done
-~~~ 
-
 
