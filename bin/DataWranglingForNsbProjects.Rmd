@@ -40,6 +40,7 @@ CherishIsaac <- cleanpunches %>%
   select(Tube, Mouse, Slice, Punch, Date, 
          ready.time, storagebox, Genotype, APA, Group, Purpose) %>%
   arrange(Mouse, Tube)
+write.csv(CherishIsaac, "CherishIsaac.csv", row.names=FALSE)
 
 ```
 
