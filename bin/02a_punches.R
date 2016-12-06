@@ -107,6 +107,7 @@ summer2016forRNAseq <- full %>%
 summer2016forRNAseq <- join(summer2016forRNAseq, summer2016photos, by=c("Mouse","Slice"), type = "full", match = "all")
 summer2016forRNAseq$Slice <- as.integer(summer2016forRNAseq$Slice) # first make both integers
 str(summer2016forRNAseq)
+rm(summer2016photos) #don't need this anymore
 
 # reset the Groups to be Yoked, Same, and Conflict
 summer2016forRNAseq <- rename(summer2016forRNAseq, c("Group"="APA"))
@@ -120,14 +121,18 @@ summer2016forRNAseq$isbest <- ifelse(summer2016forRNAseq$Slice == summer2016forR
 
 ## filter data to only the BEST slices and CA1, CA3, and DG Samples
 summer2016forRNAseq <- summer2016forRNAseq %>%
-  filter(isbest == "TRUE") %>% filter(Punch %in% c("CA1", "CA3", "DG")) %>% 
-  arrange(Mouse, Punch) %>% droplevels()
+  filter(isbest == "TRUE") %>% filter(Punch %in% c("CA1")) %>% 
+  filter(APA == "Yoked") %>% 
+  arrange(Date) %>% droplevels()
+
+## create an RNAseqID (can't have dashes, must be less than 10 characters)
+head(summer2016forRNAseq)
+summer2016forRNAseq$RNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
+summer2016forRNAseq$RNAseqID <- gsub("-", "_", summer2016forRNAseq$RNAseqID, fixed = TRUE)
 
 
-### sum summary stats
-
-summer2016forRNAseqstats <- select(summer2016forRNAseq, Genotype, APA, Punch)
-summer2016forRNAseqstats <- count(summer2016forRNAseqstats, c('Genotype','APA', "Punch"))
-summer2016forRNAseqstats <- dcast(summer2016forRNAseqstats, Genotype + APA ~ Punch, value.var = "freq")
-
-
+### calculate sample sizes
+summer2016forRNAseqtotals <- select(summer2016forRNAseq, Genotype, APA, Punch)
+summer2016forRNAseqtotals <- count(summer2016forRNAseqtotals, c('Genotype','APA', "Punch"))
+summer2016forRNAseqtotals <- dcast(summer2016forRNAseqtotals, Genotype + APA ~ Punch, value.var = "freq")
+head(summer2016forRNAseqtotals)

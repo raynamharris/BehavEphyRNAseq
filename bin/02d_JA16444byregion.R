@@ -10,7 +10,7 @@ library(plyr) ## for renmaing factors
 library(ggplot2) ## for awesome plots!
 
 
-setwd("~/Github/BehavEphyRNAseq/data/sample_info/")
+setwd("~/Github/BehavEphyRNAseq/data/rnaseq/")
 Traits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
 rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as rownames
 names(Traits)
