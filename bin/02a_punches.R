@@ -5,7 +5,7 @@ library("plyr")
 library("reshape2")
 
 #script saved in ~/Github/BehavEphyRNAseq/RNAseqSamples ----
-setwd("~/Github/BehavEphyRNAseq/data/sample_info")
+setwd("~/Github/BehavEphyRNAseq/data/rnaseq")
 
 #read raw data -----
 punches <- read.csv("punches.csv", header=TRUE)
@@ -85,12 +85,49 @@ str(WT2015samples)
 tail(WT2015samples)
 #write.csv(WT2015samples, "WT2015samples.csv", row.names=FALSE)
 
-## 2016 samples for photo analysis
-summer2016 <- full %>%
-  filter(Year == "Summer2016") %>%
-  distinct(Mouse, Genotype, Date) %>%
-  arrange(Mouse)
-#write.csv(summer2016, "summer2016.csv", row.names=FALSE)
 
+
+############# Summer 2016 Samples for RNAseq
+## first, make a spreadsheet for recording photo analysis 
+summer2016photos <- full %>%
+  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
+  distinct(Mouse, Slice) %>% droplevels()
+# This output was saved as a file and used for doing the photo analysis
+
+## then, use the allen brain atlast to annotate the photos
+## then read in photo results 
+summer2016photos <- read.csv("summer2016photos.csv", header=T, stringsAsFactors = F)
+
+## subset the full punch dataset and keep the relevant columns for the 2016 project
+summer2016forRNAseq <- full %>%
+  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
+  distinct(Tube, Mouse, Genotype, Group, Punch, Slice, Date, storagebox) %>% droplevels()
+
+## merge the photo and the punch data
+summer2016forRNAseq <- join(summer2016forRNAseq, summer2016photos, by=c("Mouse","Slice"), type = "full", match = "all")
+summer2016forRNAseq$Slice <- as.integer(summer2016forRNAseq$Slice) # first make both integers
+str(summer2016forRNAseq)
+
+# reset the Groups to be Yoked, Same, and Conflict
+summer2016forRNAseq <- rename(summer2016forRNAseq, c("Group"="APA"))
+summer2016forRNAseq$APA <- ifelse(grepl("NoConflict Trained", summer2016forRNAseq$APA), "Same", 
+                                  ifelse(grepl("Yoked", summer2016forRNAseq$APA), "Yoked", "Conflict"))
+summer2016forRNAseq$APA
+
+
+## create a T/F column to say if the the same is from the optimal slice or not. 
+summer2016forRNAseq$isbest <- ifelse(summer2016forRNAseq$Slice == summer2016forRNAseq$sliceforRNAseq, T,F) 
+
+## filter data to only the BEST slices and CA1, CA3, and DG Samples
+summer2016forRNAseq <- summer2016forRNAseq %>%
+  filter(isbest == "TRUE") %>% filter(Punch %in% c("CA1", "CA3", "DG")) %>% 
+  arrange(Mouse, Punch) %>% droplevels()
+
+
+### sum summary stats
+
+summer2016forRNAseqstats <- select(summer2016forRNAseq, Genotype, APA, Punch)
+summer2016forRNAseqstats <- count(summer2016forRNAseqstats, c('Genotype','APA', "Punch"))
+summer2016forRNAseqstats <- dcast(summer2016forRNAseqstats, Genotype + APA ~ Punch, value.var = "freq")
 
 
