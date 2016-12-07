@@ -129,6 +129,7 @@ summer2016forRNAseq <- summer2016forRNAseq %>%
 head(summer2016forRNAseq)
 summer2016forRNAseq$RNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
 summer2016forRNAseq$RNAseqID <- gsub("-", "_", summer2016forRNAseq$RNAseqID, fixed = TRUE)
+write.csv(summer2016forRNAseq, "summer2016forRNAseq.csv", row.names=FALSE)
 
 
 ### calculate sample sizes
@@ -136,3 +137,4 @@ summer2016forRNAseqtotals <- select(summer2016forRNAseq, Genotype, APA, Punch)
 summer2016forRNAseqtotals <- count(summer2016forRNAseqtotals, c('Genotype','APA', "Punch"))
 summer2016forRNAseqtotals <- dcast(summer2016forRNAseqtotals, Genotype + APA ~ Punch, value.var = "freq")
 head(summer2016forRNAseqtotals)
+rm(summer2016forRNAseqtotals)
