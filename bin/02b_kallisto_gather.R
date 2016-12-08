@@ -73,4 +73,4 @@ summary(tpmswgcna)
 #write.csv(tpmswgcna, "tpmswgcna.csv", row.names = TRUE)
 
 # save Rdata for loadinhg
-save.image("~/Github/BehavEphyRNAseq/bin/02b_kallisto_gather.Rdata")
+#save.image("~/Github/BehavEphyRNAseq/bin/02b_kallisto_gather.Rdata")
