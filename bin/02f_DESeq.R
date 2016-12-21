@@ -34,7 +34,7 @@ str(colData)
 
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
-                              design = ~ Punch + APA + Punch:APA)
+                              design = ~ Punch + TrainGroup + Punch*TrainGroup)
 dds
 
 #class: DESeqDataSet 
@@ -52,10 +52,10 @@ dds
 dds <- dds[ rowSums(counts(dds)) > 1, ]
 
 ## 1.3.7 Note on factor levels
-str(dds$APA)
-levels(dds$APA)
+str(dds$TrainGroup)
+levels(dds$TrainGroup)
 str(dds$Punch)
-dds$APA <- factor(dds$APA, levels=c("Yoked","Trained"))
+dds$TrainGroup <- factor(dds$TrainGroup, levels=c("Yoked","Trained"))
 dds$Punch <- factor(dds$Punch, levels=c("DG","CA3", "CA1"))
 
 
@@ -78,14 +78,14 @@ plotMA(res, main="DESeq2")
 resMLE <- results(dds)
 head(resMLE, 4)
 
-plotCounts(dds, gene=which.min(res$padj), intgroup="APA")
+plotCounts(dds, gene=which.min(res$padj), intgroup="TrainGroup")
 plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
 
 
-d <- plotCounts(dds, gene=which.min(res$padj), intgroup="APA",
+d <- plotCounts(dds, gene=which.min(res$padj), intgroup="TrainGroup",
                 returnData=TRUE)
 
-ggplot(d, aes(x=APA, y=count, color=APA)) +
+ggplot(d, aes(x=TrainGroup, y=count, color=TrainGroup)) +
   geom_point(position=position_jitter(w=0.1,h=0)) +
   scale_y_log10(breaks=c(25,100,400))
 
@@ -102,7 +102,7 @@ head(assay(rld), 3)
 #save.image("~/Github/BehavEphyRNAseq/bin/deseq.Rdata")
 
 ## DEG by contrasts
-resAPATY <- results(dds, contrast = c("APA", "Trained", "Yoked"), independentFiltering = F)
+resAPATY <- results(dds, contrast = c("TrainGroup", "Yoked", "Trained"), independentFiltering = F)
 sum(resAPATY$padj < 0.1, na.rm = TRUE) #126
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
@@ -171,22 +171,46 @@ library("pheatmap")
 nt <- normTransform(dds) # defaults to log2(x+1) 
 
 ## making pheatmaps annoations
-df <- as.data.frame(colData(dds)[,c("APA","Punch")])
+df <- as.data.frame(colData(dds)[,c("Punch","TrainGroup")])
 str(df)
 
 ann_colors = list(
-  APA =  c(Yoked = (values=c("#f1a340")), Trained = (values=c("#9970ab"))),
+  TrainGroup =  c(Yoked = (values=c("#f1a340")), Trained = (values=c("#9970ab"))),
   Punch =  c(DG = (values=c("#006837")),  CA3 = (values=c("#41ab5d")), 
              CA1 = (values=c("#d9f0a3"))))
 
 #### top variance genes des by brain region
-library("genefilter")
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),48)
-mat <- assay(rld)[ topVarGenes, ]
-mat <- mat - rowMeans(mat)
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.APATY, padj.CA1DG, padj.CA1CA3, padj.CA3DG)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.001)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.APATY", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.APATY", "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
 
 
-pheatmap(mat, show_colnames=TRUE, show_rownames = TRUE,
+pheatmap(DEGes, show_colnames=TRUE, show_rownames = F,
+         annotation_col=df, annotation_colors = ann_colors,
+         fontsize = 12, fontsize_row = 10, 
+         #cellwidth=10, cellheight=10,
+         #width = 10,
+         border_color = "grey60"
+)
+
+DEGes <- as.data.frame(rldpvals) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$padjmin <- with(DEGes, pmin(padj.APATY)) # put the min pvalue in a new column
+DEGes <- DEGes %>% filter(padjmin < 0.001)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <- c("padj.APATY", "padj.CA1DG" , "padj.CA1CA3" , "padj.CA3DG" , "pval.APATY", "pval.CA1DG" , "pval.CA1CA3" , "pval.CA3DG" , "rownames", "padjmin")
+DEGes <- DEGes %>% select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+
+
+pheatmap(DEGes, show_colnames=TRUE, show_rownames = F,
          annotation_col=df, annotation_colors = ann_colors,
          fontsize = 12, fontsize_row = 10, 
          #cellwidth=10, cellheight=10,
@@ -197,32 +221,13 @@ pheatmap(mat, show_colnames=TRUE, show_rownames = TRUE,
 
 
 ## regular pca
-plotPCA(rld, intgroup=c("APA", "Punch"), returnData=TRUE)
-pcadata <- plotPCA(rld, intgroup=c("APA", "Punch"), returnData=TRUE)
+plotPCA(rld, intgroup=c("TrainGroup", "Punch"), returnData=TRUE)
+pcadata <- plotPCA(rld, intgroup=c("TrainGroup", "Punch"), returnData=TRUE)
 percentVar <- round(100 * attr(pcadata, "percentVar"))
 
-ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=APA)) +
+ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=TrainGroup)) +
   geom_point(size=5) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +  
-  scale_color_manual(values=c("#a1d99b", "#41ab5d", "#006d2c"))
-
-## raynas version
-library(cowplot)
-pcadata16 <- pcaplot16(rld, intgroup=c("APA", "Punch"), returnData=TRUE)
-percentVar16 <- round(100 * attr(pcadata16, "percentVar"))
-
-pcacolors <- c("Yoked" = (values=c("#f1a340")),"Trained" = (values=c("#9970ab")),
-               "DG" = (values=c("#006837")),"CA1" = (values=c("#d9f0a3")), "CA3" = (values=c("#41ab5d")))
-
-ggplot(pcadata16, aes(PC1, PC2)) +
-  geom_point(size=5, aes(color=APA, shape=Punch) ) + 
-  guides(shape=guide_legend(title=NULL)) +
   stat_ellipse(level = 0.95, (aes(color=Punch)),size=1.5)   + 
-  xlab(paste0("Transcriptomics PC1: ",percentVar16[1],"% variance")) +
-  ylab(paste0("Transcriptomics PC2:\n",percentVar16[2],"% variance")) +  
-  scale_color_manual(values = pcacolors, 
-                     name=NULL,
-                     breaks=c("DG", "CA3", "CA1", "Yoked", "Trained"),
-                     labels=c("DG", "CA3", "CA1", "Yoked", "Trained")) + 
-  theme_cowplot(font_size = 20) 
+  scale_color_manual(values=c("#006837", "#41ab5d", "#d9f0a3"))
