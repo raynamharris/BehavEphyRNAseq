@@ -3,9 +3,9 @@
 ## location of script "/Volumes/HofmannLab/rmharris/singlecellseq/scripts.dennis"
 library("dplyr")
 
-setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/05_kallistoquant_largemem/")
+setwd("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/04_kallistoquant/")
 ## this will create lists of all the samples
-kallistoDirs = dir("~/Github/BehavEphyRNAseq/TACC-copy/JA16444/05_kallistoquant_largemem/")
+kallistoDirs = dir(".")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
         kallistoDirs, ignore.case=TRUE)]
 

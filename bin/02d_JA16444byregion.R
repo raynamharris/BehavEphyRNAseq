@@ -21,9 +21,9 @@ tail(Traits)
 str(Traits)
 
 ## remove 100 and 100 animals because they aren't APA trained
-## remove mice 147D_CA1_1 and 145B_CA3_1 because they produced almost 0 zeros
+## remove mice 147D_CA1_1 and 145B_CA3_1 because these were bad samples with no reads
 ## remove 147 and 148 because they are home cage animals
-Traits <- Traits %>% dplyr::filter(!grepl("100-|101-|147D-CA1-1|145B-CA3-1|147-|148-", RNAseqID)) 
+Traits <- Traits %>% dplyr::filter(!grepl("147D-CA1-1|145B-CA3-1|147-|148-", RNAseqID)) 
 
 
 ## adding combinatorial traits
@@ -34,16 +34,6 @@ summary(Traits)
 Traits$ID <- gsub("[[:punct:]]", "", Traits$Mouse)
 
 
-## Subset by punch or training
-TraitsCA1 <- Traits %>% filter(Punch == "CA1") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID)
-TraitsCA3 <- Traits %>% filter(Punch == "CA3") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID)
-TraitsDG <- Traits %>% filter(Punch == "DG") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID)
-TraitsCA1DG <- Traits %>% filter(Punch %in% c("DG", "CA1")) %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID, Punch)
-TraitsTrained <- Traits %>% filter(APA == "Trained") %>% select (RNAseqID, Mouse, Conflict, APA, Slice, APAconflict, ID)
-
-## pick which data to subset
-Traits <- Traits
-
 ## make gene the row name then round all value to nearest 1s place
 row.names(Traits) <- Traits$RNAseqID
 
@@ -51,7 +41,7 @@ row.names(Traits) <- Traits$RNAseqID
 ## relevel APA conflict and rename columsn
 ## rename columns 
 names(Traits)[names(Traits)=="APA"] <- "TrainGroup"
-names(Traits)[names(Traits)=="APAconflict "] <- "APA"
+names(Traits)[names(Traits)=="APAconflict"] <- "APA"
 Traits$APA <- revalue(Traits$APA, c("Trained_Conflict" = "Conflict")) 
 Traits$APA <- revalue(Traits$APA, c("Trained_NoConflict" = "Trained")) 
 Traits$APA <- revalue(Traits$APA, c("Yoked_Conflict" = "Yoked")) 
