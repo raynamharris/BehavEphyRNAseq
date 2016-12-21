@@ -219,7 +219,6 @@ pheatmap(DEGes, show_colnames=TRUE, show_rownames = F,
 )
 
 
-
 ## regular pca
 plotPCA(rld, intgroup=c("TrainGroup", "Punch"), returnData=TRUE)
 pcadata <- plotPCA(rld, intgroup=c("TrainGroup", "Punch"), returnData=TRUE)
@@ -230,4 +229,7 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=TrainGroup)) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +  
   stat_ellipse(level = 0.95, (aes(color=Punch)),size=1.5)   + 
-  scale_color_manual(values=c("#006837", "#41ab5d", "#d9f0a3"))
+  scale_color_manual(values=c("#006837", "#41ab5d", "#d9f0a3")) 
+
+
+ 
