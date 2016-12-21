@@ -16,6 +16,8 @@ colData <- Traits %>%
 head(countData)
 head(colData)
 
+countData[countData < 2] <- 0
+
 ## remove outliers
 # 146B-DG, 146D-DG, 148B-CA1
 dropcols <- c("146B-DG-2","146D-DG-3", "148B-CA3-4", "146C-CA3-4")
@@ -103,14 +105,14 @@ head(assay(rld), 3)
 
 ## DEG by contrasts
 resAPATY <- results(dds, contrast = c("TrainGroup", "Yoked", "Trained"), independentFiltering = F)
-sum(resAPATY$padj < 0.1, na.rm = TRUE) #126
+sum(resAPATY$padj < 0.1, na.rm = TRUE) #118
 
 resPunchCA1DG <- results(dds, contrast = c("Punch", "CA1", "DG"), independentFiltering = F)
-sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) #3297
+sum(resPunchCA1DG$padj < 0.1, na.rm = TRUE) #3219
 resPunchCA1CA3 <- results(dds, contrast = c("Punch", "CA1", "CA3"), independentFiltering = F)
-sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2347
+sum(resPunchCA1CA3$padj < 0.1, na.rm = TRUE) #2266
 resPunchCA3DG <- results(dds, contrast = c("Punch", "CA3", "DG"), independentFiltering = F)
-sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4187
+sum(resPunchCA3DG$padj < 0.1, na.rm = TRUE) #4029
 
 ##  now bind the table of 
 valsAPATY <- cbind(resAPATY$pvalue, resAPATY$padj) 
@@ -132,7 +134,7 @@ dim(rldpvals)
 #14347    56
 table(complete.cases(rldpvals))
 #   TRUE 
-#  17393 
+#  17422 
 
 ### venn diagram
 #install.packages("VennDiagram")
@@ -147,6 +149,7 @@ PunchCA3DG <- row.names(rldpvals[rldpvals$padj.CA3DG<0.1 & !is.na(rldpvals$padj.
 
 candidates <- list("CA1 v. DG" = PunchCA1DG, "CA1 v. CA3" = PunchCA1CA3,"CA3 v. DG"= PunchCA3DG, "Trained v. Yoked" = APATY)
 
+dev.off()
 prettyvenn <- venn.diagram(
   x = candidates, filename=NULL, lwd=4,
   col = "transparent",
@@ -159,7 +162,7 @@ prettyvenn <- venn.diagram(
   cat.cex = 1, cat.fontfamily = "sans"
 );
 grid.draw(prettyvenn)
-plot(prettyvenn)
+
 
 #save_plot("rnaseqvennV2.pdf", prettyvenn, base_aspect_ratio = 1.4)
 #save_plot("rnaseqvennV2.png", prettyvenn, base_aspect_ratio = 1.4)
@@ -229,7 +232,26 @@ ggplot(pcadata, aes(PC1, PC2, color=Punch, shape=TrainGroup)) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +  
   stat_ellipse(level = 0.95, (aes(color=Punch)),size=1.5)   + 
-  scale_color_manual(values=c("#006837", "#41ab5d", "#d9f0a3")) 
+  scale_color_manual(values=c("#006837", "#41ab5d", "#d9f0a3")) +
+  geom_text(aes(label=name),vjust=2)
 
 
+## stats
+library(edgeR)
+counts <- countData
+dim( counts )
+colSums( counts ) / 1e06  # in millions of reads
+table( rowSums( counts ) )[ 1:30 ] # Number of genes with low counts
+
+rowsum <- as.data.frame(colSums( counts ) / 1e06 )
+names(rowsum)[1] <- "millioncounts"
+rowsum$sample <- row.names(rowsum)
+
+ggplot(rowsum, aes(x=millioncounts)) + 
+  geom_histogram(binwidth = 1, colour = "black", fill = "darkgrey") +
+  theme_classic() +
+  scale_x_continuous(name = "Millions of Gene Counts per Sample",
+                     breaks = seq(0, 8, 1),
+                     limits=c(0, 8)) +
+  scale_y_continuous(name = "Number of Samples")
  
