@@ -127,9 +127,10 @@ summer2016forRNAseq <- summer2016forRNAseq %>%
 
 ## create an RNAseqID (can't have dashes, must be less than 10 characters)
 head(summer2016forRNAseq)
-summer2016forRNAseq$RNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
-summer2016forRNAseq$RNAseqID <- gsub("-", "_", summer2016forRNAseq$RNAseqID, fixed = TRUE)
-write.csv(summer2016forRNAseq, "summer2016forRNAseq.csv", row.names=FALSE)
+summer2016forRNAseq$idealRNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
+summer2016forRNAseq$idealRNAseqID <- gsub("-", "_", summer2016forRNAseq$idealRNAseqID, fixed = TRUE)
+summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
+#write.csv(summer2016forRNAseq, "~/Github/BehavEphyRNAseq/data/rnaseq/summer2016forRNAseq.csv", row.names=FALSE)
 
 
 ### calculate sample sizes
