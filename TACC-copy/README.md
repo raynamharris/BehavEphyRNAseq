@@ -24,6 +24,7 @@ These samples have been process in multiple sequencing jobs.
 JA16268 | May 24, 2016 | paired end
 JA16443 | July 26, 2016 | Tag-seq
 JA16444 | October 5, 2016 | paired end
+JA17009 | TBD | paired end
 
 Rather than set hard paths to project-specific directories, I will set enviornment varaiable that specific the folders for a given project. This way, I just need to update the variable to rerun the workflow, rather than continually modify the path name. 
 
