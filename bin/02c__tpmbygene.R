@@ -1,12 +1,21 @@
 library(dplyr)
 library(reshape2)
 
+#set working directory to source file location
+
+#start from 02b_kallistoa_gather or read these files
+count <- read.csv("../TACC-copy/JA16444/count.csv", row.names=1, check.names=FALSE )
+tpm <- read.csv("../TACC-copy/JA16444/tpm.csv")
+geneids <- read.csv("~/Github/DissociationTest/data/intermediatefiles/geneids.csv")
+
+
 # merge tpm and gene id dataframe
 tpmbygene <-  full_join(geneids, tpm)
 str(tpmbygene)
 
 countbygene <- full_join(geneids, count)
 str(countbygene)
+head(countbygene)
 
 ## remove unnecesary columns (aka, keep gene name and counts for samples)
 tpmbygene <- tpmbygene[-c(1:6,8:12)]  
@@ -19,9 +28,17 @@ head(tpmbygene)
 countbygene <- melt(countbygene, id=c("gene"))
 head(countbygene)
 
+## string split to remove last for characters aka "_S##"
+countbygene$variable <- gsub('.{4}$', '', countbygene$variable)
+head(countbygene)
+
+#replace _ with - in name
+countbygene$variable <- gsub("\\_", "-", countbygene$variable)
+head(countbygene)
+
 ## remove 147 and 148 because they are home cage animals
-tpmbygene <- tpmbygene %>% dplyr::filter(!grepl("147-|148-", variable)) 
-countbygene <- countbygene %>% dplyr::filter(!grepl("147-|148-", variable)) 
+#tpmbygene <- tpmbygene %>% dplyr::filter(!grepl("147-|148-", variable)) 
+#countbygene <- countbygene %>% dplyr::filter(!grepl("147-|148-", variable)) 
 
 #then widen by sum
 tpmbygene <- dcast(tpmbygene, gene ~ variable, value.var= "value", fun.aggregate=mean)

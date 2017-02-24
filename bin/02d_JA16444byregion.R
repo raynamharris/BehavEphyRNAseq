@@ -9,9 +9,9 @@ library(reshape2) #@ for melting dataframe
 library(plyr) ## for renmaing factors
 library(ggplot2) ## for awesome plots!
 
+## start after 02c_tpmbygene
 
-setwd("~/Github/BehavEphyRNAseq/data/rnaseq/")
-Traits <- read.csv("JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
+Traits <- read.csv("../data/rnaseq/JA16444samples.csv", sep=",", header = TRUE, stringsAsFactors=FALSE, na.string = "NA")
 rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as rownames
 names(Traits)
 
@@ -23,7 +23,7 @@ str(Traits)
 ## remove 100 and 100 animals because they aren't APA trained
 ## remove mice 147D_CA1_1 and 145B_CA3_1 because these were bad samples with no reads
 ## remove 147 and 148 because they are home cage animals
-Traits <- Traits %>% dplyr::filter(!grepl("147D-CA1-1|145B-CA3-1|147-|148-", RNAseqID)) 
+Traits <- Traits %>% dplyr::filter(!grepl("100|101|147-|148-|147D-CA1-1|145B-CA3-1|147-|148-", RNAseqID)) 
 
 
 ## adding combinatorial traits

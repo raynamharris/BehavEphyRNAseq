@@ -1,0 +1,11 @@
+---
+title: "deseq2.Rmd"
+author: "Rayna M Harris"
+date: January 7, 2017
+output: 
+  html_document:
+  keep_md: yes
+#output:
+#  md_document:
+    variant: markdown_github
+#---

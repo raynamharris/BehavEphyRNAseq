@@ -1,0 +1,105 @@
+---
+title: "FMR1"
+author: "Rayna M Harris"
+date: "2/24/2017"
+output: html_document
+---
+
+## Loading the data
+In the summer of 2016, I processed a bunch of hippocampal tissue samples from WT and FMR1-KO mice that were trained in an active place avoidance task. 
+
+This data was added the the epically large sample collection database contained in the two files  "animals.csv" and "punches.csv" which provided a detailed account of all animals processed and all tissue samples collected. Then, I tidy the dataframe a little bit to get it prepared for RNAseq sample submision.
+
+```{r install packages load data, warning=FALSE, message=FALSE}
+#install.packages("tidyr", dependencies=TRUE)
+library("tidyr")
+library("dplyr")
+library("plyr")
+library("reshape2")
+library("ggplot2")
+
+#read raw data -----
+punches <- read.csv("../data/rnaseq/punches.csv", header=TRUE)
+animals <- read.csv("../data/rnaseq/animals.csv", header=TRUE)
+
+#combine mine and maddy's notes -----
+full <- join(animals, punches, by = "Mouse", type = "full", match = "all")
+```
+
+## Subsetting the data
+This analysis will focus only on the anaimals process in 2016. I collected many, many samples, but I only processed a subset. I conducted a photo anlaysis first to decide which samples came from a very specific location in the hippocampus. 
+
+
+```{r subset fmr1 data}
+############# Summer 2016 Samples for RNAseq
+## first, make a spreadsheet for recording photo analysis 
+summer2016photos <- full %>%
+  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
+  distinct(Mouse, Slice) %>% droplevels()
+# This output was saved as a file and used for doing the photo analysis
+
+## then, use the allen brain atlast to annotate the photos
+## then read in photo results 
+summer2016photos <- read.csv("../data/rnaseq/summer2016photos.csv", header=T, stringsAsFactors = F)
+
+## subset the full punch dataset and keep the relevant columns for the 2016 project
+summer2016forRNAseq <- full %>%
+  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
+  distinct(Tube, Mouse, Genotype, Group, Punch, Slice, Date, storagebox) %>% droplevels()
+
+## merge the photo and the punch data
+summer2016forRNAseq <- join(summer2016forRNAseq, summer2016photos, by=c("Mouse","Slice"), type = "full", match = "all")
+summer2016forRNAseq$Slice <- as.integer(summer2016forRNAseq$Slice) # first make both integers
+str(summer2016forRNAseq)
+rm(summer2016photos) #don't need this anymore
+
+# reset the Groups to be Yoked, Same, and Conflict
+summer2016forRNAseq <- rename(summer2016forRNAseq, c("Group"="APA"))
+summer2016forRNAseq$APA <- ifelse(grepl("NoConflict Trained", summer2016forRNAseq$APA), "Same", 
+                                  ifelse(grepl("Yoked", summer2016forRNAseq$APA), "Yoked", "Conflict"))
+#summer2016forRNAseq$APA
+
+
+## create a T/F column to say if the the same is from the optimal slice or not. 
+summer2016forRNAseq$isbest <- ifelse(summer2016forRNAseq$Slice == summer2016forRNAseq$sliceforRNAseq, T,F) 
+
+## filter data to only the BEST slices and CA1, CA3, and DG Samples
+summer2016forRNAseq <- summer2016forRNAseq %>%
+  filter(isbest == "TRUE") %>% filter(Punch %in% c("CA1")) %>% 
+  filter(APA == "Yoked") %>% 
+  arrange(Date) %>% droplevels()
+
+## create an RNAseqID (can't have dashes, must be less than 10 characters)
+head(summer2016forRNAseq)
+summer2016forRNAseq$idealRNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
+summer2016forRNAseq$idealRNAseqID <- gsub("-", "_", summer2016forRNAseq$idealRNAseqID, fixed = TRUE)
+summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
+#write.csv(summer2016forRNAseq, "~/Github/BehavEphyRNAseq/data/rnaseq/summer2016forRNAseq.csv", row.names=FALSE)
+
+
+### calculate sample sizes
+summer2016forRNAseqtotals <- select(summer2016forRNAseq, Genotype, APA, Punch)
+summer2016forRNAseqtotals <- count(summer2016forRNAseqtotals, c('Genotype','APA', "Punch"))
+summer2016forRNAseqtotals <- dcast(summer2016forRNAseqtotals, Genotype + APA ~ Punch, value.var = "freq")
+head(summer2016forRNAseqtotals)
+rm(summer2016forRNAseqtotals)
+```
+
+## RNAseq basic statistics
+These 17 samples were processed according to the workflow descibed in: https://github.com/raynamharris/SingleNeuronSeq_bin
+
+Here, I provide a brief overview of the number of reads that survived after trimming and filters, the number of reads that were pseduoaligned, and the average read length. This particiular anlysis is sample agnostic. 
+
+You can see that all reads are between 223- 238 bp long. 
+
+A samples had 2.8 -4.7 million reads, but only 0.25-3.2 million reads mapped to the mouse transciptome. 
+
+Mapping efficiency has 57-77 percent for most samples, but one only had 6% mapping efficiency. THis sample will likely need to be removed. 
+
+```{r basic read info}
+readsprocessed <- read.table("../data/rnaseq/JA17009readsprocessed.txt", sep="\t", header=TRUE, stringsAs = FALSE)
+readsprocessed$percentaligned <- readsprocessed$pseudoaligned / readsprocessed$trimmedreads *100
+summary(readsprocessed)
+```
+
+## Kallisto Gather
