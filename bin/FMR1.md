@@ -954,7 +954,7 @@ pca plot
 
     library("genefilter")
     library("pheatmap")
-    topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),100)
+    topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
     mat <- assay(rld)[ topVarGenes, ]
     mat <- mat - rowMeans(mat)
     df <- as.data.frame(colData(rld)[,c("Genotype")])
