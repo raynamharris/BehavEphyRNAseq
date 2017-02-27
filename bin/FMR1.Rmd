@@ -2,7 +2,7 @@
 title: "FMR1"
 author: "Rayna M Harris"
 date: "2/24/2017"
-output: html_document
+output: md_document
 ---
 
 ## Loading the data
@@ -231,7 +231,9 @@ summary(countbygene)
 ## fmr1
 ```{r fmr1}
 fmr1 <-  full_join(geneids, tpm)
-fmr1 <- fmr1[-c(1:5,7:12)]  
+fmr1 <- fmr1[-c(1:5,7:12)] 
+head(fmr1)
+
 fmr1 <- melt(fmr1, id=c("transcript"))
 fmr1 <- fmr1 %>%
   dplyr::filter(grepl("Fmr1|Fos", transcript)) %>%
@@ -239,42 +241,32 @@ fmr1 <- fmr1 %>%
 fmr1 <- rename(fmr1, c("variable"="RNAseqID"))
 fmr1 <- join(fmr1, Traits, by = "RNAseqID", type = "full", match = "all")
 
-p <- ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) + geom_point()
-# With one variable
-p + facet_wrap(~ transcript, scales = "free", ncol=3)
+ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) +
+  geom_point() + 
+  facet_wrap(~ transcript, scales = "free", ncol=3)
 
-p <- ggplot(fmr1, aes(Genotype, value, colour = Genotype)) + geom_boxplot()
-# With one variable
-p + facet_wrap(~ transcript, scales = "free", ncol=3)
-
-p <- ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) + geom_boxplot()
-# With one variable
-p + facet_wrap(~ transcript, scales = "free", ncol=3)
-
+ggplot(fmr1, aes(Genotype, value, colour = Genotype)) +
+  geom_boxplot() + 
+  facet_wrap(~ transcript, scales = "free", ncol=3)
 
 ## plotting some favorite genes
 favoritegenes <-  full_join(geneids, tpm)
 favoritegenes <- favoritegenes[-c(1:6,8:12)]  
 favoritegenes <- melt(favoritegenes, id=c("gene"))
+head(favoritegenes)
 favoritegenes <- favoritegenes %>%
   dplyr::filter(grepl("Fmr1", gene)) %>%
-  dplyr::filter(!grepl("Fmr1nb", transcript))
+  dplyr::filter(!grepl("Fmr1nb", gene))
 favoritegenes <- rename(favoritegenes, c("variable"="RNAseqID"))
 favoritegenes <- join(favoritegenes, Traits, by = "RNAseqID", type = "full", match = "all")
 
-p <- ggplot(favoritegenes, aes(RNAseqID, value, colour = Genotype)) + geom_point()
-# With one variable
-p + facet_wrap(~ gene, scales = "free", ncol=3)
+ggplot(favoritegenes, aes(RNAseqID, value, colour = Genotype)) + 
+  geom_point() + 
+  facet_wrap(~ gene, scales = "free", ncol=3)
 
-p <- ggplot(favoritegenes, aes(Genotype, value, colour = Genotype)) + geom_boxplot()
-# With one variable
-p + facet_wrap(~ gene, scales = "free", ncol=3)
-
-p <- ggplot(favoritegenes, aes(RNAseqID, value, colour = Genotype)) + geom_boxplot()
-# With one variable
-p + facet_wrap(~ gene, scales = "free", ncol=3)
-########
-
+ggplot(favoritegenes, aes(Genotype, value, colour = Genotype)) + 
+  geom_boxplot() + 
+  facet_wrap(~ gene, scales = "free", ncol=3)
 
 ```
 
