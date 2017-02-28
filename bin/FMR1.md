@@ -621,7 +621,7 @@ fmr1
 
     fmr1 <- melt(fmr1, id=c("transcript"))
     fmr1 <- fmr1 %>%
-      dplyr::filter(grepl("Fmr1|Fos", transcript)) %>%
+      dplyr::filter(grepl("Fmr1", transcript)) %>%
       dplyr::filter(!grepl("Fmr1nb", transcript))
     fmr1 <- rename(fmr1, c("variable"="RNAseqID"))
     fmr1 <- join(fmr1, Traits, by = "RNAseqID", type = "full", match = "all")
@@ -794,19 +794,23 @@ in more details.
     ## [1] see 'cooksCutoff' argument of ?results
     ## [2] see 'independentFiltering' argument of ?results
 
-    head(resOrdered)
+    head(resOrdered,10)
 
     ## log2 fold change (MAP): Genotype FMR1 vs WT 
     ## Wald test p-value: Genotype FMR1 vs WT 
-    ## DataFrame with 6 rows and 6 columns
-    ##            baseMean log2FoldChange      lfcSE      stat       pvalue
-    ##           <numeric>      <numeric>  <numeric> <numeric>    <numeric>
-    ## Ccnd2      11.70261     -1.1331652 0.14396778 -7.870964 3.519179e-15
-    ## Fmr1       15.63877     -0.8246208 0.14496042 -5.688593 1.280906e-08
-    ## Serpina3n 133.91021     -0.5146472 0.10985625 -4.684733 2.803248e-06
-    ## Cry2      255.05935      0.4265061 0.09267342  4.602248 4.179552e-06
-    ## Faim2     885.97410     -0.2096753 0.05105200 -4.107093 4.006703e-05
-    ## Nbas       88.81008      0.5056638 0.12203019  4.143760 3.416575e-05
+    ## DataFrame with 10 rows and 6 columns
+    ##             baseMean log2FoldChange      lfcSE      stat       pvalue
+    ##            <numeric>      <numeric>  <numeric> <numeric>    <numeric>
+    ## Ccnd2       11.70261     -1.1331652 0.14396778 -7.870964 3.519179e-15
+    ## Fmr1        15.63877     -0.8246208 0.14496042 -5.688593 1.280906e-08
+    ## Serpina3n  133.91021     -0.5146472 0.10985625 -4.684733 2.803248e-06
+    ## Cry2       255.05935      0.4265061 0.09267342  4.602248 4.179552e-06
+    ## Faim2      885.97410     -0.2096753 0.05105200 -4.107093 4.006703e-05
+    ## Nbas        88.81008      0.5056638 0.12203019  4.143760 3.416575e-05
+    ## Plat        60.08070     -0.4843732 0.11722179 -4.132109 3.594499e-05
+    ## Arel1      126.96366      0.3653896 0.09040251  4.041808 5.304056e-05
+    ## Sstr3       30.99935     -0.5813751 0.14425901 -4.030078 5.575835e-05
+    ## Ctsb      1093.47092     -0.2720316 0.06848536 -3.972113 7.123788e-05
     ##                   padj
     ##              <numeric>
     ## Ccnd2     5.608164e-11
@@ -815,6 +819,10 @@ in more details.
     ## Cry2      1.665134e-02
     ## Faim2     9.121545e-02
     ## Nbas      9.121545e-02
+    ## Plat      9.121545e-02
+    ## Arel1     9.872945e-02
+    ## Sstr3     9.872945e-02
+    ## Ctsb      1.135247e-01
 
     sum(res$padj < 0.1, na.rm = TRUE) 
 
