@@ -2,10 +2,10 @@
 
 Differential gene expression analysis comparing the **CA1** region of **yoked** individuals from **WT and FMR1-KO** mice. 
 
-## Variance
+## Fold change
 I think its worth nothing that there aren't any genes that have huge fold change differences. 
 
-![](FMR1_files/figure-markdown_strict/DESeq-1.png)
+![](FMR1_files/figure-markdown_strict/DESeq-2.png)
 
 ## P values
 There isn't a significant enrichment of p values at any cutoff
