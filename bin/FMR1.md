@@ -621,22 +621,20 @@ fmr1
 
     fmr1 <- melt(fmr1, id=c("transcript"))
     fmr1 <- fmr1 %>%
-      dplyr::filter(grepl("Fmr1", transcript)) %>%
+      dplyr::filter(grepl("Prkcz", transcript)) %>%
       dplyr::filter(!grepl("Fmr1nb", transcript))
     fmr1 <- rename(fmr1, c("variable"="RNAseqID"))
     fmr1 <- join(fmr1, Traits, by = "RNAseqID", type = "full", match = "all")
 
-    ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) +
-      geom_point() + 
-      facet_wrap(~ transcript, scales = "free", ncol=3)
-
-![](FMR1_files/figure-markdown_strict/fmr1-1.png)
+    #ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) +
+    #  geom_point() + 
+    #  facet_wrap(~ transcript, scales = "free", ncol=3)
 
     ggplot(fmr1, aes(Genotype, value, colour = Genotype)) +
       geom_boxplot() + 
       facet_wrap(~ transcript, scales = "free", ncol=3)
 
-![](FMR1_files/figure-markdown_strict/fmr1-2.png)
+![](FMR1_files/figure-markdown_strict/fmr1-1.png)
 
     ## plotting some favorite genes
     favoritegenes <-  full_join(geneids, tpm)
@@ -656,7 +654,7 @@ fmr1
     ## 6 Sox17  16-116B  0.0000
 
     favoritegenes <- favoritegenes %>%
-      dplyr::filter(grepl("Fmr1", gene)) %>%
+      dplyr::filter(grepl("Fmr1|Prkcz", gene)) %>%
       dplyr::filter(!grepl("Fmr1nb", gene))
     favoritegenes <- rename(favoritegenes, c("variable"="RNAseqID"))
     favoritegenes <- join(favoritegenes, Traits, by = "RNAseqID", type = "full", match = "all")
@@ -665,13 +663,13 @@ fmr1
       geom_point() + 
       facet_wrap(~ gene, scales = "free", ncol=3)
 
-![](FMR1_files/figure-markdown_strict/fmr1-3.png)
+![](FMR1_files/figure-markdown_strict/fmr1-2.png)
 
     ggplot(favoritegenes, aes(Genotype, value, colour = Genotype)) + 
       geom_boxplot() + 
       facet_wrap(~ gene, scales = "free", ncol=3)
 
-![](FMR1_files/figure-markdown_strict/fmr1-4.png)
+![](FMR1_files/figure-markdown_strict/fmr1-3.png)
 
 DESeq Analysis
 --------------
@@ -969,6 +967,314 @@ pca plot
     pheatmap(mat)
 
 ![](FMR1_files/figure-markdown_strict/heatmap-1.png)
+
+DESeq2 with transcripts, not genes!!!
+-------------------------------------
+
+    # 1.3.3 Count matrix input ----
+    countData <- count 
+    countData <- countData %>% 
+      mutate_each(funs(round(.,0)), -id) 
+    str(countData)
+
+    ## 'data.frame':    58716 obs. of  18 variables:
+    ##  $ id     : chr  "ENSMUST00000070533.4|ENSMUSG00000051951.5|OTTMUSG00000026353.2|OTTMUST00000065166.1|Xkr4-001|Xkr4|3634|UTR5:1-150|CDS:151-2094|"| __truncated__ "ENSMUST00000208660.1|ENSMUSG00000025900.11|OTTMUSG00000049985.3|OTTMUST00000145515.1|Rp1-003|Rp1|4170|UTR5:1-54|CDS:55-4170|" "ENSMUST00000027032.5|ENSMUSG00000025900.11|OTTMUSG00000049985.3|OTTMUST00000127195.2|Rp1-001|Rp1|6869|UTR5:1-127|CDS:128-6415|U"| __truncated__ "ENSMUST00000194992.6|ENSMUSG00000109048.1|-|-|Rp1-201|Rp1|858|CDS:1-858|" ...
+    ##  $ 16-116B: num  141 0 0 0 0 0 0 0 0 1 ...
+    ##  $ 16-116D: num  0 0 0 0 0 0 0 0 0 0 ...
+    ##  $ 16-117D: num  83 0 1 0 0 0 0 4 0 0 ...
+    ##  $ 16-118B: num  189 0 0 0 0 0 0 0 0 0 ...
+    ##  $ 16-118D: num  141 0 0 0 0 0 0 5 0 0 ...
+    ##  $ 16-119B: num  99 0 0 0 0 0 0 2 0 1 ...
+    ##  $ 16-119D: num  223 0 0 0 0 0 0 0 0 2 ...
+    ##  $ 16-120B: num  152 0 0 0 0 2 0 0 1 0 ...
+    ##  $ 16-120D: num  89 0 0 0 0 0 0 0 0 0 ...
+    ##  $ 16-122B: num  126 0 0 0 0 0 0 0 0 0 ...
+    ##  $ 16-122D: num  178 1 0 0 0 1 0 0 0 1 ...
+    ##  $ 16-123B: num  61 0 0 0 0 0 0 0 0 0 ...
+    ##  $ 16-123D: num  158 0 0 0 0 0 0 24 0 0 ...
+    ##  $ 16-124D: num  144 0 0 0 0 0 0 0 0 1 ...
+    ##  $ 16-125B: num  12 0 0 0 0 0 0 0 0 0 ...
+    ##  $ 16-125D: num  140 0 0 0 0 0 0 0 0 1 ...
+    ##  $ 16-126B: num  105 1 0 0 0 2 0 0 0 1 ...
+
+    colData <- Traits %>%
+      arrange(RNAseqID) # needs to be in same order a countData
+    head(countData)
+
+    ##                                                                                                                                                    id
+    ## 1      ENSMUST00000070533.4|ENSMUSG00000051951.5|OTTMUSG00000026353.2|OTTMUST00000065166.1|Xkr4-001|Xkr4|3634|UTR5:1-150|CDS:151-2094|UTR3:2095-3634|
+    ## 2                        ENSMUST00000208660.1|ENSMUSG00000025900.11|OTTMUSG00000049985.3|OTTMUST00000145515.1|Rp1-003|Rp1|4170|UTR5:1-54|CDS:55-4170|
+    ## 3       ENSMUST00000027032.5|ENSMUSG00000025900.11|OTTMUSG00000049985.3|OTTMUST00000127195.2|Rp1-001|Rp1|6869|UTR5:1-127|CDS:128-6415|UTR3:6416-6869|
+    ## 4                                                                            ENSMUST00000194992.6|ENSMUSG00000109048.1|-|-|Rp1-201|Rp1|858|CDS:1-858|
+    ## 5 ENSMUST00000027035.9|ENSMUSG00000025902.13|OTTMUSG00000050014.7|OTTMUST00000127245.2|Sox17-001|Sox17|3127|UTR5:1-1082|CDS:1083-2342|UTR3:2343-3127|
+    ## 6   ENSMUST00000195555.1|ENSMUSG00000025902.13|OTTMUSG00000050014.7|OTTMUST00000127249.1|Sox17-005|Sox17|1977|UTR5:1-635|CDS:636-1511|UTR3:1512-1977|
+    ##   16-116B 16-116D 16-117D 16-118B 16-118D 16-119B 16-119D 16-120B 16-120D
+    ## 1     141       0      83     189     141      99     223     152      89
+    ## 2       0       0       0       0       0       0       0       0       0
+    ## 3       0       0       1       0       0       0       0       0       0
+    ## 4       0       0       0       0       0       0       0       0       0
+    ## 5       0       0       0       0       0       0       0       0       0
+    ## 6       0       0       0       0       0       0       0       2       0
+    ##   16-122B 16-122D 16-123B 16-123D 16-124D 16-125B 16-125D 16-126B
+    ## 1     126     178      61     158     144      12     140     105
+    ## 2       0       1       0       0       0       0       0       1
+    ## 3       0       0       0       0       0       0       0       0
+    ## 4       0       0       0       0       0       0       0       0
+    ## 5       0       0       0       0       0       0       0       0
+    ## 6       0       1       0       0       0       0       0       2
+
+    head(colData)
+
+    ##     Mouse Genotype   APA Punch atlaslocation RNAseqID
+    ## 1 16-116B     FMR1 Yoked   CA1            74  16-116B
+    ## 2 16-116D     FMR1 Yoked   CA1            74  16-116D
+    ## 3 16-117D     FMR1 Yoked   CA1            74  16-117D
+    ## 4 16-118B     FMR1 Yoked   CA1            74  16-118B
+    ## 5 16-118D     FMR1 Yoked   CA1            74  16-118D
+    ## 6 16-119B     FMR1 Yoked   CA1            NA  16-119B
+
+    ## removing outliers. if the colDatat dataframe has fewer samples than the colData, then this will remove that sample from the analysis
+
+    colData <- colData %>%
+      dplyr::filter(!grepl("16-125B|16-116D|16-123B", RNAseqID)) 
+
+    savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+    savecols <- as.vector(savecols) # make it a vector
+    countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+
+    ## remove genes with total counts across all samples < 2
+    countData[countData < 2] <- 0
+
+    ## differential gene expression
+    dds <- DESeqDataSetFromMatrix(countData = countData,
+                                  colData = colData,
+                                  design = ~ Genotype)
+
+    ## converting counts to integer mode
+
+    dds
+
+    ## class: DESeqDataSet 
+    ## dim: 58716 14 
+    ## metadata(1): version
+    ## assays(1): counts
+    ## rownames: NULL
+    ## rowData names(0):
+    ## colnames(14): 16-116B 16-117D ... 16-125D 16-126B
+    ## colData names(6): Mouse Genotype ... atlaslocation RNAseqID
+
+    ## 1.3.6 Pre-filtering
+    dds <- dds[ rowSums(counts(dds)) > 1, ]
+
+    ## 1.3.7 Note on factor levels
+    dds$Genotype <- factor(dds$Genotype, levels=c("WT","FMR1"))
+
+    ## 1.4  Differential expression analysi
+    dds <- DESeq(dds)
+
+    ## estimating size factors
+
+    ## estimating dispersions
+
+    ## gene-wise dispersion estimates
+
+    ## mean-dispersion relationship
+
+    ## final dispersion estimates
+
+    ## fitting model and testing
+
+    ## -- replacing outliers and refitting for 3443 genes
+    ## -- DESeq argument 'minReplicatesForReplace' = 7 
+    ## -- original counts are preserved in counts(dds)
+
+    ## estimating dispersions
+
+    ## fitting model and testing
+
+    # general deseq
+    res <- results(dds, independentFiltering = F)
+    resOrdered <- res[order(res$padj),]
+    summary(res)
+
+    ## 
+    ## out of 41443 with nonzero total read count
+    ## adjusted p-value < 0.1
+    ## LFC > 0 (up)     : 1, 0.0024% 
+    ## LFC < 0 (down)   : 1, 0.0024% 
+    ## outliers [1]     : 1344, 3.2% 
+    ## low counts [2]   : 0, 0% 
+    ## (mean count < 0)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    head(resOrdered,10)
+
+    ## log2 fold change (MAP): Genotype FMR1 vs WT 
+    ## Wald test p-value: Genotype FMR1 vs WT 
+    ## DataFrame with 10 rows and 6 columns
+    ##        baseMean log2FoldChange      lfcSE         stat       pvalue
+    ##       <numeric>      <numeric>  <numeric>    <numeric>    <numeric>
+    ## 1    44.1426802  -2.2240322237 0.23209051 -9.582607199 9.462553e-22
+    ## 2   747.6428949   0.3202725840 0.06726422  4.761410920 1.922442e-06
+    ## 3   481.0237527   0.4314312887 0.09918084  4.349945828 1.361712e-05
+    ## 4   132.3040310  -0.5759092683 0.14341073 -4.015803138 5.924369e-05
+    ## 5   161.7544118   0.5722516124 0.15059684  3.799891148 1.447597e-04
+    ## 6  1175.2300061   0.4131410464 0.10855128  3.805952890 1.412593e-04
+    ## 7   129.8153167   0.9298029353 0.24747603  3.757143399 1.718640e-04
+    ## 8  1080.2052913  -0.2841769272 0.07586209 -3.745967363 1.797000e-04
+    ## 9   136.1482635   0.1348554861 0.18652522  0.722987938 4.696873e-01
+    ## 10    0.2418434  -0.0007902229 0.09640590 -0.008196831 9.934599e-01
+    ##            padj
+    ##       <numeric>
+    ## 1  3.868197e-17
+    ## 2  3.929374e-02
+    ## 3  1.855514e-01
+    ## 4  6.054557e-01
+    ## 5  9.182443e-01
+    ## 6  9.182443e-01
+    ## 7  9.182443e-01
+    ## 8  9.182443e-01
+    ## 9  1.000000e+00
+    ## 10 1.000000e+00
+
+    sum(res$padj < 0.1, na.rm = TRUE) 
+
+    ## [1] 2
+
+    res05 <- results(dds, alpha=0.05)
+    summary(res05) 
+
+    ## 
+    ## out of 41443 with nonzero total read count
+    ## adjusted p-value < 0.05
+    ## LFC > 0 (up)     : 1, 0.0024% 
+    ## LFC < 0 (down)   : 1, 0.0024% 
+    ## outliers [1]     : 1344, 3.2% 
+    ## low counts [2]   : 780, 1.9% 
+    ## (mean count < 0)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
+
+    table(res05$padj < .05)
+
+    ## 
+    ## FALSE  TRUE 
+    ## 40097     2
+
+    sum(res05$padj < 0.05, na.rm=TRUE)
+
+    ## [1] 2
+
+    ## 1.5 exploring and reporting results
+
+    plotMA(res, main="plotMA")
+
+![](FMR1_files/figure-markdown_strict/DESeqTranscriptsNotGenes-1.png)
+
+    plotMA(res, ylim=c(-2,2))
+
+![](FMR1_files/figure-markdown_strict/DESeqTranscriptsNotGenes-2.png)
+
+    resMLE <- results(dds)
+    head(resMLE, 4)
+
+    ## log2 fold change (MAP): Genotype FMR1 vs WT 
+    ## Wald test p-value: Genotype FMR1 vs WT 
+    ## DataFrame with 4 rows and 6 columns
+    ##      baseMean log2FoldChange     lfcSE         stat    pvalue      padj
+    ##     <numeric>      <numeric> <numeric>    <numeric> <numeric> <numeric>
+    ## 1 136.1482635   0.1348554861 0.1865252  0.722987938 0.4696873 0.9999377
+    ## 2   0.2418434  -0.0007902229 0.0964059 -0.008196831 0.9934599 0.9999377
+    ## 3   2.6042291  -0.0449827665 0.1090677 -0.412429870        NA        NA
+    ## 4   0.1326960   0.0289612752 0.0964059  0.300409777 0.7638646 0.9999377
+
+    hist(res$pvalue[res$baseMean > 1], breaks=0:20/20, col="grey50", border="white")
+
+![](FMR1_files/figure-markdown_strict/DESeqTranscriptsNotGenes-3.png)
+
+    plotCounts(dds, gene=which.min(res$padj), intgroup="Genotype")
+
+![](FMR1_files/figure-markdown_strict/DESeqTranscriptsNotGenes-4.png)
+
+    respadj <- as.data.frame(res$padj)
+    head(respadj)
+
+    ##   res$padj
+    ## 1        1
+    ## 2        1
+    ## 3       NA
+    ## 4        1
+    ## 5        1
+    ## 6        1
+
+    ## 1.5 more info
+    mcols(res)$description
+
+    ## [1] "mean of normalized counts for all samples"  
+    ## [2] "log2 fold change (MAP): Genotype FMR1 vs WT"
+    ## [3] "standard error: Genotype FMR1 vs WT"        
+    ## [4] "Wald statistic: Genotype FMR1 vs WT"        
+    ## [5] "Wald test p-value: Genotype FMR1 vs WT"     
+    ## [6] "BH adjusted p-values"
+
+    ## for variance stablized gene expression and log transformed data
+    rld <- rlog(dds, blind=FALSE)
+    vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+    vsd.fast <- vst(dds, blind=FALSE)
+
+    ## -- note: fitType='parametric', but the dispersion trend was not well captured by the
+    ##    function: y = a/x + b, and a local regression fit was automatically substituted.
+    ##    specify fitType='local' or 'mean' to avoid this message next time.
+
+    head(assay(rld), 3)
+
+    ##        16-116B   16-117D   16-118B   16-118D   16-119B   16-119D   16-120B
+    ## [1,]  7.272327  7.111106  7.223762  7.178481  6.666206  7.490797  7.017906
+    ## [2,] -1.654845 -1.652867 -1.656706 -1.655366 -1.656403 -1.656147 -1.634985
+    ## [3,]  1.060522  1.222052  1.059497  1.192804  1.106480  1.059772  1.059510
+    ##        16-120D   16-122B   16-122D   16-123D   16-124D   16-125D   16-126B
+    ## [1,]  6.766955  6.831857  7.014411  7.159233  7.065360  7.252676  6.682056
+    ## [2,] -1.655232 -1.656729 -1.657553 -1.656092 -1.656116 -1.654915 -1.634933
+    ## [3,]  1.060282  1.059486  1.059125  1.512567  1.059789  1.060477  1.059535
+
+    pcaData <- plotPCA(rld, intgroup = c( "Genotype"), returnData=TRUE)
+    pcaData
+
+    ##                 PC1        PC2 group Genotype    name
+    ## 16-116B -29.1489928   8.263538  FMR1     FMR1 16-116B
+    ## 16-117D  -7.0913017 -18.579821  FMR1     FMR1 16-117D
+    ## 16-118B   1.4481099  -5.849164  FMR1     FMR1 16-118B
+    ## 16-118D   3.9137187   3.458847  FMR1     FMR1 16-118D
+    ## 16-119B   1.5757765   6.059143  FMR1     FMR1 16-119B
+    ## 16-119D   5.1915889  -8.383541  FMR1     FMR1 16-119D
+    ## 16-120B   1.2448445  -8.833126  FMR1     FMR1 16-120B
+    ## 16-120D   7.1287580  12.374182  FMR1     FMR1 16-120D
+    ## 16-122B   2.0181603   6.682327    WT       WT 16-122B
+    ## 16-122D   6.4150523   5.411242    WT       WT 16-122D
+    ## 16-123D  -0.9742826  -1.658842    WT       WT 16-123D
+    ## 16-124D   3.6198111  -3.963376    WT       WT 16-124D
+    ## 16-125D  -0.1563977  -0.236770    WT       WT 16-125D
+    ## 16-126B   4.8151546   5.255361    WT       WT 16-126B
+
+    percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+    ggplot(pcaData, aes(PC1, PC2, color=Genotype)) + geom_point(size=3) +
+      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      coord_fixed()
+
+![](FMR1_files/figure-markdown_strict/DESeqTranscriptsNotGenes-5.png)
+
+    library("genefilter")
+    library("pheatmap")
+    topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
+    mat <- assay(rld)[ topVarGenes, ]
+    mat <- mat - rowMeans(mat)
+    df <- as.data.frame(colData(rld)[,c("Genotype")])
+    pheatmap(mat)
+
+![](FMR1_files/figure-markdown_strict/DESeqTranscriptsNotGenes-6.png)
 
 Session Info
 ------------

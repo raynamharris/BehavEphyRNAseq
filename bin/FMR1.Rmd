@@ -233,21 +233,25 @@ summary(countbygene)
 fmr1 <-  full_join(geneids, tpm)
 fmr1 <- fmr1[-c(1:5,7:12)] 
 head(fmr1)
-
 fmr1 <- melt(fmr1, id=c("transcript"))
 fmr1 <- fmr1 %>%
-  dplyr::filter(grepl("Fmr1", transcript)) %>%
+  dplyr::filter(grepl("Prkcz", transcript)) %>%
   dplyr::filter(!grepl("Fmr1nb", transcript))
 fmr1 <- rename(fmr1, c("variable"="RNAseqID"))
 fmr1 <- join(fmr1, Traits, by = "RNAseqID", type = "full", match = "all")
 
-ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) +
-  geom_point() + 
-  facet_wrap(~ transcript, scales = "free", ncol=3)
+#ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) +
+#  geom_point() + 
+#  facet_wrap(~ transcript, scales = "free", ncol=3)
 
 ggplot(fmr1, aes(Genotype, value, colour = Genotype)) +
   geom_boxplot() + 
   facet_wrap(~ transcript, scales = "free", ncol=3)
+
+
+
+
+
 
 ## plotting some favorite genes
 favoritegenes <-  full_join(geneids, tpm)
@@ -255,7 +259,7 @@ favoritegenes <- favoritegenes[-c(1:6,8:12)]
 favoritegenes <- melt(favoritegenes, id=c("gene"))
 head(favoritegenes)
 favoritegenes <- favoritegenes %>%
-  dplyr::filter(grepl("Fmr1", gene)) %>%
+  dplyr::filter(grepl("Fmr1|Prkcz", gene)) %>%
   dplyr::filter(!grepl("Fmr1nb", gene))
 favoritegenes <- rename(favoritegenes, c("variable"="RNAseqID"))
 favoritegenes <- join(favoritegenes, Traits, by = "RNAseqID", type = "full", match = "all")
@@ -281,8 +285,6 @@ colData <- Traits %>%
   arrange(RNAseqID) # needs to be in same order a countData
 head(countData)
 head(colData)
-
-
 
 ## removing outliers. if the colDatat dataframe has fewer samples than the colData, then this will remove that sample from the analysis
 
@@ -374,6 +376,110 @@ mat <- mat - rowMeans(mat)
 df <- as.data.frame(colData(rld)[,c("Genotype")])
 pheatmap(mat)
 ```
+
+
+## DESeq2 with transcripts, not genes!!!
+
+```{r DESeqTranscriptsNotGenes}
+# 1.3.3 Count matrix input ----
+countData <- count 
+countData <- countData %>% 
+  mutate_each(funs(round(.,0)), -id) 
+str(countData)
+colData <- Traits %>%
+  arrange(RNAseqID) # needs to be in same order a countData
+head(countData)
+head(colData)
+
+
+
+## removing outliers. if the colDatat dataframe has fewer samples than the colData, then this will remove that sample from the analysis
+
+colData <- colData %>%
+  dplyr::filter(!grepl("16-125B|16-116D|16-123B", RNAseqID)) 
+
+savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+savecols <- as.vector(savecols) # make it a vector
+countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+
+## remove genes with total counts across all samples < 2
+countData[countData < 2] <- 0
+
+## differential gene expression
+dds <- DESeqDataSetFromMatrix(countData = countData,
+                              colData = colData,
+                              design = ~ Genotype)
+dds
+
+
+## 1.3.6 Pre-filtering
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+
+## 1.3.7 Note on factor levels
+dds$Genotype <- factor(dds$Genotype, levels=c("WT","FMR1"))
+
+## 1.4  Differential expression analysi
+dds <- DESeq(dds)
+
+# general deseq
+res <- results(dds, independentFiltering = F)
+resOrdered <- res[order(res$padj),]
+summary(res)
+head(resOrdered,10)
+sum(res$padj < 0.1, na.rm = TRUE) 
+res05 <- results(dds, alpha=0.05)
+summary(res05) 
+table(res05$padj < .05)
+sum(res05$padj < 0.05, na.rm=TRUE)
+
+
+## 1.5 exploring and reporting results
+
+plotMA(res, main="plotMA")
+
+plotMA(res, ylim=c(-2,2))
+
+resMLE <- results(dds)
+head(resMLE, 4)
+
+hist(res$pvalue[res$baseMean > 1], breaks=0:20/20, col="grey50", border="white")
+
+plotCounts(dds, gene=which.min(res$padj), intgroup="Genotype")
+
+respadj <- as.data.frame(res$padj)
+head(respadj)
+
+## 1.5 more info
+mcols(res)$description
+
+## for variance stablized gene expression and log transformed data
+rld <- rlog(dds, blind=FALSE)
+vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+vsd.fast <- vst(dds, blind=FALSE)
+head(assay(rld), 3)
+
+pcaData <- plotPCA(rld, intgroup = c( "Genotype"), returnData=TRUE)
+pcaData
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+ggplot(pcaData, aes(PC1, PC2, color=Genotype)) + geom_point(size=3) +
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  coord_fixed()
+
+library("genefilter")
+library("pheatmap")
+topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
+mat <- assay(rld)[ topVarGenes, ]
+mat <- mat - rowMeans(mat)
+df <- as.data.frame(colData(rld)[,c("Genotype")])
+pheatmap(mat)
+```
+
+
+
+
+
 
 
 

@@ -37,3 +37,6 @@ I looked into the Fmr1 gene a little more closely. There are 6 transcripts. This
 ## PCA
 There is no clear pattern of clustering by genotype. 
 ![](FMR1_files/figure-markdown_strict/pca-1.png)
+
+
+
