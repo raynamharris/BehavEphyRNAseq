@@ -4,12 +4,11 @@ library("dplyr")
 library("plyr")
 library("reshape2")
 
-#script saved in ~/Github/BehavEphyRNAseq/RNAseqSamples ----
-setwd("~/Github/BehavEphyRNAseq/data/rnaseq")
+setwd("~/Github/BehavEphyRNAseq/bin")
 
 #read raw data -----
-punches <- read.csv("punches.csv", header=TRUE)
-animals <- read.csv("animals.csv", header=TRUE)
+punches <- read.csv("../data/rnaseq/punches.csv", header=TRUE)
+animals <- read.csv("../data/rnaseq/animals.csv", header=TRUE)
 
 #combine mine and maddy's notes -----
 full <- join(animals, punches, by = "Mouse", type = "full", match = "all")
@@ -85,6 +84,23 @@ str(WT2015samples)
 tail(WT2015samples)
 #write.csv(WT2015samples, "WT2015samples.csv", row.names=FALSE)
 
+
+
+## for homecage animals
+homecage <- full %>%
+  filter(jobnumber == "JA16444")  %>% droplevels()
+homecage$Group <- as.character(homecage$Group)
+homecage$notes <- as.character(homecage$notes)
+homecage$Group <- ifelse(grepl("maddy punch", homecage$notes), "homogenized", 
+                         ifelse(grepl("maddy FACS", homecage$notes), "dissociated", 
+                                ifelse(grepl("Cage", homecage$Behavior), "homecage",
+                                ifelse(grepl("Yoked", homecage$Group), "yoked", homecage$Group))))
+homecage <- homecage[c(1,2,9,14,30)] 
+homecage <- homecage %>%
+  filter(grepl("yoked|homecage", Group)) %>% 
+  filter(grepl("15-145|15-146|15-147|15-148", Mouse)) %>%   droplevels()
+
+#write.csv(homecage, "/Users/raynamharris/Github/DissociationTest/data/homecage.csv", row.names=FALSE)
 
 
 ############# Summer 2016 Samples for RNAseq
