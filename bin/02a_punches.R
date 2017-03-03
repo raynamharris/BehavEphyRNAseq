@@ -103,6 +103,9 @@ homecage <- homecage %>%
 #write.csv(homecage, "/Users/raynamharris/Github/DissociationTest/data/homecage.csv", row.names=FALSE)
 
 
+########
+
+
 ############# Summer 2016 Samples for RNAseq
 ## first, make a spreadsheet for recording photo analysis 
 summer2016photos <- full %>%
@@ -149,9 +152,22 @@ summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
 #write.csv(summer2016forRNAseq, "~/Github/BehavEphyRNAseq/data/rnaseq/summer2016forRNAseq.csv", row.names=FALSE)
 
 
-### calculate sample sizes
-summer2016forRNAseqtotals <- select(summer2016forRNAseq, Genotype, APA, Punch)
-summer2016forRNAseqtotals <- count(summer2016forRNAseqtotals, c('Genotype','APA', "Punch"))
-summer2016forRNAseqtotals <- dcast(summer2016forRNAseqtotals, Genotype + APA ~ Punch, value.var = "freq")
-head(summer2016forRNAseqtotals)
-rm(summer2016forRNAseqtotals)
+## for all animals
+all <- full %>%
+  filter(grepl("JA16444|JA17009", jobnumber))  %>% droplevels()
+all$Group <- as.character(all$Group)
+all$notes <- as.character(all$notes)
+all$Group <- ifelse(grepl("maddy punch", all$notes), "homogenized", 
+                    ifelse(grepl("maddy FACS", all$notes), "dissociated", 
+                           ifelse(grepl("Cage", all$Behavior), "all",
+                                  ifelse(grepl("Yoked", all$Group), "control", 
+                                         ifelse(grepl("NoConflict", all$Group), "consistent",
+                                                ifelse(grepl("Conflict", all$Group), "conflict",all$Group))))))
+all <- all[c(1,2,9,14,30)] 
+all <- all %>%
+  filter(grepl("yoked|all", Group)) %>% 
+  filter(grepl("15-145|15-146|15-147|15-148", Mouse)) %>%   droplevels()
+
+#write.csv(all, "/Users/raynamharris/Github/DissociationTest/data/all.csv", row.names=FALSE)
+
+
