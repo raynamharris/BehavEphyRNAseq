@@ -115,7 +115,7 @@ summer2016photos <- full %>%
 
 ## then, use the allen brain atlast to annotate the photos
 ## then read in photo results 
-summer2016photos <- read.csv("summer2016photos.csv", header=T, stringsAsFactors = F)
+summer2016photos <- read.csv("../data/rnaseq/summer2016photos.csv", header=T, stringsAsFactors = F)
 
 ## subset the full punch dataset and keep the relevant columns for the 2016 project
 summer2016forRNAseq <- full %>%
@@ -152,22 +152,28 @@ summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
 #write.csv(summer2016forRNAseq, "~/Github/BehavEphyRNAseq/data/rnaseq/summer2016forRNAseq.csv", row.names=FALSE)
 
 
-## for all animals
-all <- full %>%
-  filter(grepl("JA16444|JA17009", jobnumber))  %>% droplevels()
-all$Group <- as.character(all$Group)
-all$notes <- as.character(all$notes)
-all$Group <- ifelse(grepl("maddy punch", all$notes), "homogenized", 
-                    ifelse(grepl("maddy FACS", all$notes), "dissociated", 
-                           ifelse(grepl("Cage", all$Behavior), "all",
-                                  ifelse(grepl("Yoked", all$Group), "control", 
-                                         ifelse(grepl("NoConflict", all$Group), "consistent",
-                                                ifelse(grepl("Conflict", all$Group), "conflict",all$Group))))))
-all <- all[c(1,2,9,14,30)] 
-all <- all %>%
-  filter(grepl("yoked|all", Group)) %>% 
-  filter(grepl("15-145|15-146|15-147|15-148", Mouse)) %>%   droplevels()
+### Adding the job number to the JA17009 samples
+# make new vector with all the JA17009 samples
+JA17009 <- lapply(summer2016forRNAseq$Tube, as.character) 
+# use if else to add the job number for the above sample to the full data frame, but first make it a character
+full$jobnumber <- as.character(full$jobnumber)
+full$jobnumber <- ifelse(full$Tube %in% JA17009, "JA17009", full$jobnumber) 
+full$jobnumber <- as.factor(full$jobnumber)
 
-#write.csv(all, "/Users/raynamharris/Github/DissociationTest/data/all.csv", row.names=FALSE)
+## for all animals
+tidysamples <- full %>%
+  filter(grepl("JA16268|JA16444|JA17009", jobnumber))  %>% droplevels()
+tidysamples$Group <- as.character(tidysamples$Group)
+tidysamples$notes <- as.character(tidysamples$notes)
+tidysamples$Group <- ifelse(grepl("maddy punch", tidysamples$notes), "homogenized", 
+                    ifelse(grepl("maddy FACS", tidysamples$notes), "dissociated", 
+                           ifelse(grepl("Cage", tidysamples$Behavior), "tidysamples",
+                                  ifelse(grepl("Yoked", tidysamples$Group), "control", 
+                                         ifelse(grepl("NoConflict", tidysamples$Group), "consistent",
+                                                ifelse(grepl("Conflict", tidysamples$Group), "conflict",tidysamples$Group))))))
+
+
+## write out clearn data file will all samples
+#write.csv(tidysamples, "/Users/raynamharris/Github/DissociationTest/data/tidysamples.csv", row.names=FALSE)
 
 
