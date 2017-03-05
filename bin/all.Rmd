@@ -31,7 +31,7 @@ This data has been cleaned using a different script `02a_punches.R`.
 THis 
 
 
-```{r ReadAndTidySampleData, include = FALSE}
+```{r ReadAndTidySampleData, echo = FALSE}
 tidysamples <- read.csv("../data/rnaseq/tidysamples.csv", header=TRUE)
 rownames(tidysamples) <- tidysamples$RNAseqID  
 tidysamples$year <- as.factor(tidysamples$year)

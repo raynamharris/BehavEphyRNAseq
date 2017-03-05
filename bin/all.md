@@ -18,6 +18,31 @@ This data has been cleaned using a different script `02a_punches.R`.
 
 THis
 
+    ##       RNAseqID      Mouse      year    Genotype    jobnumber  Punch   
+    ##  100-CA1-1: 1   15-100 :14   2015:71   FMR1: 9   JA16268: 4   CA1:43  
+    ##  100-CA1-2: 1   15-143C: 3   2016:17   WT  :79   JA16444:67   CA3:21  
+    ##  100-CA1-3: 1   15-144A: 3                       JA17009:17   DG :24  
+    ##  100-CA3-1: 1   15-144C: 3                                            
+    ##  100-CA3-4: 1   15-145A: 3                                            
+    ##  100-DG-2 : 1   15-145B: 3                                            
+    ##  (Other)  :82   (Other):59                                            
+    ##         Group          Conflict       APA             method  
+    ##  conflict  :14   Conflict  :36   Trained:28   dissociated: 7  
+    ##  consistent:14   NoConflict:32   Yoked  :40   homogenized:81  
+    ##  control   :40   NA's      :20   NA's   :20                   
+    ##  homecage  :20                                                
+    ##                                                               
+    ##                                                               
+    ##                                                               
+    ##      dodgy          daytime   Slice       Date   
+    ##  allgood:77   afternoon : 3   1:22   9/28/15:14  
+    ##  ephys  : 2   beforenoon:15   2:31   7/18/15: 9  
+    ##  slice  : 9   earlyAM   : 6   3:22   7/23/15: 6  
+    ##               evening   : 5   4:13   7/24/15: 6  
+    ##               nighttime : 3          7/29/15: 6  
+    ##               norecord  :56          7/30/15: 6  
+    ##                                      (Other):41
+
 Kallisto Gather
 ---------------
 
