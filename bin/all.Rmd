@@ -5,12 +5,10 @@ date: "2/24/2017"
 output: md_document
 ---
   
-## Loading the data
-In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from WT and FMR1-KO. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage.  
+## The Project
+The research project was designed to understand how experience shapes the brain. In particular, we are looking at learned avoidance behavhior. How do animals change their behavior to avoidance an unpleasant experience?
 
-This data was added the the epically large sample collection database contained in the two files  "animals.csv" and "punches.csv" which provided a detailed account of all animals processed and all tissue samples collected. Then, I tidy the dataframe a little bit to get it prepared for RNAseq sample submision. I didn't always have the forsight to get the data in the propoer column for subsequent anlaysis, but some data wrangly magic will make it tidy.
-
-```{r install packages load data, warning=FALSE, message=FALSE}
+```{r install packages load data, warning=FALSE, message=FALSE, include = FALSE}
 #install.packages("tidyr", dependencies=TRUE)
 library("tidyr") 
 library("dplyr") ## for filtering and selecting rows
@@ -25,11 +23,21 @@ library("DESeq2") ## for differnetial gene expression profiling
 knitr::opts_chunk$set(fig.path = '../results/all/')
 ```
 
-## Subsetting the data
-This analysis will focus only on the anaimals process in 2016. I collected many, many samples, but I only processed a subset. I conducted a photo anlaysis first to decide which samples came from a very specific location in the hippocampus. 
+## RNAseq samples
+In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from WT and FMR1-KO mice. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage.  
 
-## Data Cleaning
-Well, the words I used when collecting might not be exactly what I want plotted on figures and such, so I need to do a little data cleaning. I also need to get the data in order so that row names are informative and contain information
+This data has been cleaned using a different script `02a_punches.R`.
+
+THis 
+
+
+```{r ReadAndTidySampleData, include = FALSE}
+tidysamples <- read.csv("../data/rnaseq/tidysamples.csv", header=TRUE)
+rownames(tidysamples) <- tidysamples$RNAseqID  
+tidysamples$year <- as.factor(tidysamples$year)
+tidysamples$Slice <- as.factor(tidysamples$Slice)
+summary(tidysamples)
+```
 
 
 
@@ -39,7 +47,7 @@ The kallisto output gives you read counts for sample in an abundance file for ev
 
 (P.S. Unfortunately, I have no idea how to do this next part without changing directories.)
 
-```{r kallisto gather}
+#```{r kallisto gather}
 setwd("../data/JA16444/")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
@@ -101,13 +109,13 @@ row.names(tpmswgcna) <- geneids$transcript_lenght
 tpmswgcna[1] <- NULL
 tpmswgcna <- round(tpmswgcna)
 summary(tpmswgcna)
-```
+#```
 
 ## Merge transcipts counts to gene counts
 
 Kallisto is cool because it does give you transcript level stuff, but right now I think I have more power if I just look at gene level stuff. I'll go back and look at transcripts if I want to.
 
-```{r tpmbygene}
+#```{r tpmbygene}
 # merge tpm and gene id dataframe
 tpmbygene <-  full_join(geneids, tpm)
 str(tpmbygene)
@@ -144,15 +152,9 @@ countbygene[1] <- NULL
 countbygene <- round(countbygene)
 summary(countbygene)
 
-```
+#```
 
 
-```{r data cleaning}
-## start after 02c_tpmbygene
-Traits <- read.csv("../data/homecage.csv", header=TRUE)
-rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as
-str(Traits)
-```
 
 
 
@@ -160,7 +162,7 @@ str(Traits)
 
 Now, I'll look for differential gene expression between the FMR1-KO and WT mice. This analysis was developed by reading the DESEq manual. In many place, I try to provide the chapter where these steps are described in more details.
 
-```{r DESeq}
+#```{r DESeq}
 # 1.3.3 Count matrix input ----
 countData <- countbygene 
 colData <- Traits %>%
@@ -229,12 +231,12 @@ vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
 vsd.fast <- vst(dds, blind=FALSE)
 head(assay(rld), 3)
 
-```
+#```
 
 
 ## pca plot
 
-```{r pca}
+#```{r pca}
 pcaData <- plotPCA(rld, intgroup = c( "Group", "Punch"), returnData=TRUE)
 pcaData
 percentVar <- round(100 * attr(pcaData, "percentVar"))
@@ -243,9 +245,9 @@ ggplot(pcaData, aes(PC1, PC2, color=Group, shape = Punch)) + geom_point(size=3) 
 xlab(paste0("PC1: ",percentVar[1],"% variance")) +
 ylab(paste0("PC2: ",percentVar[2],"% variance")) +
 coord_fixed()
-```
+#```
 
-```{r heatmap}
+#```{r heatmap}
 library("genefilter")
 library("pheatmap")
 topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
@@ -255,7 +257,7 @@ df <- as.data.frame(colData(rld)[,c("Group", "Punch")])
 pheatmap(mat)
 pheatmap(mat, show_colnames=F, show_rownames = T,
 annotation_col=df)
-```
+#```
 
 
 
