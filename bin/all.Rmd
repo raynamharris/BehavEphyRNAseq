@@ -44,7 +44,7 @@ The kallisto output gives you read counts for sample in an abundance file for ev
 
 (P.S. Unfortunately, I have no idea how to do this next part without changing directories.)
 
-```{r kallisto gather, echo = FALSE}
+```{r kallisto gather, echo = FALSE, warning=FALSE}
 setwd("../data/rnaseq/04_kallistoquant/")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
@@ -93,26 +93,15 @@ geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
 geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
 geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
 
-## prep data for wgcna
-countswgcna <- count
-row.names(countswgcna) <- geneids$transcript_lenght
-countswgcna[1] <- NULL
-countswgcna <- round(countswgcna)
-summary(countswgcna)
-
-## prep data for wgcna
-tpmswgcna <- tpm
-row.names(tpmswgcna) <- geneids$transcript_lenght
-tpmswgcna[1] <- NULL
-tpmswgcna <- round(tpmswgcna)
-summary(tpmswgcna)
+## summary of tpm per samples
+summary(tpm)
 ```
 
 ## Merge transcipts counts to gene counts
 
 Kallisto is cool because it does give you transcript level stuff, but right now I think I have more power if I just look at gene level stuff. I'll go back and look at transcripts if I want to.
 
-#```{r tpmbygene}
+```{r tpmbygene, echo = FALSE, warning=FALSE}
 # merge tpm and gene id dataframe
 tpmbygene <-  full_join(geneids, tpm)
 str(tpmbygene)
@@ -148,10 +137,7 @@ row.names(countbygene) <- countbygene$gene
 countbygene[1] <- NULL
 countbygene <- round(countbygene)
 summary(countbygene)
-
-#```
-
-
+```
 
 
 
