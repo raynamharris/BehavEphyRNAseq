@@ -5,10 +5,10 @@ date: "2/24/2017"
 output: md_document
 ---
   
-  ## Loading the data
-  In the summer of 2016, I processed a bunch of hippocampal tissue samples from WT and FMR1-KO mice that were trained in an active place avoidance task. 
+## Loading the data
+In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from WT and FMR1-KO. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage.  
 
-This data was added the the epically large sample collection database contained in the two files  "animals.csv" and "punches.csv" which provided a detailed account of all animals processed and all tissue samples collected. Then, I tidy the dataframe a little bit to get it prepared for RNAseq sample submision.
+This data was added the the epically large sample collection database contained in the two files  "animals.csv" and "punches.csv" which provided a detailed account of all animals processed and all tissue samples collected. Then, I tidy the dataframe a little bit to get it prepared for RNAseq sample submision. I didn't always have the forsight to get the data in the propoer column for subsequent anlaysis, but some data wrangly magic will make it tidy.
 
 ```{r install packages load data, warning=FALSE, message=FALSE}
 #install.packages("tidyr", dependencies=TRUE)
@@ -28,17 +28,9 @@ knitr::opts_chunk$set(fig.path = '../results/all/')
 ## Subsetting the data
 This analysis will focus only on the anaimals process in 2016. I collected many, many samples, but I only processed a subset. I conducted a photo anlaysis first to decide which samples came from a very specific location in the hippocampus. 
 
-
-
 ## Data Cleaning
 Well, the words I used when collecting might not be exactly what I want plotted on figures and such, so I need to do a little data cleaning. I also need to get the data in order so that row names are informative and contain information
 
-```{r data cleaning}
-## start after 02c_tpmbygene
-Traits <- read.csv("../data/homecage.csv", header=TRUE)
-rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as
-str(Traits)
-```
 
 
 ## Kallisto Gather
@@ -154,6 +146,13 @@ summary(countbygene)
 
 ```
 
+
+```{r data cleaning}
+## start after 02c_tpmbygene
+Traits <- read.csv("../data/homecage.csv", header=TRUE)
+rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as
+str(Traits)
+```
 
 
 

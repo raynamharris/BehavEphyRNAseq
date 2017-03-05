@@ -10,9 +10,12 @@ setwd("~/Github/BehavEphyRNAseq/bin")
 punches <- read.csv("../data/rnaseq/punches.csv", header=TRUE)
 animals <- read.csv("../data/rnaseq/animals.csv", header=TRUE)
 
-#combine mine and maddy's notes -----
+# combine mine and maddy's notes -----
 full <- join(animals, punches, by = "Mouse", type = "full", match = "all")
+full <- full %>% # filter bad samples
+  filter(Mouse != "", Mouse != "???") %>% droplevels()
 str(full)
+
 
 ## used to create the RNAseq printed program ----
 forRNAseq <- full %>%
@@ -108,9 +111,9 @@ homecage <- homecage %>%
 
 ############# Summer 2016 Samples for RNAseq
 ## first, make a spreadsheet for recording photo analysis 
-summer2016photos <- full %>%
-  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
-  distinct(Mouse, Slice) %>% droplevels()
+#summer2016photos <- full %>%
+#  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
+#  distinct(Mouse, Slice) %>% droplevels()
 # This output was saved as a file and used for doing the photo analysis
 
 ## then, use the allen brain atlast to annotate the photos
@@ -157,20 +160,41 @@ summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
 JA17009 <- lapply(summer2016forRNAseq$Tube, as.character) 
 # use if else to add the job number for the above sample to the full data frame, but first make it a character
 full$jobnumber <- as.character(full$jobnumber)
-full$jobnumber <- ifelse(full$Tube %in% JA17009, "JA17009", full$jobnumber) 
+full$jobnumber <- ifelse(full$Tube %in% JA17009, "JA17009", full$jobnumber)
 full$jobnumber <- as.factor(full$jobnumber)
 
-## for all animals
+full$RNAseqID <- as.character(full$RNAseqID)
+full$Mouse <- as.character(full$Mouse)
+full$RNAseqID <- ifelse(full$Tube %in% JA17009, full$Mouse, full$RNAseqID) 
+full$RNAseqID <- as.factor(full$RNAseqID)
+full$Mouse <- as.factor(full$Mouse)
+str(full)
+
+
+###################
+## creating a data frame with just the samples that have been sequeneded that I want to analysize
+# subset the data
 tidysamples <- full %>%
   filter(grepl("JA16268|JA16444|JA17009", jobnumber))  %>% droplevels()
+tidysamples <- tidysamples[c(1:3,5:14,16:22,29:30,34,4)] 
+tidysamples <- tidysamples[c(22,1,23,3,21,13,8,4:7,9:12,14:20,24)] 
+
+# make better column descriptions for groups
 tidysamples$Group <- as.character(tidysamples$Group)
 tidysamples$notes <- as.character(tidysamples$notes)
+tidysamples$Group <- as.character(tidysamples$Group)
 tidysamples$Group <- ifelse(grepl("maddy punch", tidysamples$notes), "homogenized", 
                     ifelse(grepl("maddy FACS", tidysamples$notes), "dissociated", 
-                           ifelse(grepl("Cage", tidysamples$Behavior), "tidysamples",
+                           ifelse(grepl("Cage", tidysamples$Behavior), "homecage",
                                   ifelse(grepl("Yoked", tidysamples$Group), "control", 
                                          ifelse(grepl("NoConflict", tidysamples$Group), "consistent",
                                                 ifelse(grepl("Conflict", tidysamples$Group), "conflict",tidysamples$Group))))))
+
+# make better column descriptions for possibly dodgy samples
+tidysamples$dodgy <- ifelse(grepl("NG", tidysamples$E.phy), "ephys",
+                            ifelse(grepl("CYRSTALS", tidysamples$notes), "slice",
+                                   ifelse(grepl("late", tidysamples$notes), "slice",
+                                          ifelse(grepl("350", tidysamples$SliceSize), "slice",
 
 
 ## write out clearn data file will all samples
