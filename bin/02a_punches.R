@@ -183,18 +183,51 @@ tidysamples <- tidysamples[c(22,1,23,3,21,13,8,4:7,9:12,14:20,24)]
 tidysamples$Group <- as.character(tidysamples$Group)
 tidysamples$notes <- as.character(tidysamples$notes)
 tidysamples$Group <- as.character(tidysamples$Group)
-tidysamples$Group <- ifelse(grepl("maddy punch", tidysamples$notes), "homogenized", 
-                    ifelse(grepl("maddy FACS", tidysamples$notes), "dissociated", 
-                           ifelse(grepl("Cage", tidysamples$Behavior), "homecage",
-                                  ifelse(grepl("Yoked", tidysamples$Group), "control", 
-                                         ifelse(grepl("NoConflict", tidysamples$Group), "consistent",
-                                                ifelse(grepl("Conflict", tidysamples$Group), "conflict",tidysamples$Group))))))
+tidysamples$method <- ifelse(grepl("maddy punch", tidysamples$notes), "homogenized", 
+                    ifelse(grepl("maddy FACS", tidysamples$notes), "dissociated", "homogenized"))
+
+tidysamples$Group <- ifelse(grepl("maddy punch", tidysamples$notes), "homecage", 
+                            ifelse(grepl("maddy FACS", tidysamples$notes), "homecage", 
+                                   ifelse(grepl("Cage", tidysamples$Behavior), "homecage",
+                                          ifelse(grepl("Yoked", tidysamples$Group), "control", 
+                                                 ifelse(grepl("NoConflict", tidysamples$Group), "consistent",
+                                                        ifelse(grepl("Conflict", tidysamples$Group), "conflict",tidysamples$Group))))))
+
 
 # make better column descriptions for possibly dodgy samples
 tidysamples$dodgy <- ifelse(grepl("NG", tidysamples$E.phy), "ephys",
                             ifelse(grepl("CYRSTALS", tidysamples$notes), "slice",
                                    ifelse(grepl("late", tidysamples$notes), "slice",
-                                          ifelse(grepl("350", tidysamples$SliceSize), "slice",
+                                          ifelse(grepl("350", tidysamples$SliceSize), "slice", "allgood"))))
+
+# make better column for time of day collected
+str(tidysamples$start.time)
+tidysamples$start.time <- as.character(tidysamples$start.time)
+
+tidysamples$daytime <- ifelse(grepl("10:|11:", tidysamples$start.time), "beforenoon",
+                            ifelse(grepl("4:30", tidysamples$start.time), "earlyAM",
+                                   ifelse(grepl("12:|14:|15:", tidysamples$start.time), "afternoon",
+                                          ifelse(grepl("17:|18:|19:", tidysamples$start.time), "evening",
+                                                 ifelse(grepl("20:|23:0", tidysamples$start.time), "nighttime", "norecord")))))
+
+
+
+
+## drop some JA16268 samples and rename
+tidysamples$RNAseqID <- as.character(tidysamples$RNAseqID)
+tidysamples <- tidysamples %>%
+  filter(!grepl("DG_D|CA1_D", RNAseqID))  %>% droplevels()
+tidysamples$RNAseqID <- ifelse(grepl("142C_DG_S", tidysamples$RNAseqID), "142C_DG",
+                              ifelse(grepl("142C_CA1_S", tidysamples$RNAseqID), "142C_CA1",
+                                     ifelse(grepl("143C_CA1_S", tidysamples$RNAseqID), "143C_CA1",
+                                            ifelse(grepl("143C_DG_S", tidysamples$RNAseqID), "143C_DG",tidysamples$RNAseqID))))
+                                     
+## correct mouse name for 15-100 and 15-101 samples
+tidysamples$Mouse <- as.character(tidysamples$Mouse)
+tidysamples$Mouse <- ifelse(grepl("15-101", tidysamples$Mouse), "15-100", tidysamples$Mouse)
+             
+## final drop columns
+tidysamples <- tidysamples[c(1:7,10:11,24:26,15:16)] 
 
 
 ## write out clearn data file will all samples
