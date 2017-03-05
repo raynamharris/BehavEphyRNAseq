@@ -58,64 +58,9 @@ identifiers for each transcript.
 (P.S. Unfortunately, I have no idea how to do this next part without
 changing directories.)
 
-    setwd("../data/rnaseq/04_kallistoquant/")
-    ## this will create lists of all the samples
-    kallistoDirs = dir(".")
-    kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
-    kallistoDirs, ignore.case=TRUE)]
-
-    kallistoFiles = paste0(kallistoDirs, "/abundance.tsv")
-    names(kallistoFiles) = kallistoDirs
-    if(file.exists(kallistoFiles))
-    kallistoData = lapply(
-    kallistoFiles,
-    read.table,
-    sep = "\t",
-    row.names = 1,
-    header = TRUE
-    )
-
     ## Warning in if (file.exists(kallistoFiles)) kallistoData =
     ## lapply(kallistoFiles, : the condition has length > 1 and only the first
     ## element will be used
-
-    ## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
-    ids = Reduce(f=union, x=lapply(kallistoData, rownames))
-    if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
-    count = data.frame(
-    id = ids,
-    sapply(kallistoData, function(x) {x$est_counts}),
-    check.names = FALSE,
-    stringsAsFactors = FALSE
-    )
-    tpm = data.frame(
-    id = ids,
-    sapply(kallistoData, function(x) {x$tpm}),
-    check.names = FALSE,
-    stringsAsFactors = FALSE
-    )
-    }
-
-    ## make a dataframe with the parts of the gene id as columns
-    geneids <- count[c(1)] 
-    geneids$ENSMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 1)
-    geneids$ENSMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 2)
-    geneids$OTTMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 3)
-    geneids$OTTMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 4)
-    geneids$transcript <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 5)
-    geneids$gene <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 6)
-    geneids$length <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 7)
-    geneids$structure1 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 8)
-    geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
-    geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
-    geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
-
-    ## prep data for wgcna
-    countswgcna <- count
-    row.names(countswgcna) <- geneids$transcript_lenght
-    countswgcna[1] <- NULL
-    countswgcna <- round(countswgcna)
-    summary(countswgcna)
 
     ##     142C_CA1           142C_DG          143A-CA3-1      
     ##  Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
@@ -285,13 +230,6 @@ changing directories.)
     ##  Mean   :   45.99  
     ##  3rd Qu.:   16.00  
     ##  Max.   :24322.00
-
-    ## prep data for wgcna
-    tpmswgcna <- tpm
-    row.names(tpmswgcna) <- geneids$transcript_lenght
-    tpmswgcna[1] <- NULL
-    tpmswgcna <- round(tpmswgcna)
-    summary(tpmswgcna)
 
     ##     142C_CA1           142C_DG          143A-CA3-1      
     ##  Min.   :    0.00   Min.   :   0.00   Min.   :    0.00  

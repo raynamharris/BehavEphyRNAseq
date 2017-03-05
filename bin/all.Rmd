@@ -44,7 +44,7 @@ The kallisto output gives you read counts for sample in an abundance file for ev
 
 (P.S. Unfortunately, I have no idea how to do this next part without changing directories.)
 
-```{r kallisto gather}
+```{r kallisto gather, echo = FALSE}
 setwd("../data/rnaseq/04_kallistoquant/")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
