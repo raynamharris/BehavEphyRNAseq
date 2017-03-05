@@ -1,5 +1,5 @@
-The Project
------------
+The Overall Research Question
+-----------------------------
 
 The research project was designed to understand how experience shapes
 the brain. In particular, we are looking at learned avoidance behavhior.
@@ -10,13 +10,13 @@ RNAseq samples
 --------------
 
 In the summers of 2015 and 2016, I processed a bunch of hippocampal
-tissue samples from WT and FMR1-KO mice. Most mice were trained in an
-active place avoidance task or used as yoked controls; however, a few
-animals were taken straight from the home cage.
+tissue samples from 59 mice. Most mice were trained in an active place
+avoidance task or used as yoked controls; however, a few animals were
+taken straight from the home cage. This data has been cleaned using a
+different script `02a_punches.R`.
 
-This data has been cleaned using a different script `02a_punches.R`.
-
-THis
+THis output provides a summary of the samples and the various factors
+that descibe them.
 
     ##       RNAseqID      Mouse      year    Genotype    jobnumber  Punch   
     ##  100-CA1-1: 1   15-100 :14   2015:71   FMR1: 9   JA16268: 4   CA1:43  
@@ -58,68 +58,409 @@ identifiers for each transcript.
 (P.S. Unfortunately, I have no idea how to do this next part without
 changing directories.)
 
-\`\`\`{r kallisto gather}
-=========================
+    setwd("../data/rnaseq/04_kallistoquant/")
+    ## this will create lists of all the samples
+    kallistoDirs = dir(".")
+    kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
+    kallistoDirs, ignore.case=TRUE)]
 
-setwd("../data/JA16444/") \#\# this will create lists of all the samples
-kallistoDirs = dir(".") kallistoDirs =
-kallistoDirs\[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
-kallistoDirs, ignore.case=TRUE)\]
+    kallistoFiles = paste0(kallistoDirs, "/abundance.tsv")
+    names(kallistoFiles) = kallistoDirs
+    if(file.exists(kallistoFiles))
+    kallistoData = lapply(
+    kallistoFiles,
+    read.table,
+    sep = "\t",
+    row.names = 1,
+    header = TRUE
+    )
 
-kallistoFiles = paste0(kallistoDirs, "/abundance.tsv")
-names(kallistoFiles) = kallistoDirs if(file.exists(kallistoFiles))
-kallistoData = lapply( kallistoFiles, read.table, sep = "", row.names =
-1, header = TRUE )
+    ## Warning in if (file.exists(kallistoFiles)) kallistoData =
+    ## lapply(kallistoFiles, : the condition has length > 1 and only the first
+    ## element will be used
 
-this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
------------------------------------------------------------------------------------------------------
+    ## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
+    ids = Reduce(f=union, x=lapply(kallistoData, rownames))
+    if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
+    count = data.frame(
+    id = ids,
+    sapply(kallistoData, function(x) {x$est_counts}),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+    )
+    tpm = data.frame(
+    id = ids,
+    sapply(kallistoData, function(x) {x$tpm}),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+    )
+    }
 
-ids = Reduce(f=union, x=lapply(kallistoData, rownames)) if
-(all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) { count
-= data.frame( id = ids, sapply(kallistoData, function(x)
-{x$est\_counts}), check.names = FALSE, stringsAsFactors = FALSE ) tpm = data.frame( id = ids, sapply(kallistoData, function(x) {x$tpm}),
-check.names = FALSE, stringsAsFactors = FALSE ) }
+    ## make a dataframe with the parts of the gene id as columns
+    geneids <- count[c(1)] 
+    geneids$ENSMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 1)
+    geneids$ENSMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 2)
+    geneids$OTTMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 3)
+    geneids$OTTMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 4)
+    geneids$transcript <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 5)
+    geneids$gene <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 6)
+    geneids$length <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 7)
+    geneids$structure1 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 8)
+    geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
+    geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
+    geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
 
-make a dataframe with the parts of the gene id as columns
----------------------------------------------------------
+    ## prep data for wgcna
+    countswgcna <- count
+    row.names(countswgcna) <- geneids$transcript_lenght
+    countswgcna[1] <- NULL
+    countswgcna <- round(countswgcna)
+    summary(countswgcna)
 
-geneids &lt;- count\[c(1)\]
-geneids*E**N**S**M**U**S**T* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 1)
-geneids*E**N**S**M**U**S**G* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 2)
-geneids*O**T**T**M**U**S**G* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 3)
-geneids*O**T**T**M**U**S**T* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 4)
-geneids*t**r**a**n**s**c**r**i**p**t* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 5)
-geneids*g**e**n**e* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 6)
-geneids*l**e**n**g**t**h* &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 7)
-geneids*s**t**r**u**c**t**u**r**e*1 &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 8)
-geneids*s**t**r**u**c**t**u**r**e*2 &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 9)
-geneids*s**t**r**u**c**t**u**r**e*3 &lt; −*s**a**p**p**l**y*(*s**t**r**s**p**l**i**t*(*a**s*.*c**h**a**r**a**c**t**e**r*(*g**e**n**e**i**d**s*id),'\\|'),
-"\[", 10)
-geneids*t**r**a**n**s**c**r**i**p**t*<sub>*l*</sub>*e**n**g**h**t* &lt; −*a**s*.*f**a**c**t**o**r*(*p**a**s**t**e*(*g**e**n**e**i**d**s*transcript,
-geneids$length, sep="\_"))
+    ##     142C_CA1           142C_DG          143A-CA3-1      
+    ##  Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.0   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.0   Median :    0.00  
+    ##  Mean   :   82.63   Mean   :   69.9   Mean   :   56.68  
+    ##  3rd Qu.:   32.00   3rd Qu.:   26.0   3rd Qu.:   17.00  
+    ##  Max.   :46130.00   Max.   :17459.0   Max.   :23989.00  
+    ##    143A-DG-1          143B-CA1-1         143B-DG-1       
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   89.92   Mean   :   29.29   Mean   :   35.51  
+    ##  3rd Qu.:   35.00   3rd Qu.:    9.00   3rd Qu.:   15.00  
+    ##  Max.   :76185.00   Max.   :30026.00   Max.   :21691.00  
+    ##     143C_CA1          143C_DG           143C-CA1-1        143D-CA1-3      
+    ##  Min.   :    0.0   Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
+    ##  1st Qu.:    0.0   1st Qu.:    0.00   1st Qu.:    0.0   1st Qu.:    0.00  
+    ##  Median :    0.0   Median :    0.00   Median :    0.0   Median :    0.00  
+    ##  Mean   :  125.3   Mean   :   61.17   Mean   :   37.7   Mean   :   18.59  
+    ##  3rd Qu.:   45.0   3rd Qu.:   25.00   3rd Qu.:   13.0   3rd Qu.:    5.00  
+    ##  Max.   :44580.0   Max.   :33983.00   Max.   :21143.0   Max.   :14110.00  
+    ##    143D-DG-3          144A-CA1-2         144A-CA3-2       
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.000  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.000  
+    ##  Median :    0.00   Median :    0.00   Median :    0.000  
+    ##  Mean   :   17.78   Mean   :   50.77   Mean   :    7.173  
+    ##  3rd Qu.:    7.00   3rd Qu.:   19.00   3rd Qu.:    2.000  
+    ##  Max.   :10111.00   Max.   :44270.00   Max.   :12302.000  
+    ##    144A-DG-2          144B-CA1-1         144B-CA3-1     
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.0  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.0  
+    ##  Median :    0.00   Median :    0.00   Median :    0.0  
+    ##  Mean   :   54.67   Mean   :   43.53   Mean   :   17.5  
+    ##  3rd Qu.:   21.00   3rd Qu.:   14.00   3rd Qu.:    5.0  
+    ##  Max.   :33414.00   Max.   :35177.00   Max.   :12714.0  
+    ##    144C-CA1-2         144C-CA3-2        144C-DG-2       
+    ##  Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.0   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.0   Median :    0.00  
+    ##  Mean   :   56.18   Mean   :   21.1   Mean   :   37.88  
+    ##  3rd Qu.:   20.00   3rd Qu.:    6.0   3rd Qu.:   15.00  
+    ##  Max.   :35028.00   Max.   :26898.0   Max.   :15607.00  
+    ##    144D-CA3-2         144D-DG-2         145A-CA1-2      
+    ##  Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.0   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    1.0   Median :    0.00  
+    ##  Mean   :   39.57   Mean   :   79.9   Mean   :   79.72  
+    ##  3rd Qu.:   13.00   3rd Qu.:   32.0   3rd Qu.:   27.00  
+    ##  Max.   :46442.00   Max.   :39287.0   Max.   :73533.00  
+    ##    145A-CA3-2          145A-DG-2          145B-CA1-1     
+    ##  Min.   :    0.000   Min.   :    0.00   Min.   :    0.0  
+    ##  1st Qu.:    0.000   1st Qu.:    0.00   1st Qu.:    0.0  
+    ##  Median :    0.000   Median :    0.00   Median :    0.0  
+    ##  Mean   :    5.886   Mean   :   24.45   Mean   :   34.4  
+    ##  3rd Qu.:    1.000   3rd Qu.:    9.00   3rd Qu.:   10.0  
+    ##  Max.   :15478.000   Max.   :11567.00   Max.   :39155.0  
+    ##    145B-DG-1         146A-CA1-2         146A-CA3-2      
+    ##  Min.   :    0.0   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.0   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.0   Median :    0.00   Median :    0.00  
+    ##  Mean   :   25.7   Mean   :   29.21   Mean   :   46.94  
+    ##  3rd Qu.:   10.0   3rd Qu.:   10.00   3rd Qu.:   14.00  
+    ##  Max.   :15903.0   Max.   :28994.00   Max.   :89329.00  
+    ##    146A-DG-2          146B-CA1-2         146B-CA3-2      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   20.46   Mean   :   18.11   Mean   :   36.53  
+    ##  3rd Qu.:    8.00   3rd Qu.:    6.00   3rd Qu.:   11.00  
+    ##  Max.   :13368.00   Max.   :10320.00   Max.   :23297.00  
+    ##    146B-DG-2          146C-CA1-4         146C-CA3-4      
+    ##  Min.   :   0.000   Min.   :    0.00   Min.   :   0.000  
+    ##  1st Qu.:   0.000   1st Qu.:    0.00   1st Qu.:   0.000  
+    ##  Median :   0.000   Median :    0.00   Median :   0.000  
+    ##  Mean   :   1.977   Mean   :   23.16   Mean   :   4.391  
+    ##  3rd Qu.:   0.000   3rd Qu.:    8.00   3rd Qu.:   0.000  
+    ##  Max.   :7802.000   Max.   :15918.00   Max.   :6848.000  
+    ##    146C-DG-4          146D-CA1-3          146D-CA3-3      146D-DG-3      
+    ##  Min.   :   0.000   Min.   :    0.000   Min.   :    0   Min.   :   0.00  
+    ##  1st Qu.:   0.000   1st Qu.:    0.000   1st Qu.:    0   1st Qu.:   0.00  
+    ##  Median :   0.000   Median :    0.000   Median :    0   Median :   0.00  
+    ##  Mean   :   8.382   Mean   :    6.666   Mean   :   51   Mean   :   1.54  
+    ##  3rd Qu.:   3.000   3rd Qu.:    0.000   3rd Qu.:   16   3rd Qu.:   0.00  
+    ##  Max.   :2795.000   Max.   :19366.000   Max.   :38276   Max.   :6004.00  
+    ##    147-CA1-4          147-CA3-4           147-DG-4       
+    ##  Min.   :   0.000   Min.   :    0.00   Min.   :   0.000  
+    ##  1st Qu.:   0.000   1st Qu.:    0.00   1st Qu.:   0.000  
+    ##  Median :   0.000   Median :    0.00   Median :   0.000  
+    ##  Mean   :   2.709   Mean   :   11.74   Mean   :   2.372  
+    ##  3rd Qu.:   0.000   3rd Qu.:    0.00   3rd Qu.:   0.000  
+    ##  Max.   :8956.000   Max.   :28974.00   Max.   :7543.000  
+    ##    147C-CA1-3         147C-CA3-3          147C-DG-3      
+    ##  Min.   :    0.00   Min.   :     0.00   Min.   :    0.0  
+    ##  1st Qu.:    0.00   1st Qu.:     0.00   1st Qu.:    0.0  
+    ##  Median :    0.00   Median :     0.00   Median :    1.0  
+    ##  Mean   :   52.32   Mean   :    98.01   Mean   :   74.1  
+    ##  3rd Qu.:   20.00   3rd Qu.:    37.00   3rd Qu.:   34.0  
+    ##  Max.   :37687.00   Max.   :150301.00   Max.   :46988.0  
+    ##    147D-CA3-1         147D-DG-1         148-CA1-2       
+    ##  Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.0   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.0   Median :    0.00  
+    ##  Mean   :   78.77   Mean   :  199.3   Mean   :   32.38  
+    ##  3rd Qu.:   27.00   3rd Qu.:   82.0   3rd Qu.:    8.00  
+    ##  Max.   :95754.00   Max.   :91299.0   Max.   :24841.00  
+    ##    148-CA3-2           148-DG-2          148A-CA1-3     
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.0  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.0  
+    ##  Median :    0.00   Median :    0.00   Median :    0.0  
+    ##  Mean   :   39.91   Mean   :   38.01   Mean   :   89.6  
+    ##  3rd Qu.:   13.00   3rd Qu.:   12.00   3rd Qu.:   31.0  
+    ##  Max.   :23437.00   Max.   :23190.00   Max.   :52783.0  
+    ##    148A-CA3-3         148A-DG-3          148B-CA1-4      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   45.58   Mean   :   68.45   Mean   :    5.74  
+    ##  3rd Qu.:   13.00   3rd Qu.:   29.00   3rd Qu.:    0.00  
+    ##  Max.   :32891.00   Max.   :31971.00   Max.   :33665.00  
+    ##    148B-CA3-4         148B-DG-4          16-116B        
+    ##  Min.   :    0.00   Min.   :    0.0   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.0   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.0   Median :    0.00  
+    ##  Mean   :   59.38   Mean   :   13.6   Mean   :   35.47  
+    ##  3rd Qu.:   19.00   3rd Qu.:    5.0   3rd Qu.:   11.00  
+    ##  Max.   :37680.00   Max.   :10089.0   Max.   :23015.00  
+    ##     16-116D            16-117D            16-118B        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :    4.37   Mean   :   24.49   Mean   :   49.45  
+    ##  3rd Qu.:    0.00   3rd Qu.:    8.00   3rd Qu.:   16.00  
+    ##  Max.   :51919.00   Max.   :18898.00   Max.   :15698.00  
+    ##     16-118D            16-119B            16-119D        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   37.33   Mean   :   44.62   Mean   :   44.17  
+    ##  3rd Qu.:   13.00   3rd Qu.:   14.00   3rd Qu.:   14.00  
+    ##  Max.   :15547.00   Max.   :20043.00   Max.   :13698.00  
+    ##     16-120B            16-120D            16-122B        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   48.87   Mean   :   37.38   Mean   :   47.32  
+    ##  3rd Qu.:   16.00   3rd Qu.:   11.00   3rd Qu.:   16.00  
+    ##  Max.   :21743.00   Max.   :21114.00   Max.   :21913.00  
+    ##     16-122D            16-123B            16-123D        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   54.55   Mean   :   14.42   Mean   :   43.46  
+    ##  3rd Qu.:   18.00   3rd Qu.:    3.00   3rd Qu.:   15.00  
+    ##  Max.   :21640.00   Max.   :33189.00   Max.   :16867.00  
+    ##     16-124D            16-125B            16-125D        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   44.21   Mean   :    8.27   Mean   :   34.99  
+    ##  3rd Qu.:   14.00   3rd Qu.:    2.00   3rd Qu.:   12.00  
+    ##  Max.   :22218.00   Max.   :90359.00   Max.   :13073.00  
+    ##     16-126B        
+    ##  Min.   :    0.00  
+    ##  1st Qu.:    0.00  
+    ##  Median :    0.00  
+    ##  Mean   :   45.99  
+    ##  3rd Qu.:   16.00  
+    ##  Max.   :24322.00
 
-prep data for wgcna
--------------------
+    ## prep data for wgcna
+    tpmswgcna <- tpm
+    row.names(tpmswgcna) <- geneids$transcript_lenght
+    tpmswgcna[1] <- NULL
+    tpmswgcna <- round(tpmswgcna)
+    summary(tpmswgcna)
 
-countswgcna &lt;- count row.names(countswgcna) &lt;-
-geneids$transcript\_lenght countswgcna\[1\] &lt;- NULL countswgcna &lt;-
-round(countswgcna) summary(countswgcna)
-
-prep data for wgcna
--------------------
-
-tpmswgcna &lt;- tpm row.names(tpmswgcna) &lt;-
-geneids$transcript\_lenght tpmswgcna\[1\] &lt;- NULL tpmswgcna &lt;-
-round(tpmswgcna) summary(tpmswgcna) \#\`\`\`
+    ##     142C_CA1           142C_DG          143A-CA3-1      
+    ##  Min.   :    0.00   Min.   :   0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:   0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :   0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :  17.03   Mean   :   17.03  
+    ##  3rd Qu.:    9.00   3rd Qu.:  11.00   3rd Qu.:    7.00  
+    ##  Max.   :19994.00   Max.   :9036.00   Max.   :13308.00  
+    ##    143A-DG-1          143B-CA1-1         143B-DG-1       
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    8.00   3rd Qu.:    6.00   3rd Qu.:    8.00  
+    ##  Max.   :25544.00   Max.   :27782.00   Max.   :18912.00  
+    ##     143C_CA1           143C_DG           143C-CA1-1      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    9.00   3rd Qu.:   10.00   3rd Qu.:    7.00  
+    ##  Max.   :13133.00   Max.   :18685.00   Max.   :18125.00  
+    ##    143D-CA1-3         143D-DG-3          144A-CA1-2      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    5.00   3rd Qu.:    9.00   3rd Qu.:    7.00  
+    ##  Max.   :19703.00   Max.   :16880.00   Max.   :24613.00  
+    ##    144A-CA3-2         144A-DG-2          144B-CA1-1      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    3.00   3rd Qu.:    9.00   3rd Qu.:    7.00  
+    ##  Max.   :38260.00   Max.   :19211.00   Max.   :23010.00  
+    ##    144B-CA3-1         144C-CA1-2         144C-CA3-2      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    5.00   3rd Qu.:    8.00   3rd Qu.:    5.00  
+    ##  Max.   :20084.00   Max.   :19363.00   Max.   :30938.00  
+    ##    144C-DG-2          144D-CA3-2         144D-DG-2       
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    9.00   3rd Qu.:    6.00   3rd Qu.:    9.00  
+    ##  Max.   :13913.00   Max.   :35044.00   Max.   :15967.00  
+    ##    145A-CA1-2         145A-CA3-2         145A-DG-2       
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    6.00   3rd Qu.:    1.00   3rd Qu.:    9.00  
+    ##  Max.   :27499.00   Max.   :38595.00   Max.   :14783.00  
+    ##    145B-CA1-1         145B-DG-1          146A-CA1-2      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    6.00   3rd Qu.:    9.00   3rd Qu.:    6.00  
+    ##  Max.   :31778.00   Max.   :18049.00   Max.   :25334.00  
+    ##    146A-CA3-2         146A-DG-2          146B-CA1-2      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    4.00   3rd Qu.:    9.00   3rd Qu.:    8.00  
+    ##  Max.   :43024.00   Max.   :19323.00   Max.   :12770.00  
+    ##    146B-CA3-2         146B-DG-2           146C-CA1-4      
+    ##  Min.   :    0.00   Min.   :     0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:     0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :     0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :    17.03   Mean   :   17.03  
+    ##  3rd Qu.:    6.00   3rd Qu.:     0.00   3rd Qu.:    8.00  
+    ##  Max.   :17434.00   Max.   :118921.00   Max.   :20521.00  
+    ##    146C-CA3-4         146C-DG-4          146D-CA1-3      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    0.00   3rd Qu.:    6.00   3rd Qu.:    0.00  
+    ##  Max.   :26486.00   Max.   :10508.00   Max.   :48182.00  
+    ##    146D-CA3-3         146D-DG-3           147-CA1-4       
+    ##  Min.   :    0.00   Min.   :     0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:     0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :     0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :    17.03   Mean   :   17.03  
+    ##  3rd Qu.:    7.00   3rd Qu.:     0.00   3rd Qu.:    0.00  
+    ##  Max.   :21103.00   Max.   :110585.00   Max.   :51833.00  
+    ##    147-CA3-4           147-DG-4           147C-CA1-3      
+    ##  Min.   :    0.00   Min.   :     0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:     0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :     0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :    17.03   Mean   :   17.03  
+    ##  3rd Qu.:    0.00   3rd Qu.:     0.00   3rd Qu.:    8.00  
+    ##  Max.   :36128.00   Max.   :129255.00   Max.   :21638.00  
+    ##    147C-CA3-3         147C-DG-3          147D-CA3-1      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    7.00   3rd Qu.:   10.00   3rd Qu.:    6.00  
+    ##  Max.   :38426.00   Max.   :18962.00   Max.   :30897.00  
+    ##    147D-DG-1          148-CA1-2          148-CA3-2       
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    9.00   3rd Qu.:    5.00   3rd Qu.:    6.00  
+    ##  Max.   :15216.00   Max.   :22177.00   Max.   :16496.00  
+    ##     148-DG-2          148A-CA1-3         148A-CA3-3      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    7.00   3rd Qu.:    7.00   3rd Qu.:    5.00  
+    ##  Max.   :12329.00   Max.   :18801.00   Max.   :19835.00  
+    ##    148A-DG-3          148B-CA1-4         148B-CA3-4      
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:   10.00   3rd Qu.:    0.00   3rd Qu.:    6.00  
+    ##  Max.   :15700.00   Max.   :56713.00   Max.   :19770.00  
+    ##    148B-DG-4           16-116B            16-116D         
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :     0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:     0.00  
+    ##  Median :    0.00   Median :    0.00   Median :     0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :    17.03  
+    ##  3rd Qu.:    7.00   3rd Qu.:    8.00   3rd Qu.:     0.00  
+    ##  Max.   :21584.00   Max.   :54046.00   Max.   :215104.00  
+    ##     16-117D            16-118B            16-118D        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    8.00   3rd Qu.:    9.00   3rd Qu.:    8.00  
+    ##  Max.   :35992.00   Max.   :22172.00   Max.   :12942.00  
+    ##     16-119B            16-119D            16-120B        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    7.00   3rd Qu.:    9.00   3rd Qu.:    8.00  
+    ##  Max.   :14617.00   Max.   :21162.00   Max.   :43054.00  
+    ##     16-120D            16-122B            16-122D        
+    ##  Min.   :    0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:    0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :    0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :   17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:    8.00   3rd Qu.:    8.00   3rd Qu.:    8.00  
+    ##  Max.   :41812.00   Max.   :15864.00   Max.   :13117.00  
+    ##     16-123B             16-123D            16-124D        
+    ##  Min.   :     0.00   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:     0.00   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :     0.00   Median :    0.00   Median :    0.00  
+    ##  Mean   :    17.03   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:     3.00   3rd Qu.:    9.00   3rd Qu.:    8.00  
+    ##  Max.   :169061.00   Max.   :19103.00   Max.   :29286.00  
+    ##     16-125B          16-125D            16-126B        
+    ##  Min.   :     0   Min.   :    0.00   Min.   :    0.00  
+    ##  1st Qu.:     0   1st Qu.:    0.00   1st Qu.:    0.00  
+    ##  Median :     0   Median :    0.00   Median :    0.00  
+    ##  Mean   :    17   Mean   :   17.03   Mean   :   17.03  
+    ##  3rd Qu.:     3   3rd Qu.:    8.00   3rd Qu.:    7.00  
+    ##  Max.   :547257   Max.   :27181.00   Max.   :16647.00
 
 Merge transcipts counts to gene counts
 --------------------------------------

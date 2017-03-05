@@ -5,8 +5,8 @@ date: "2/24/2017"
 output: md_document
 ---
   
-## The Project
-The research project was designed to understand how experience shapes the brain. In particular, we are looking at learned avoidance behavhior. How do animals change their behavior to avoidance an unpleasant experience?
+## The Overall Research Question
+The research project was designed to understand how experience shapes the brain. In particular, we are looking at learned avoidance behavhior. How do animals change their behavior to avoidance an unpleasant experience? 
 
 ```{r install packages load data, warning=FALSE, message=FALSE, include = FALSE}
 #install.packages("tidyr", dependencies=TRUE)
@@ -24,11 +24,9 @@ knitr::opts_chunk$set(fig.path = '../results/all/')
 ```
 
 ## RNAseq samples
-In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from WT and FMR1-KO mice. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage.  
+In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from 59 mice. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage. This data has been cleaned using a different script `02a_punches.R`.
 
-This data has been cleaned using a different script `02a_punches.R`.
-
-THis 
+THis output provides a summary of the samples and the various factors that descibe them. 
 
 
 ```{r ReadAndTidySampleData, echo = FALSE}
@@ -40,15 +38,14 @@ summary(tidysamples)
 ```
 
 
-
 ## Kallisto Gather
 
 The kallisto output gives you read counts for sample in an abundance file for every single sample. This portion of the code goes through and finds each samples' abundance.tsv file, extracts the data, and combines it all into a dataframe. The "counts" file is unnormalized, but the "tpm" is the data after being normalized by transcripts per million. I also use some string splitting to take the very long transcript identifying and create a "geneids" file that has all the database identifiers for each transcript. 
 
 (P.S. Unfortunately, I have no idea how to do this next part without changing directories.)
 
-#```{r kallisto gather}
-setwd("../data/JA16444/")
+```{r kallisto gather}
+setwd("../data/rnaseq/04_kallistoquant/")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
@@ -109,7 +106,7 @@ row.names(tpmswgcna) <- geneids$transcript_lenght
 tpmswgcna[1] <- NULL
 tpmswgcna <- round(tpmswgcna)
 summary(tpmswgcna)
-#```
+```
 
 ## Merge transcipts counts to gene counts
 
