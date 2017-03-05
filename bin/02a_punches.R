@@ -21,7 +21,7 @@ forRNAseq <- full %>%
   select(Tube, RNAseqID, Group, Mouse, Behavior, E.phy, Punch, 
          Slice, best.location, jobnumber, Random) %>% 
   arrange(Random) 
-# write.csv(forRNAseq, "forRNAseq.csv", row.names=FALSE)
+# write.csv(forRNAseq, "../data/rnaseq/JA16444/forRNAseq.csv", row.names=FALSE)
 
 ## used to find some samples that I don't need that can be used for practice ---
 MaxwellRSCtest <- full %>%
@@ -36,14 +36,14 @@ RNAseqAnimals <- full %>%
   filter(Mouse.short != 100) %>% filter(Mouse.short != 101) %>%
   distinct(Mouse, Date, Conflict, APA, Behavior, E.phy)
 str(RNAseqAnimals)
-# write.csv(RNAseqAnimals, "RNAseqAnimals.csv", row.names=FALSE)
+# write.csv(RNAseqAnimals, "../data/rnaseq/JA16444/RNAseqAnimals.csv", row.names=FALSE)
 
 JA16444samples <- full %>%
   filter(jobnumber == "JA16444") %>%
   distinct(RNAseqID, Tube, Mouse, Genotype, Conflict, APA, Group, Behavior, E.phy, Punch, Slice, Date, jobnumber)
 str(JA16444samples)
 tail(JA16444samples)
-# write.csv(JA16444samples, "JA16444samples.csv", row.names=FALSE)
+# write.csv(JA16444samples, "../data/rnaseq/JA16444/JA16444samples.csv", row.names=FALSE)
 
 ## for DissociationTest project
 DissociationTest <- full %>%
@@ -55,7 +55,7 @@ names(DissociationTest)[names(DissociationTest)=="notes"] <- "Method"
 DissociationTest$Method <- revalue(DissociationTest$Method, c("maddy FACS dissociate" = "dissociated")) 
 DissociationTest$Method <- revalue(DissociationTest$Method, c("maddy punch" = "homogenized")) 
 str(DissociationTest)
-#write.csv(DissociationTest, "/Users/raynamharris/Github/DissociationTest/data/sampleinfo.csv", row.names=FALSE)
+#write.csv(DissociationTest, "../data/rnaseq/JA16444/sampleinfo.csv", row.names=FALSE)
 
 ## for Bigger DissociationTest project
 ## includes some animals for which we have behavior data
@@ -74,7 +74,7 @@ DissociationTest2$Method <- ifelse(grepl("maddy FACS dissociate", DissociationTe
 DissociationTest2 <- DissociationTest2[c(1:3,12:14,16,21,29:32,38)] 
 DissociationTest2 <- DissociationTest2[c(10,13,6,5,1:4,7:9)]
 str(DissociationTest2)
-#write.csv(DissociationTest2, "/Users/raynamharris/Github/DissociationTest/data/sampleinfo2.csv", row.names=FALSE)
+#write.csv(DissociationTest2, "../data/rnaseq/JA16444/sampleinfo2.csv", row.names=FALSE)
 
 ## for WT with mutliple jobs
 WT2015samples <- full %>%
@@ -82,7 +82,7 @@ WT2015samples <- full %>%
   distinct(RNAseqID, Tube, Mouse, Genotype, Conflict, APA, Group, Behavior, E.phy, Punch, Slice, Date, jobnumber) %>% droplevels()
 str(WT2015samples)
 tail(WT2015samples)
-#write.csv(WT2015samples, "WT2015samples.csv", row.names=FALSE)
+#write.csv(WT2015samples, "../data/rnaseq/JA16444/WT2015samples.csv", row.names=FALSE)
 
 
 
@@ -100,7 +100,7 @@ homecage <- homecage %>%
   filter(grepl("yoked|homecage", Group)) %>% 
   filter(grepl("15-145|15-146|15-147|15-148", Mouse)) %>%   droplevels()
 
-#write.csv(homecage, "/Users/raynamharris/Github/DissociationTest/data/homecage.csv", row.names=FALSE)
+#write.csv(homecage, "../data/rnaseq/JA16444/homecage.csv", row.names=FALSE)
 
 
 ########
@@ -115,7 +115,7 @@ summer2016photos <- full %>%
 
 ## then, use the allen brain atlast to annotate the photos
 ## then read in photo results 
-summer2016photos <- read.csv("../data/rnaseq/summer2016photos.csv", header=T, stringsAsFactors = F)
+summer2016photos <- read.csv("../data/rnaseq/JA17009/summer2016photos.csv", header=T, stringsAsFactors = F)
 
 ## subset the full punch dataset and keep the relevant columns for the 2016 project
 summer2016forRNAseq <- full %>%
@@ -149,7 +149,7 @@ head(summer2016forRNAseq)
 summer2016forRNAseq$idealRNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
 summer2016forRNAseq$idealRNAseqID <- gsub("-", "_", summer2016forRNAseq$idealRNAseqID, fixed = TRUE)
 summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
-#write.csv(summer2016forRNAseq, "~/Github/BehavEphyRNAseq/data/rnaseq/summer2016forRNAseq.csv", row.names=FALSE)
+#write.csv(summer2016forRNAseq, "../data/rnaseq/JA17009/summer2016forRNAseq.csv", row.names=FALSE)
 
 
 ### Adding the job number to the JA17009 samples
@@ -174,6 +174,6 @@ tidysamples$Group <- ifelse(grepl("maddy punch", tidysamples$notes), "homogenize
 
 
 ## write out clearn data file will all samples
-#write.csv(tidysamples, "/Users/raynamharris/Github/DissociationTest/data/tidysamples.csv", row.names=FALSE)
+#write.csv(tidysamples, "../data/rnaseq/tidysamples.csv", row.names=FALSE)
 
 
