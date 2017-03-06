@@ -17,8 +17,9 @@ knitr::opts_chunk$set(fig.path = '../results/02c_DESeq2/') # set output file for
 
 
 ```{r DESeq}
-countData <- read.csv("../data/rnaseq/countbygene.csv", header=T)
+countData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F)
 colData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+rownames(colData) <- colData$RNAseqID
 
 ## differential gene expression
 dds <- DESeqDataSetFromMatrix(countData = countData,

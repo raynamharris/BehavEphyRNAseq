@@ -1,0 +1,37 @@
+---
+title: "02d_subsetforprojects.Rmd"
+author: "Rayna M Harris"
+date: "March 6, 2017"
+output: md_document
+---
+
+Not all of my samples need to be processed together. This script will make the appropriate subset files. First, read in the new data
+
+```{r readdata}
+countbygene.csv <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F)
+kallistosamples.csv <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+rownames(colData) <- colData$RNAseqID
+```
+
+## Subset for dissociation test
+
+```{r subset for dissociation test}
+dissociationsamples <- kallistosamples %>%
+  filter(Group %in% c("homecage", "control")) %>%
+  filter(Conflict != "NoConflict")
+savecols <- as.character(dissociationsamples$RNAseqID) #selects all good samples
+savecols <- as.vector(savecols) # make it a vector
+dissociationcountbygene <- countbygene %>% select(one_of(savecols)) # keep good samples
+
+#write.csv(dissociationcountbygene, "../data/rnaseq/dissociationcountbygene.csv", row.names=FALSE)
+#write.csv(tpmbygene, "../data/rnaseq/tpmbygene.csv", row.names=FALSE)
+#write.csv(tpm, "../data/rnaseq/tpm.csv", row.names=FALSE)
+#write.csv(count, "../data/rnaseq/count.csv", row.names=FALSE)
+#write.csv(geneids, "../data/rnaseq/geneids.csv", row.names=FALSE)
+#write.csv(kallistosamples, "../data/rnaseq/kallistosamples.csv", row.names=FALSE)
+```
+
+## Session Info
+```{r SessionInfo}
+sessionInfo()
+```
