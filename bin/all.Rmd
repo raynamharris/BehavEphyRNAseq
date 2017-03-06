@@ -144,6 +144,15 @@ savecols <- colnames(countData)
 colData <- colData %>%
   filter(RNAseqID %in% savecols) %>% droplevels()
 
+## remove outliers as per 1st pca
+
+## removeing outliers
+colData <- colData %>%
+  filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") # needs to be in same order a countData
+savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+savecols <- as.vector(savecols) # make it a vector
+countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+
 ## remove genes with total counts across all samples < 2
 countData[countData < 2] <- 0
 
@@ -166,11 +175,10 @@ dds <- DESeq(dds)
 # general deseq
 res <- results(dds, independentFiltering = F)
 resOrdered <- res[order(res$padj),]
-summary(res)
 head(resOrdered,10)
+
 sum(res$padj < 0.1, na.rm = TRUE) 
 res05 <- results(dds, alpha=0.05)
-summary(res05) 
 table(res05$padj < .05)
 sum(res05$padj < 0.05, na.rm=TRUE)
 
@@ -214,7 +222,7 @@ ylab(paste0("PC2: ",percentVar[2],"% variance")) +
 coord_fixed()
 ```
 
-#```{r heatmap}
+```{r heatmap}
 library("genefilter")
 library("pheatmap")
 topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
@@ -224,7 +232,7 @@ df <- as.data.frame(colData(rld)[,c("Group", "Punch")])
 pheatmap(mat)
 pheatmap(mat, show_colnames=F, show_rownames = T,
 annotation_col=df)
-#```
+```
 
 
 

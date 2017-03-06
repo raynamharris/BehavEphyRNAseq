@@ -365,6 +365,15 @@ in more details.
     colData <- colData %>%
       filter(RNAseqID %in% savecols) %>% droplevels()
 
+    ## remove outliers as per 1st pca
+
+    ## removeing outliers
+    colData <- colData %>%
+      filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") # needs to be in same order a countData
+    savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+    savecols <- as.vector(savecols) # make it a vector
+    countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
+
     ## remove genes with total counts across all samples < 2
     countData[countData < 2] <- 0
 
@@ -378,12 +387,12 @@ in more details.
     dds
 
     ## class: DESeqDataSet 
-    ## dim: 22485 72 
+    ## dim: 22485 70 
     ## metadata(1): version
     ## assays(1): counts
     ## rownames(22485): 0610007P14Rik 0610009B22Rik ... Zzef1 Zzz3
     ## rowData names(0):
-    ## colnames(72): 142C_CA1 142C_DG ... 16-125D 16-126B
+    ## colnames(70): 142C_CA1 142C_DG ... 16-125D 16-126B
     ## colData names(14): RNAseqID Mouse ... Slice Date
 
     ## 1.3.6 Pre-filtering
@@ -408,7 +417,7 @@ in more details.
 
     ## fitting model and testing
 
-    ## -- replacing outliers and refitting for 858 genes
+    ## -- replacing outliers and refitting for 673 genes
     ## -- DESeq argument 'minReplicatesForReplace' = 7 
     ## -- original counts are preserved in counts(dds)
 
@@ -419,72 +428,46 @@ in more details.
     # general deseq
     res <- results(dds, independentFiltering = F)
     resOrdered <- res[order(res$padj),]
-    summary(res)
-
-    ## 
-    ## out of 17958 with nonzero total read count
-    ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 3213, 18% 
-    ## LFC < 0 (down)   : 4095, 23% 
-    ## outliers [1]     : 276, 1.5% 
-    ## low counts [2]   : 0, 0% 
-    ## (mean count < 0)
-    ## [1] see 'cooksCutoff' argument of ?results
-    ## [2] see 'independentFiltering' argument of ?results
-
     head(resOrdered,10)
 
     ## log2 fold change (MAP): Punch CA3 vs DG 
     ## Wald test p-value: Punch CA3 vs DG 
     ## DataFrame with 10 rows and 6 columns
-    ##          baseMean log2FoldChange      lfcSE      stat        pvalue
-    ##         <numeric>      <numeric>  <numeric> <numeric>     <numeric>
-    ## Doc2b    389.1356      -6.478901 0.18814262 -34.43612 7.266237e-260
-    ## Pitpnm2  132.4383      -3.279066 0.10397585 -31.53681 2.719445e-218
-    ## C1ql3    248.7928      -6.992053 0.22526521 -31.03920 1.595686e-211
-    ## Gnao1    161.1137       1.415813 0.05151084  27.48573 2.600102e-166
-    ## Adcy1   2515.2328      -4.008200 0.15001460 -26.71873 2.851800e-157
-    ## Lynx1    261.8223       2.578374 0.09677866  26.64197 2.217611e-156
-    ## Fam163b  475.1924      -5.343691 0.20108893 -26.57377 1.364687e-155
-    ## Syn2     321.9665       1.560201 0.05909040  26.40363 1.244809e-153
-    ## Syngr1   138.9374       1.842224 0.07288544  25.27561 5.923733e-141
-    ## Prkcg    573.9046       2.246629 0.08929613  25.15931 1.117839e-139
-    ##                  padj
-    ##             <numeric>
-    ## Doc2b   1.287287e-255
-    ## Pitpnm2 2.408884e-214
-    ## C1ql3   9.423057e-208
-    ## Gnao1   1.151585e-162
-    ## Adcy1   1.010450e-153
-    ## Lynx1   6.547865e-153
-    ## Fam163b 3.453827e-152
-    ## Syn2    2.756629e-150
-    ## Syngr1  1.166054e-137
-    ## Prkcg   1.980364e-136
+    ##                baseMean log2FoldChange      lfcSE      stat        pvalue
+    ##               <numeric>      <numeric>  <numeric> <numeric>     <numeric>
+    ## Doc2b          424.5281      -6.461417 0.18384984 -35.14508 1.382026e-270
+    ## Pitpnm2        142.8426      -3.246536 0.10310149 -31.48874 1.238734e-217
+    ## C1ql3          269.4539      -6.939982 0.22807897 -30.42798 2.343508e-203
+    ## Fam163b        515.5785      -5.521926 0.18685234 -29.55235 6.126197e-192
+    ## Adcy1         2746.1178      -4.000904 0.14316989 -27.94515 7.550762e-172
+    ## Gnao1          170.5782       1.420943 0.05178648  27.43849 9.531129e-166
+    ## Lynx1          273.8072       2.571880 0.09814446  26.20504 2.327998e-151
+    ## Syn2           339.6125       1.570916 0.06038751  26.01392 3.446537e-149
+    ## 2010300C02Rik  515.5477      -2.449168 0.09702642 -25.24228 1.376722e-140
+    ## Syngr1         147.5799       1.850054 0.07334744  25.22316 2.231934e-140
+    ##                        padj
+    ##                   <numeric>
+    ## Doc2b         2.453096e-266
+    ## Pitpnm2       1.099377e-213
+    ## C1ql3         1.386575e-199
+    ## Fam163b       2.718500e-188
+    ## Adcy1         2.680521e-168
+    ## Gnao1         2.819626e-162
+    ## Lynx1         5.903137e-148
+    ## Syn2          7.647003e-146
+    ## 2010300C02Rik 2.715202e-137
+    ## Syngr1        3.961683e-137
 
     sum(res$padj < 0.1, na.rm = TRUE) 
 
-    ## [1] 7308
+    ## [1] 7380
 
     res05 <- results(dds, alpha=0.05)
-    summary(res05) 
-
-    ## 
-    ## out of 17958 with nonzero total read count
-    ## adjusted p-value < 0.05
-    ## LFC > 0 (up)     : 3004, 17% 
-    ## LFC < 0 (down)   : 3827, 21% 
-    ## outliers [1]     : 276, 1.5% 
-    ## low counts [2]   : 3689, 21% 
-    ## (mean count < 1)
-    ## [1] see 'cooksCutoff' argument of ?results
-    ## [2] see 'independentFiltering' argument of ?results
-
     table(res05$padj < .05)
 
     ## 
     ## FALSE  TRUE 
-    ##  7196  6831
+    ##  7542  6831
 
     sum(res05$padj < 0.05, na.rm=TRUE)
 
@@ -502,18 +485,18 @@ in more details.
     ## log2 fold change (MAP): Punch CA3 vs DG 
     ## Wald test p-value: Punch CA3 vs DG 
     ## DataFrame with 4 rows and 6 columns
-    ##                baseMean log2FoldChange     lfcSE       stat      pvalue
-    ##               <numeric>      <numeric> <numeric>  <numeric>   <numeric>
-    ## 0610007P14Rik 19.294373      0.3554797 0.1956735  1.8166984 0.069263309
-    ## 0610009B22Rik  7.132269      0.8739272 0.2683269  3.2569501 0.001126162
-    ## 0610009L18Rik  2.921439      0.5003623 0.5243815  0.9541953 0.339984797
-    ## 0610009O20Rik 44.797784     -0.2198744 0.1831514 -1.2005062 0.229942816
-    ##                      padj
-    ##                 <numeric>
-    ## 0610007P14Rik 0.126354933
-    ## 0610009B22Rik 0.003309787
-    ## 0610009L18Rik 0.463152266
-    ## 0610009O20Rik 0.339638786
+    ##                baseMean log2FoldChange     lfcSE       stat     pvalue
+    ##               <numeric>      <numeric> <numeric>  <numeric>  <numeric>
+    ## 0610007P14Rik 20.521964      0.3893900 0.1973029  1.9735644 0.04843130
+    ## 0610009B22Rik  7.408938      0.8217232 0.2661621  3.0873039 0.00201981
+    ## 0610009L18Rik  3.210245      0.5470837 0.5220123  1.0480284 0.29462551
+    ## 0610009O20Rik 48.192647     -0.1726400 0.1845391 -0.9355201 0.34952035
+    ##                     padj
+    ##                <numeric>
+    ## 0610007P14Rik 0.09240714
+    ## 0610009B22Rik 0.00562611
+    ## 0610009L18Rik 0.41105149
+    ## 0610009O20Rik 0.46972006
 
     hist(res$pvalue[res$baseMean > 1], breaks=0:20/20, col="grey50", border="white")
 
@@ -531,12 +514,12 @@ in more details.
     head(respadj)
 
     ##      res$padj
-    ## 1 0.155739152
-    ## 2 0.004084153
-    ## 3 0.565343595
-    ## 4 0.416445197
-    ## 5 0.109977342
-    ## 6 0.283418977
+    ## 1 0.114058048
+    ## 2 0.006947989
+    ## 3 0.502991522
+    ## 4 0.573010643
+    ## 5 0.071053627
+    ## 6 0.272157185
 
     ## 1.5 more info
     mcols(res)$description
@@ -555,61 +538,57 @@ in more details.
     head(assay(rld), 3)
 
     ##                142C_CA1   142C_DG 143A-CA3-1 143A-DG-1 143B-CA1-1
-    ## 0610007P14Rik 4.2677519 4.1863350   4.246738  4.097138   4.597665
-    ## 0610009B22Rik 3.0045188 2.5678001   2.532332  2.473324   2.892293
-    ## 0610009L18Rik 0.7135633 0.7258563   1.197163  1.350874   2.032248
+    ## 0610007P14Rik 4.3680546 4.2826258   4.346341  4.182953   4.691853
+    ## 0610009B22Rik 3.0860879 2.6581924   2.626913  2.559275   2.974106
+    ## 0610009L18Rik 0.8540732 0.8678653   1.320091  1.462775   2.138681
     ##               143B-DG-1 143C_CA1   143C_DG 143C-CA1-1 143D-CA1-3 143D-DG-3
-    ## 0610007P14Rik  4.168940 3.437211 3.2857395   3.823459   4.280930  4.813606
-    ## 0610009B22Rik  2.283801 2.415943 2.4041845   2.673166   1.563376  1.578111
-    ## 0610009L18Rik  1.768150 1.070580 0.7317905   1.100745   0.833524  1.392884
+    ## 0610007P14Rik  4.250679 3.555186 3.4016862   3.932075  4.3654771  4.882537
+    ## 0610009B22Rik  2.379160 2.516878 2.4995243   2.762587  1.7416850  1.754528
+    ## 0610009L18Rik  1.867181 1.196393 0.8744423   1.228406  0.9852113  1.502572
     ##               144A-CA1-2 144A-CA3-2 144A-DG-2 144B-CA1-1 144B-CA3-1
-    ## 0610007P14Rik   4.315784   5.024361 4.3040022  4.3802738   4.541039
-    ## 0610009B22Rik   2.781585   3.323114 1.9484477  2.3612882   2.597699
-    ## 0610009L18Rik   1.624981   2.569098 0.7387162  0.7513143   1.751894
+    ## 0610007P14Rik   4.410221   5.082189 4.3944978   4.472906   4.626085
+    ## 0610009B22Rik   2.864806   3.361472 2.0691668   2.460478   2.684168
+    ## 0610009L18Rik   1.736350   2.636336 0.8821811   0.896601   1.853542
     ##               144C-CA1-2 144C-CA3-2 144C-DG-2 144D-CA3-2 144D-DG-2
-    ## 0610007P14Rik  3.9505098   4.198110  4.143447   4.022004  4.482764
-    ## 0610009B22Rik  2.2556415   3.355823  2.543533   2.359550  2.288544
-    ## 0610009L18Rik  0.9921251   1.676502  1.565258   1.807928  1.570758
+    ## 0610007P14Rik   4.052805   4.289459  4.236971   4.122592   4.56565
+    ## 0610009B22Rik   2.360378   3.415270  2.632502   2.459929   2.38467
+    ## 0610009L18Rik   1.121483   1.780394  1.675024   1.915691   1.67917
     ##               145A-CA1-2 145A-CA3-2 145A-DG-2 145B-CA1-1 145B-DG-1
-    ## 0610007P14Rik   4.361676   3.768841 4.3495000   4.322968 3.6685090
-    ## 0610009B22Rik   2.575870   3.269867 2.7493582   2.637826 2.5176543
-    ## 0610009L18Rik   1.868978   1.062914 0.8012805   1.301150 0.8019297
+    ## 0610007P14Rik   4.455898   3.892505 4.4372021   4.418591 3.7749650
+    ## 0610009B22Rik   2.666410   3.316500 2.8283868   2.726571 2.6072460
+    ## 0610009L18Rik   1.978510   1.207248 0.9511375   1.420774 0.9518726
     ##               146A-CA1-2 146A-CA3-2 146A-DG-2 146B-CA1-2 146B-CA3-2
-    ## 0610007P14Rik   3.837906   4.667209  4.027906  3.5106277   3.714284
-    ## 0610009B22Rik   2.739585   2.080128  2.323969  2.4018882   3.364989
-    ## 0610009L18Rik   1.895555   1.759342  1.919371  0.8372935   1.119121
-    ##               146B-DG-2 146C-CA1-4 146C-CA3-4 146C-DG-4 146D-CA1-3
-    ## 0610007P14Rik  3.375583   4.420197   3.941227 4.8579052  4.5119131
-    ## 0610009B22Rik  2.326103   2.448272   3.695130 2.9049812  2.8073485
-    ## 0610009L18Rik  1.361462   2.155573   1.123693 0.9407276  0.9977117
-    ##               146D-CA3-3 146D-DG-3 147-CA1-4 147-CA3-4 147-DG-4 147C-CA1-3
-    ## 0610007P14Rik   4.442570  5.140646  3.217367 6.1678903 3.292688   4.098955
-    ## 0610009B22Rik   2.631906  2.386915  2.196470 3.7000257 4.230663   2.308821
-    ## 0610009L18Rik   1.501784  1.407197  1.263970 0.8986993 1.309172   1.013464
-    ##               147C-CA3-3 147C-DG-3 147D-CA3-1 147D-DG-1 148-CA1-2
-    ## 0610007P14Rik   4.511103  4.015787   3.910596  4.281375  4.253270
-    ## 0610009B22Rik   2.393126  2.764598   2.705518  2.688821  2.057086
-    ## 0610009L18Rik   1.450377  1.042930   1.423413  2.046641  2.150567
-    ##               148-CA3-2  148-DG-2 148A-CA1-3 148A-CA3-3 148A-DG-3
-    ## 0610007P14Rik 4.2261134 3.9673519   4.240433   4.111058  4.321223
-    ## 0610009B22Rik 3.3295193 2.5447483   2.856001   2.732990  2.175491
-    ## 0610009L18Rik 0.7566737 0.7623257   1.615507   1.572545  1.595821
-    ##               148B-CA1-4 148B-CA3-4 148B-DG-4  16-116B  16-116D   16-117D
-    ## 0610007P14Rik   3.822119   4.636994 4.0324351 3.923428 4.569736 4.3194252
-    ## 0610009B22Rik   1.983420   2.990018 1.6532431 2.746618 2.309903 2.8673326
-    ## 0610009L18Rik   1.081673   1.671509 0.8718916 1.499306 1.349279 0.8036222
-    ##                16-118B  16-118D  16-119B   16-119D  16-120B   16-120D
-    ## 0610007P14Rik 3.231132 3.961983 3.917615 3.6949404 3.432437 3.8641769
-    ## 0610009B22Rik 2.177749 2.840042 2.544861 2.4267154 2.360040 1.8160630
-    ## 0610009L18Rik 1.031291 1.867782 1.048538 0.7489247 1.150785 0.7620841
-    ##                16-122B  16-122D   16-123B  16-123D  16-124D  16-125B
-    ## 0610007P14Rik 4.002160 4.070174 3.4883578 3.866692 3.758364 3.730555
-    ## 0610009B22Rik 3.246434 2.753782 1.6739283 2.524970 2.723266 1.948988
-    ## 0610009L18Rik 1.589150 1.367223 0.8810047 1.403181 1.190391 1.049445
-    ##                 16-125D  16-126B
-    ## 0610007P14Rik 3.6909519 3.860763
-    ## 0610009B22Rik 2.2786624 2.601611
-    ## 0610009L18Rik 0.7669431 2.118743
+    ## 0610007P14Rik   3.942070   4.752191  4.113503  3.6324161   3.826297
+    ## 0610009B22Rik   2.822436   2.193812  2.419435  2.5023977   3.435793
+    ## 0610009L18Rik   1.999683   1.865608  2.011775  0.9906043   1.246398
+    ##               146B-DG-2 146C-CA1-4 146C-DG-4 146D-CA1-3 146D-CA3-3
+    ## 0610007P14Rik  3.557297   4.507949  4.920990   4.587475   4.548852
+    ## 0610009B22Rik  2.434866   2.542511  2.964953   2.874700   2.729415
+    ## 0610009L18Rik  1.471230   2.252988  1.095343   1.145029   1.621972
+    ##               146D-DG-3 147-CA1-4 147-CA3-4 147-DG-4 147C-CA1-3 147C-CA3-3
+    ## 0610007P14Rik  5.150217  3.413903  6.243430 3.479221   4.205892   4.601074
+    ## 0610009B22Rik  2.489284  2.324378  3.758172 4.189579   2.415709   2.489058
+    ## 0610009L18Rik  1.513809  1.384779  1.056396 1.423005   1.144264   1.564706
+    ##               147C-DG-3 147D-CA3-1 147D-DG-1 148-CA1-2 148-CA3-2 148-DG-2
+    ## 0610007P14Rik  4.098393   4.010549  4.368071  4.354110 4.3209259 4.046583
+    ## 0610009B22Rik  2.836312   2.790413  2.769768  2.178835 3.3968501 2.621506
+    ## 0610009L18Rik  1.164452   1.538325  2.150671  2.257739 0.9025552 0.906939
+    ##               148A-CA1-3 148A-CA3-3 148A-DG-3 148B-CA1-4 148B-CA3-4
+    ## 0610007P14Rik   4.339643   4.205626  4.402845   3.937793   4.728573
+    ## 0610009B22Rik   2.940382   2.815066  2.275970   2.142053   3.068767
+    ## 0610009L18Rik   1.729952   1.682721  1.701599   1.222737   1.783318
+    ##               148B-DG-4  16-116B   16-117D  16-118B  16-118D  16-119B
+    ## 0610007P14Rik  4.116998 4.039606 4.4238274 3.367074 4.067697 4.022068
+    ## 0610009B22Rik  1.826017 2.840447 2.9534251 2.295320 2.924108 2.638022
+    ## 0610009L18Rik  1.024501 1.619194 0.9554746 1.163665 1.977182 1.177011
+    ##                 16-119D  16-120B   16-120D  16-122B  16-122D  16-123B
+    ## 0610007P14Rik 3.8189751 3.552881 3.9750119 4.108134 4.175833 3.622129
+    ## 0610009B22Rik 2.5341646 2.463212 1.9556637 3.322039 2.843051 1.853382
+    ## 0610009L18Rik 0.8953857 1.276296 0.9093414 1.704076 1.487043 1.037571
+    ##                16-123D  16-124D  16-125B   16-125D  16-126B
+    ## 0610007P14Rik 3.978058 3.875998 3.862728 3.8087405 3.969233
+    ## 0610009B22Rik 2.622746 2.816832 2.114145 2.3887631 2.694578
+    ## 0610009L18Rik 1.522678 1.316978 1.197082 0.9149803 2.228167
 
 pca plot
 --------
@@ -617,79 +596,77 @@ pca plot
     pcaData <- plotPCA(rld, intgroup = c( "Group", "Punch"), returnData=TRUE)
     pcaData
 
-    ##                    PC1           PC2            group      Group Punch
-    ## 142C_CA1   -17.6217815  -8.778768944 consistent : CA1 consistent   CA1
-    ## 142C_DG     36.7572071  -2.106459059  consistent : DG consistent    DG
-    ## 143A-CA3-1  -4.2428789  -0.595082613   conflict : CA3   conflict   CA3
-    ## 143A-DG-1   36.4855509  -2.614206001    conflict : DG   conflict    DG
-    ## 143B-CA1-1 -15.4635085  -7.387143733    control : CA1    control   CA1
-    ## 143B-DG-1   33.8991255  -1.152194586     control : DG    control    DG
-    ## 143C_CA1   -17.4766988  -9.774124786 consistent : CA1 consistent   CA1
-    ## 143C_DG     31.1351747  -1.183908770  consistent : DG consistent    DG
-    ## 143C-CA1-1 -17.1673933  -9.113686485 consistent : CA1 consistent   CA1
-    ## 143D-CA1-3 -17.4245996  -6.064502867    control : CA1    control   CA1
-    ## 143D-DG-3   34.1204441  -0.048242947     control : DG    control    DG
-    ## 144A-CA1-2  -7.1425486  -5.368832267   conflict : CA1   conflict   CA1
-    ## 144A-CA3-2  -1.9840174   3.751744059   conflict : CA3   conflict   CA3
-    ## 144A-DG-2   37.0901881  -1.742644446    conflict : DG   conflict    DG
-    ## 144B-CA1-1 -18.1426634  -6.802403037    control : CA1    control   CA1
-    ## 144B-CA3-1   1.8082446   1.466670519    control : CA3    control   CA3
-    ## 144C-CA1-2  -8.8119235  -6.174864238 consistent : CA1 consistent   CA1
-    ## 144C-CA3-2  -2.2729942   0.441746449 consistent : CA3 consistent   CA3
-    ## 144C-DG-2   38.2025940  -1.995787053  consistent : DG consistent    DG
-    ## 144D-CA3-2  -2.1217724  -0.183534562    control : CA3    control   CA3
-    ## 144D-DG-2   37.1857930  -3.072705100     control : DG    control    DG
-    ## 145A-CA1-2 -16.7764103  -8.952248185   conflict : CA1   conflict   CA1
-    ## 145A-CA3-2   1.9751354   3.496102810   conflict : CA3   conflict   CA3
-    ## 145A-DG-2   34.5523840  -1.661233548    conflict : DG   conflict    DG
-    ## 145B-CA1-1 -16.0955292  -6.882171508    control : CA1    control   CA1
-    ## 145B-DG-1   35.9221363   0.006470756     control : DG    control    DG
-    ## 146A-CA1-2 -15.4035815  -7.637142256   conflict : CA1   conflict   CA1
-    ## 146A-CA3-2   0.1484925   1.681960387   conflict : CA3   conflict   CA3
-    ## 146A-DG-2   34.7691092  -1.439048199    conflict : DG   conflict    DG
-    ## 146B-CA1-2 -13.3613563  -5.295131113    control : CA1    control   CA1
-    ## 146B-CA3-2  -4.0099302   0.928017454    control : CA3    control   CA3
-    ## 146B-DG-2   13.9568512   4.632470634     control : DG    control    DG
-    ## 146C-CA1-4 -15.3245921  -3.457425290 consistent : CA1 consistent   CA1
-    ## 146C-CA3-4  -2.9811742  83.347088004 consistent : CA3 consistent   CA3
-    ## 146C-DG-4   33.0593342   0.563385690  consistent : DG consistent    DG
-    ## 146D-CA1-3 -11.3995090  -0.501401973    control : CA1    control   CA1
-    ## 146D-CA3-3  -1.0281664   1.557537566    control : CA3    control   CA3
-    ## 146D-DG-3   14.3993347   5.766273516     control : DG    control    DG
-    ## 147-CA1-4  -11.2615152   2.068628743   homecage : CA1   homecage   CA1
-    ## 147-CA3-4   -7.0457427   3.538462580   homecage : CA3   homecage   CA3
-    ## 147-DG-4    16.2203328   5.820075649    homecage : DG   homecage    DG
-    ## 147C-CA1-3 -15.0959865  -8.005842598 consistent : CA1 consistent   CA1
-    ## 147C-CA3-3  -0.6353310   1.331362524 consistent : CA3 consistent   CA3
-    ## 147C-DG-3   37.9838581  -2.347806624  consistent : DG consistent    DG
-    ## 147D-CA3-1  -3.2182667   0.322962501    control : CA3    control   CA3
-    ## 147D-DG-1   38.7695080  -1.884763487     control : DG    control    DG
-    ## 148-CA1-2  -18.3957892  -6.332675357   homecage : CA1   homecage   CA1
-    ## 148-CA3-2   -2.5466454   0.368838366   homecage : CA3   homecage   CA3
-    ## 148-DG-2    35.1144881   0.612154297    homecage : DG   homecage    DG
-    ## 148A-CA1-3 -11.4230932  -7.343152415   conflict : CA1   conflict   CA1
-    ## 148A-CA3-3  -3.7926034  -0.292736065   conflict : CA3   conflict   CA3
-    ## 148A-DG-3   35.1750697  -1.301996302    conflict : DG   conflict    DG
-    ## 148B-CA1-4 -14.2366518   3.750228794    control : CA1    control   CA1
-    ## 148B-CA3-4  -2.8141316  -0.184686262    control : CA3    control   CA3
-    ## 148B-DG-4   16.3324050   1.580922657     control : DG    control    DG
-    ## 16-116B    -18.9453556  -6.185036361    control : CA1    control   CA1
-    ## 16-116D    -25.2068349 108.013164644    control : CA1    control   CA1
-    ## 16-117D    -17.4188173  -4.183739050    control : CA1    control   CA1
-    ## 16-118B    -19.5408802  -8.827323819    control : CA1    control   CA1
-    ## 16-118D    -18.1700561  -8.144639400    control : CA1    control   CA1
-    ## 16-119B    -19.9230415  -8.857167110    control : CA1    control   CA1
-    ## 16-119D    -19.5394293  -8.117712123    control : CA1    control   CA1
-    ## 16-120B    -19.2926068  -8.129499180    control : CA1    control   CA1
-    ## 16-120D    -18.9786403  -7.154410723    control : CA1    control   CA1
-    ## 16-122B    -17.6784812  -7.979936464    control : CA1    control   CA1
-    ## 16-122D    -18.2406541  -8.506924677    control : CA1    control   CA1
-    ## 16-123B    -15.3116106   0.036736389    control : CA1    control   CA1
-    ## 16-123D    -17.7563578  -7.828255918    control : CA1    control   CA1
-    ## 16-124D    -20.0920276  -5.840201214    control : CA1    control   CA1
-    ## 16-125B    -16.2569691   7.251512972    control : CA1    control   CA1
-    ## 16-125D    -18.0891205  -6.769995182    control : CA1    control   CA1
-    ## 16-126B    -17.9030922  -8.131124068    control : CA1    control   CA1
+    ##                    PC1         PC2            group      Group Punch
+    ## 142C_CA1   -18.1776505 -10.1448583 consistent : CA1 consistent   CA1
+    ## 142C_DG     36.7297015 -12.2805464  consistent : DG consistent    DG
+    ## 143A-CA3-1  -5.2632827  28.0090716   conflict : CA3   conflict   CA3
+    ## 143A-DG-1   35.8035478  -5.1016899    conflict : DG   conflict    DG
+    ## 143B-CA1-1 -15.9410958  -5.6972950    control : CA1    control   CA1
+    ## 143B-DG-1   33.2877891  -3.5882750     control : DG    control    DG
+    ## 143C_CA1   -18.2072175  -8.9838171 consistent : CA1 consistent   CA1
+    ## 143C_DG     30.7238949  -5.8661008  consistent : DG consistent    DG
+    ## 143C-CA1-1 -17.7546625  -7.8454704 consistent : CA1 consistent   CA1
+    ## 143D-CA1-3 -17.5104984  -6.4342764    control : CA1    control   CA1
+    ## 143D-DG-3   33.3825923  -4.6844950     control : DG    control    DG
+    ## 144A-CA1-2  -8.1194198  -2.4828915   conflict : CA1   conflict   CA1
+    ## 144A-CA3-2  -2.3595655  22.8777089   conflict : CA3   conflict   CA3
+    ## 144A-DG-2   36.5248853  -7.0960092    conflict : DG   conflict    DG
+    ## 144B-CA1-1 -18.2761076  -6.3157305    control : CA1    control   CA1
+    ## 144B-CA3-1   0.8986960  21.4125803    control : CA3    control   CA3
+    ## 144C-CA1-2  -9.7386584  -4.9277295 consistent : CA1 consistent   CA1
+    ## 144C-CA3-2  -3.0641252  24.9137086 consistent : CA3 consistent   CA3
+    ## 144C-DG-2   37.7305148  -9.0374434  consistent : DG consistent    DG
+    ## 144D-CA3-2  -3.2016217  27.4655339    control : CA3    control   CA3
+    ## 144D-DG-2   36.5440596  -5.8864329     control : DG    control    DG
+    ## 145A-CA1-2 -17.5560879  -6.5203039   conflict : CA1   conflict   CA1
+    ## 145A-CA3-2   1.5523936  16.9147913   conflict : CA3   conflict   CA3
+    ## 145A-DG-2   33.9892529  -6.6485719    conflict : DG   conflict    DG
+    ## 145B-CA1-1 -16.6240234  -6.7044877    control : CA1    control   CA1
+    ## 145B-DG-1   35.2872066  -5.5060733     control : DG    control    DG
+    ## 146A-CA1-2 -15.9696209  -5.2771787   conflict : CA1   conflict   CA1
+    ## 146A-CA3-2  -0.7973897  26.3273612   conflict : CA3   conflict   CA3
+    ## 146A-DG-2   34.1090503  -5.3662004    conflict : DG   conflict    DG
+    ## 146B-CA1-2 -13.5094192  -7.7007626    control : CA1    control   CA1
+    ## 146B-CA3-2  -4.9205437  27.3306135    control : CA3    control   CA3
+    ## 146B-DG-2   13.5435385   0.4424828     control : DG    control    DG
+    ## 146C-CA1-4 -14.9711850 -10.5347635 consistent : CA1 consistent   CA1
+    ## 146C-DG-4   32.4148903  -7.0475927  consistent : DG consistent    DG
+    ## 146D-CA1-3 -10.8861375  -3.5644580    control : CA1    control   CA1
+    ## 146D-CA3-3  -1.8751030  25.6276605    control : CA3    control   CA3
+    ## 146D-DG-3   13.8089719   0.4562047     control : DG    control    DG
+    ## 147-CA1-4  -10.4689132  -1.4523333   homecage : CA1   homecage   CA1
+    ## 147-CA3-4   -6.5553322  24.9319548   homecage : CA3   homecage   CA3
+    ## 147-DG-4    16.2975479  -3.9602299    homecage : DG   homecage    DG
+    ## 147C-CA1-3 -15.6654370  -6.8682676 consistent : CA1 consistent   CA1
+    ## 147C-CA3-3  -1.6184147  25.1003720 consistent : CA3 consistent   CA3
+    ## 147C-DG-3   37.3935192  -7.8392099  consistent : DG consistent    DG
+    ## 147D-CA3-1  -4.0207852  27.9384629    control : CA3    control   CA3
+    ## 147D-DG-1   38.4042777  -6.3170623     control : DG    control    DG
+    ## 148-CA1-2  -18.5394758  -5.6708153   homecage : CA1   homecage   CA1
+    ## 148-CA3-2   -3.4031526  27.4336545   homecage : CA3   homecage   CA3
+    ## 148-DG-2    34.7000477  -5.2022487    homecage : DG   homecage    DG
+    ## 148A-CA1-3 -12.3878866  -5.5789635   conflict : CA1   conflict   CA1
+    ## 148A-CA3-3  -4.6445161  30.0027710   conflict : CA3   conflict   CA3
+    ## 148A-DG-3   34.7123170  -5.5383757    conflict : DG   conflict    DG
+    ## 148B-CA1-4 -12.7704292  -5.6310592    control : CA1    control   CA1
+    ## 148B-CA3-4  -3.8831512  27.8170254    control : CA3    control   CA3
+    ## 148B-DG-4   15.7101547   2.0575072     control : DG    control    DG
+    ## 16-116B    -18.8528196 -10.2607642    control : CA1    control   CA1
+    ## 16-117D    -17.2192068  -9.8113269    control : CA1    control   CA1
+    ## 16-118B    -19.7685777 -11.6028685    control : CA1    control   CA1
+    ## 16-118D    -18.4128031 -10.2299540    control : CA1    control   CA1
+    ## 16-119B    -20.0812813  -9.5604784    control : CA1    control   CA1
+    ## 16-119D    -19.6127600 -12.3075686    control : CA1    control   CA1
+    ## 16-120B    -19.3127159 -11.4460760    control : CA1    control   CA1
+    ## 16-120D    -19.0414178 -10.7177023    control : CA1    control   CA1
+    ## 16-122B    -18.0093812  -9.0805493    control : CA1    control   CA1
+    ## 16-122D    -18.6489741  -7.8161318    control : CA1    control   CA1
+    ## 16-123B    -15.0679437  -6.6109567    control : CA1    control   CA1
+    ## 16-123D    -17.9806317 -11.4720652    control : CA1    control   CA1
+    ## 16-124D    -19.9305950  -9.8813084    control : CA1    control   CA1
+    ## 16-125B    -16.3946167 -12.8247642    control : CA1    control   CA1
+    ## 16-125D    -18.1729696 -10.4746381    control : CA1    control   CA1
+    ## 16-126B    -18.3612462  -7.6602928    control : CA1    control   CA1
     ##                  name
     ## 142C_CA1     142C_CA1
     ## 142C_DG       142C_DG
@@ -724,7 +701,6 @@ pca plot
     ## 146B-CA3-2 146B-CA3-2
     ## 146B-DG-2   146B-DG-2
     ## 146C-CA1-4 146C-CA1-4
-    ## 146C-CA3-4 146C-CA3-4
     ## 146C-DG-4   146C-DG-4
     ## 146D-CA1-3 146D-CA1-3
     ## 146D-CA3-3 146D-CA3-3
@@ -747,7 +723,6 @@ pca plot
     ## 148B-CA3-4 148B-CA3-4
     ## 148B-DG-4   148B-DG-4
     ## 16-116B       16-116B
-    ## 16-116D       16-116D
     ## 16-117D       16-117D
     ## 16-118B       16-118B
     ## 16-118D       16-118D
@@ -773,8 +748,20 @@ pca plot
 
 ![](../results/all/pca-1.png)
 
-`{r heatmap} library("genefilter") library("pheatmap") topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25) mat <- assay(rld)[ topVarGenes, ] mat <- mat - rowMeans(mat) df <- as.data.frame(colData(rld)[,c("Group", "Punch")]) pheatmap(mat) pheatmap(mat, show_colnames=F, show_rownames = T, annotation_col=df) #`
-====================================================================================================================================================================================================================================================================================================================================
+    library("genefilter")
+    library("pheatmap")
+    topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
+    mat <- assay(rld)[ topVarGenes, ]
+    mat <- mat - rowMeans(mat)
+    df <- as.data.frame(colData(rld)[,c("Group", "Punch")])
+    pheatmap(mat)
+
+![](../results/all/heatmap-1.png)
+
+    pheatmap(mat, show_colnames=F, show_rownames = T,
+    annotation_col=df)
+
+![](../results/all/heatmap-2.png)
 
 Session Info
 ------------
@@ -793,14 +780,15 @@ Session Info
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] DESeq2_1.14.0              SummarizedExperiment_1.4.0
-    ##  [3] Biobase_2.34.0             GenomicRanges_1.26.1      
-    ##  [5] GenomeInfoDb_1.10.1        IRanges_2.8.0             
-    ##  [7] S4Vectors_0.12.0           BiocGenerics_0.20.0       
-    ##  [9] cowplot_0.7.0              gplots_3.0.1              
-    ## [11] magrittr_1.5               ggplot2_2.1.0             
-    ## [13] reshape2_1.4.2             plyr_1.8.4                
-    ## [15] dplyr_0.5.0                tidyr_0.6.0               
+    ##  [1] pheatmap_1.0.8             genefilter_1.56.0         
+    ##  [3] DESeq2_1.14.0              SummarizedExperiment_1.4.0
+    ##  [5] Biobase_2.34.0             GenomicRanges_1.26.1      
+    ##  [7] GenomeInfoDb_1.10.1        IRanges_2.8.0             
+    ##  [9] S4Vectors_0.12.0           BiocGenerics_0.20.0       
+    ## [11] cowplot_0.7.0              gplots_3.0.1              
+    ## [13] magrittr_1.5               ggplot2_2.1.0             
+    ## [15] reshape2_1.4.2             plyr_1.8.4                
+    ## [17] dplyr_0.5.0                tidyr_0.6.0               
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] locfit_1.5-9.1       Rcpp_0.12.7          lattice_0.20-34     
@@ -818,7 +806,7 @@ Session Info
     ## [37] bitops_1.0-6         grid_3.3.1           xtable_1.8-2        
     ## [40] gtable_0.2.0         DBI_0.5-1            scales_0.4.0        
     ## [43] KernSmooth_2.23-15   stringi_1.1.2        XVector_0.14.0      
-    ## [46] genefilter_1.56.0    latticeExtra_0.6-28  Formula_1.2-1       
-    ## [49] RColorBrewer_1.1-2   tools_3.3.1          survival_2.40-1     
-    ## [52] yaml_2.1.14          AnnotationDbi_1.36.0 colorspace_1.2-7    
-    ## [55] cluster_2.0.5        caTools_1.17.1       knitr_1.15.1
+    ## [46] latticeExtra_0.6-28  Formula_1.2-1        RColorBrewer_1.1-2  
+    ## [49] tools_3.3.1          survival_2.40-1      yaml_2.1.14         
+    ## [52] AnnotationDbi_1.36.0 colorspace_1.2-7     cluster_2.0.5       
+    ## [55] caTools_1.17.1       knitr_1.15.1
