@@ -8,27 +8,21 @@ output: md_document
 Not all of my samples need to be processed together. This script will make the appropriate subset files. First, read in the new data
 
 ```{r readdata}
-countbygene.csv <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F)
-kallistosamples.csv <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
-rownames(colData) <- colData$RNAseqID
+countData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = T)
+colData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+rownames(kallistosamples.csv) <- kallistosamples.csv$RNAseqID
 ```
 
-## Subset for dissociation test
+## Subset for the dissociation experiment
+Here, I'm selection only homecage or control samples. The output will be sent the the folder for just the dissociation experiment 
 
-```{r subset for dissociation test}
-dissociationsamples <- kallistosamples %>%
+```{r dissociation}
+colData <- colData %>%
   filter(Group %in% c("homecage", "control")) %>%
   filter(Conflict != "NoConflict")
-savecols <- as.character(dissociationsamples$RNAseqID) #selects all good samples
+savecols <- as.character(colData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
-dissociationcountbygene <- countbygene %>% select(one_of(savecols)) # keep good samples
-
-#write.csv(dissociationcountbygene, "../data/rnaseq/dissociationcountbygene.csv", row.names=FALSE)
-#write.csv(tpmbygene, "../data/rnaseq/tpmbygene.csv", row.names=FALSE)
-#write.csv(tpm, "../data/rnaseq/tpm.csv", row.names=FALSE)
-#write.csv(count, "../data/rnaseq/count.csv", row.names=FALSE)
-#write.csv(geneids, "../data/rnaseq/geneids.csv", row.names=FALSE)
-#write.csv(kallistosamples, "../data/rnaseq/kallistosamples.csv", row.names=FALSE)
+countdata <- countdata %>% select(one_of(savecols)) # keep good samples
 ```
 
 ## Session Info

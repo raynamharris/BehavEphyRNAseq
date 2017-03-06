@@ -168,10 +168,8 @@ Write files
 
 Now, let's save the output files for future use
 
-    write.csv(countbygene, "../data/rnaseq/countbygene.csv", row.names=FALSE)
-    write.csv(tpmbygene, "../data/rnaseq/tpmbygene.csv", row.names=FALSE)
-    write.csv(tpm, "../data/rnaseq/tpm.csv", row.names=FALSE)
-    write.csv(count, "../data/rnaseq/count.csv", row.names=FALSE)
+    write.csv(countbygene, "../data/rnaseq/countbygene.csv", row.names=T)
+    write.csv(tpmbygene, "../data/rnaseq/tpmbygene.csv", row.names=T)
     write.csv(geneids, "../data/rnaseq/geneids.csv", row.names=FALSE)
     write.csv(kallistosamples, "../data/rnaseq/kallistosamples.csv", row.names=FALSE)
 
