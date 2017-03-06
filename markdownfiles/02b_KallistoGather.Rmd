@@ -6,7 +6,6 @@ output: md_document
 ---
   
 ```{r install packages load data, warning=FALSE, message=FALSE}
-#install.packages("tidyr", dependencies=TRUE)
 library("dplyr") ## for filtering and selecting rows
 library("plyr")  ## for renmaing factors
 library("reshape2") ##  for melting dataframe
@@ -63,9 +62,6 @@ if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
     stringsAsFactors = FALSE
 )
 }
-
-head(tpm)
-head(count)
 ```
 
 ## Tranform transcipts-level measurements to gene-level measurements
@@ -112,31 +108,34 @@ countbygene <- round(countbygene) #round all value to nearest 1s place
 At this point, we need to remove a few more samples that either didn't have an abundance tsv file or were deemed outliers.
 
 ```{r removingsamples}
-# removing outliers RNAseq samples
-countbygene <- countbygene %>%
-  filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") 
-tpmbygene <- tpmtbygene %>%
-  filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") 
-tpm <- tpm %>%
-  filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") 
-count <- count %>%
-  filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") 
+## remove samples that never produced quality reads
+savesamples <- colnames(countbygene)
+kallistosamples <- tidysamples %>%
+  filter(RNAseqID %in% savesamples) %>% droplevels()
 
-# remove samples that don't have rnaseq data 
-savesamples <- colnames(countbygene) # list of all samples with kallisto data
-kallistosamples <- tidysamples %>% filter(RNAseqID %in% savesamples) %>% droplevels() # removes samples without kallisto data
+## remove outlier samples
+kallistosamples <- kallistosamples %>%
+  filter(RNAseqID != "146C-CA3-4", RNAseqID != "16-116D") # two outliters
+savecols <- as.character(kallistosamples$RNAseqID) #selects all good samples
+savecols <- as.vector(savecols) # make it a vector
+
+countbygene <- countbygene %>% select(one_of(savecols)) # keep good samples
+count <- count %>% select(one_of(savecols)) # keep good samples
+tpm <- tpm %>% select(one_of(savecols)) # keep good samples
+tpmbygene <- tpmbygene %>% select(one_of(savecols)) # keep good samples
+
 summary(kallistosamples)
 ```
 
 ## Write files 
 Now, let's save the output files for future use
 ```{r writefiles}
-write.csv(countbygene, "../data/rnaseq/countbygene.csv", row.names=FALSE)
-write.csv(tpmbygene, "../data/rnaseq/tpmbygene.csv", row.names=FALSE)
-write.csv(tpm, "../data/rnaseq/tpm.csv", row.names=FALSE)
-write.csv(count, "../data/rnaseq/count.csv", row.names=FALSE)
-write.csv(geneids, "../data/rnaseq/geneids.csv", row.names=FALSE)
-write.csv(kallistosamples, "../data/rnaseq/kallistosamples.csv", row.names=FALSE)
+#write.csv(countbygene, "../data/rnaseq/countbygene.csv", row.names=FALSE)
+#write.csv(tpmbygene, "../data/rnaseq/tpmbygene.csv", row.names=FALSE)
+#write.csv(tpm, "../data/rnaseq/tpm.csv", row.names=FALSE)
+#write.csv(count, "../data/rnaseq/count.csv", row.names=FALSE)
+#write.csv(geneids, "../data/rnaseq/geneids.csv", row.names=FALSE)
+#write.csv(kallistosamples, "../data/rnaseq/kallistosamples.csv", row.names=FALSE)
 ```
 
 ## Session Info

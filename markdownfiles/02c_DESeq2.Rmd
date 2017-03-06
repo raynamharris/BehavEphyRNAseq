@@ -5,11 +5,25 @@ date: "March 6, 2017"
 output: md_document
 ---
 
+This will do a quick and dirty DESeq2 analysis for all samples!
+
+```{r install packages load data, warning=FALSE, message=FALSE}
+library("ggplot2") ## pretty plots
+library("DESeq2")
+library("genefilter") # for selecting top varying genes
+library("pheatmap") # for the pretty heatmap
+knitr::opts_chunk$set(fig.path = '../results/02c_DESeq2/') # set output file for figures 
+```
+
+
 ```{r DESeq}
+countData <- read.csv("../data/rnaseq/countbygene.csv", header=T)
+colData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+
 ## differential gene expression
 dds <- DESeqDataSetFromMatrix(countData = countData,
-colData = colData,
-design = ~ Group + Punch)
+  colData = colData,
+  design = ~ Group + Punch)
 dds
 
 ## 1.3.6 Pre-filtering
@@ -73,8 +87,6 @@ coord_fixed()
 ```
 
 ```{r heatmap}
-library("genefilter")
-library("pheatmap")
 topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
 mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
