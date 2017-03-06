@@ -1,7 +1,9 @@
 # BehavEphyRNAseq
 This is where I store all the raw and processed data and scripts for a 5 year collaboration between the Fenton and Hofmann Labs. Then, little bits and pieces are broken off for the the four sub projects
 
-The name comes from the longer "**Behav**ior **E**lectro**phy**siology **RNA** **seq**uencing", which are the three levels of analysis we incorporate to understand how experience alters brain and behavior. 
+The goal of this integrative research project is to understand how experience shapes the brain. In particular, we are looking at learned avoidance behavior using the Active Place Avoidance Task. 
+
+The repo name comes from the longer "**Behav**ior **E**lectro**phy**siology **RNA** **seq**uencing", which are the three levels of analysis we incorporate to understand how experience alters brain and behavior. 
 
 ## Repo Contents
 - [**data**]((./data/)): contains all the raw and processed data files. They are broken up into sub folders. 
@@ -16,8 +18,14 @@ All the data analyses for this project were conducted in R. Here is a brief over
 **Behavior**
 
 **RNAseq**
-- 02a_tidysamples.R
-- 02b_kallistoDESeq2allsamples.Rmd
+- 02a_tidysamples.R: This is a data wrangling script. I make some new columns to describe the samples and delete some obsolete columns. I also filter all samples that were never processed for RNAseq. 
+	- The two input files are `./data/punches.csv` and `./data/animals.csv`
+	- The output file is `./data/tidysamples.csv` 
+- 02b_KallistoGather.Rmd: This script gathers all the raw data for every sample (contained in subdirectories in `./data/04_kallistoquant` and joins it into two dataframes called `count` and `tpm` which stands for transcripts per million. Then, I do some data manipulation to obtain gene-level measurements. Then, because some samples won't be carried forward, I do one more step to remove unsed samples. 
+	- The input file is `./data/tidysamples.csv `
+	- The are six output files.
+- 02c_DESeq2.Rmd: This script does a very slow analysis of all of the samples looking to see if brain region differences hold up over all three sequencing runs. 
+	- The two input files are `./data/kallistosamples.csv` and `./data/countbygene/csv`.
 
 **Ephys**
 
