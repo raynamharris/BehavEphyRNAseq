@@ -24,7 +24,7 @@ knitr::opts_chunk$set(fig.path = '../results/02b_kallistoDESeq2allsamples/')
 ```
 
 ## RNAseq samples
-In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from 59 mice. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage. This data has been cleaned using a different script `02a_punches.R`.
+In the summers of 2015 and 2016, I processed a bunch of hippocampal tissue samples from 59 mice. Most mice were trained in an active place avoidance task or used as yoked controls; however, a few animals were taken straight from the home cage. This data has been cleaned using a different script `02a_tidysamples.R`.
 
 THis output provides a summary of the samples and the various factors that descibe them. 
 

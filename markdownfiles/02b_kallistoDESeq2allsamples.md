@@ -13,7 +13,7 @@ In the summers of 2015 and 2016, I processed a bunch of hippocampal
 tissue samples from 59 mice. Most mice were trained in an active place
 avoidance task or used as yoked controls; however, a few animals were
 taken straight from the home cage. This data has been cleaned using a
-different script `02a_punches.R`.
+different script `02a_tidysamples.R`.
 
 THis output provides a summary of the samples and the various factors
 that descibe them.
@@ -481,7 +481,7 @@ in more details.
 
     plotMA(res, main="plotMA")
 
-![](../results/all/DESeq-1.png)
+![](../results/02b_kallistoDESeq2allsamples/DESeq-1.png)
 
     resMLE <- results(dds)
     head(resMLE, 4)
@@ -504,15 +504,15 @@ in more details.
 
     hist(res$pvalue[res$baseMean > 1], breaks=0:20/20, col="grey50", border="white")
 
-![](../results/all/DESeq-2.png)
+![](../results/02b_kallistoDESeq2allsamples/DESeq-2.png)
 
     plotCounts(dds, gene=which.min(res$padj), intgroup="Group")
 
-![](../results/all/DESeq-3.png)
+![](../results/02b_kallistoDESeq2allsamples/DESeq-3.png)
 
     plotCounts(dds, gene=which.min(res$padj), intgroup="Punch")
 
-![](../results/all/DESeq-4.png)
+![](../results/02b_kallistoDESeq2allsamples/DESeq-4.png)
 
     respadj <- as.data.frame(res$padj)
     head(respadj)
@@ -750,7 +750,7 @@ pca plot
     ylab(paste0("PC2: ",percentVar[2],"% variance")) +
     coord_fixed()
 
-![](../results/all/pca-1.png)
+![](../results/02b_kallistoDESeq2allsamples/pca-1.png)
 
     library("genefilter")
     library("pheatmap")
@@ -761,7 +761,7 @@ pca plot
     pheatmap(mat, show_colnames=F, show_rownames = T,
     annotation_col=df)
 
-![](../results/all/heatmap-1.png)
+![](../results/02b_kallistoDESeq2allsamples/heatmap-1.png)
 
 Session Info
 ------------
