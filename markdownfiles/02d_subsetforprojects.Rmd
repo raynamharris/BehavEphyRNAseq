@@ -7,22 +7,26 @@ output: md_document
 
 Not all of my samples need to be processed together. This script will make the appropriate subset files. First, read in the new data
 
-```{r readdata}
-countData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = T)
-colData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
-rownames(kallistosamples.csv) <- kallistosamples.csv$RNAseqID
+```{r install packages load data, warning=FALSE, message=FALSE}
+library("dplyr") ## for filtering and selecting rows
 ```
 
-## Subset for the dissociation experiment
-Here, I'm selection only homecage or control samples. The output will be sent the the folder for just the dissociation experiment 
 
 ```{r dissociation}
-colData <- colData %>%
+DissociationCountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
+DissociationColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+
+DissociationColData <- DissociationColData %>%
   filter(Group %in% c("homecage", "control")) %>%
-  filter(Conflict != "NoConflict")
-savecols <- as.character(colData$RNAseqID) #selects all good samples
+  filter(Genotype != "FMR1") %>%
+  filter(!grepl("C|D|16-", Mouse))
+savecols <- as.character(DissociationColData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
-countdata <- countdata %>% select(one_of(savecols)) # keep good samples
+DissociationCountData <- DissociationCountData %>% select(one_of(savecols)) # keep good samples
+
+# save files to dissociation project directory
+#write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
+#write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
 ```
 
 ## Session Info
