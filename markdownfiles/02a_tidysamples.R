@@ -4,7 +4,7 @@ library("dplyr")
 library("plyr")
 library("reshape2")
 
-setwd("~/Github/BehavEphyRNAseq/bin")
+setwd("~/Github/BehavEphyRNAseq/markdownfiles")
 
 #read raw data -----
 punches <- read.csv("../data/rnaseq/punches.csv", header=TRUE)
