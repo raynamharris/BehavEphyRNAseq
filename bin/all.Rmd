@@ -131,7 +131,7 @@ countbygene <- round(countbygene)
 ## DESeq Analysis
 Now, I'll look for differential gene expression between of the various factors. This analysis was developed by reading the DESEq manual. In many place, I try to provide the chapter where these steps are described in more details.
 
-```{r DESeq}
+```{r DESeq1}
 # 1.3.3 Count matrix input ----
 countData <- countbygene 
 colData <- tidysamples %>%
@@ -156,6 +156,12 @@ countData <- countData %>% select(one_of(savecols)) # select just the columns th
 ## remove genes with total counts across all samples < 2
 countData[countData < 2] <- 0
 
+## write files for easy import
+write.csv(countData, "../data/rnaseq/countData.csv", row.names=FALSE)
+write.csv(colData, "../data/rnaseq/colData.csv", row.names=FALSE)
+```
+
+#```{r DESeq1}
 ## differential gene expression
 dds <- DESeqDataSetFromMatrix(countData = countData,
 colData = colData,
@@ -211,7 +217,7 @@ head(assay(rld), 3)
 
 ## pca plot
 
-```{r pca}
+#```{r pca}
 pcaData <- plotPCA(rld, intgroup = c( "Group", "Punch"), returnData=TRUE)
 pcaData
 percentVar <- round(100 * attr(pcaData, "percentVar"))
@@ -220,9 +226,9 @@ ggplot(pcaData, aes(PC1, PC2, color=Group, shape = Punch)) + geom_point(size=3) 
 xlab(paste0("PC1: ",percentVar[1],"% variance")) +
 ylab(paste0("PC2: ",percentVar[2],"% variance")) +
 coord_fixed()
-```
+#```
 
-```{r heatmap}
+#```{r heatmap}
 library("genefilter")
 library("pheatmap")
 topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
@@ -232,7 +238,7 @@ df <- as.data.frame(colData(rld)[,c("Group", "Punch")])
 pheatmap(mat)
 pheatmap(mat, show_colnames=F, show_rownames = T,
 annotation_col=df)
-```
+#```
 
 
 
