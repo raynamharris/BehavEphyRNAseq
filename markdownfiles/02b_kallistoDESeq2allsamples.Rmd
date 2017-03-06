@@ -1,5 +1,5 @@
 ---
-title: "02b_kallistogatherallsamples"
+title: "02b_kallistoDESeq2allsamples"
 author: "Rayna M Harris"
 date: "2/24/2017"
 output: md_document
@@ -20,7 +20,7 @@ library("gplots") ##for making awesome plots
 library("cowplot") ## for some easy to use themes
 library("DESeq2") ## for differnetial gene expression profiling
 # set output file for figures 
-knitr::opts_chunk$set(fig.path = '../results/all/')
+knitr::opts_chunk$set(fig.path = '../results/02b_kallistoDESeq2allsamples/')
 ```
 
 ## RNAseq samples
