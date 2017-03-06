@@ -1,5 +1,5 @@
 ---
-title: "all"
+title: "02b_kallistogatherallsamples"
 author: "Rayna M Harris"
 date: "2/24/2017"
 output: md_document
