@@ -26,6 +26,7 @@ All the data analyses for this project were conducted in R. Here is a brief over
 	- The are six output files.
 - 02c_DESeq2.Rmd: This script does a very slow analysis of all of the samples looking to see if brain region differences hold up over all three sequencing runs. 
 	- The two input files are `./data/kallistosamples.csv` and `./data/countbygene/csv`.
+- 02d_subsetforprojects.Rmd: This file creates the subfiles for special projects and stores them in directories outside this one.
 
 **Ephys**
 
