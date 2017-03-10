@@ -15,8 +15,21 @@ make the appropriate subset files. First, read in the new data
     DissociationCountData <- DissociationCountData %>% select(one_of(savecols)) # keep good samples
 
     # save files to dissociation project directory
-    write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
-    write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
+    #write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
+    #write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
+
+    fmr1CountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
+    fmr1ColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+
+    fmr1ColData <- fmr1ColData %>%
+      filter(jobnumber == "JA17009")
+    savecols <- as.character(fmr1ColData$RNAseqID) #selects all good samples
+    savecols <- as.vector(savecols) # make it a vector
+    fmr1CountData <- fmr1CountData %>% select(one_of(savecols)) # keep good samples
+
+    # save files to dissociation project directory
+    write.csv(fmr1ColData, "../data/rnaseq/fmr1ColData.csv", row.names=F)
+    write.csv(fmr1CountData, "../data/rnaseq/fmr1CountData.csv", row.names=T)
 
 Session Info
 ------------
@@ -37,8 +50,8 @@ Session Info
     ## [1] dplyr_0.5.0
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_0.12.7     digest_0.6.11   rprojroot_1.2   assertthat_0.1 
-    ##  [5] R6_2.2.0        DBI_0.5-1       backports_1.0.5 magrittr_1.5   
+    ##  [1] Rcpp_0.12.9     digest_0.6.12   rprojroot_1.2   assertthat_0.1 
+    ##  [5] R6_2.2.0        DBI_0.6         backports_1.0.5 magrittr_1.5   
     ##  [9] evaluate_0.10   stringi_1.1.2   lazyeval_0.2.0  rmarkdown_1.3  
-    ## [13] tools_3.3.1     stringr_1.1.0   yaml_2.1.14     htmltools_0.3.5
+    ## [13] tools_3.3.1     stringr_1.2.0   yaml_2.1.14     htmltools_0.3.5
     ## [17] knitr_1.15.1    tibble_1.2

@@ -12,6 +12,8 @@ This data was added the the epically large sample collection database contained 
 
 ```{r install packages load data, warning=FALSE, message=FALSE}
 #install.packages("tidyr", dependencies=TRUE)
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("DESeq2")
 library("tidyr") 
 library("dplyr") ## for filtering and selecting rows
 library("plyr")  ## for renmaing factors
@@ -22,278 +24,29 @@ library("gplots") ##for making awesome plots
 library("cowplot") ## for some easy to use themes
 library("DESeq2") ## for differnetial gene expression profiling
 
-#read raw data -----
-punches <- read.csv("../data/rnaseq/punches.csv", header=TRUE)
-animals <- read.csv("../data/rnaseq/animals.csv", header=TRUE)
-
-#combine mine and maddy's notes -----
-full <- join(animals, punches, by = "Mouse", type = "full", match = "all")
-```
-
-## Subsetting the data
-This analysis will focus only on the anaimals process in 2016. I collected many, many samples, but I only processed a subset. I conducted a photo anlaysis first to decide which samples came from a very specific location in the hippocampus. 
-
-
-```{r subset fmr1 data, warning=FALSE}
-############# Summer 2016 Samples for RNAseq
-## first, make a spreadsheet for recording photo analysis 
-summer2016photos <- full %>%
-  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
-  distinct(Mouse, Slice) %>% droplevels()
-# This output was saved as a file and used for doing the photo analysis
-
-## then, use the allen brain atlast to annotate the photos
-## then read in photo results 
-summer2016photos <- read.csv("../data/rnaseq/summer2016photos.csv", header=T, stringsAsFactors = F)
-
-## subset the full punch dataset and keep the relevant columns for the 2016 project
-summer2016forRNAseq <- full %>%
-  filter(Year == "Summer2016", Purpose == "Collaboratorium") %>%
-  distinct(Tube, Mouse, Genotype, Group, Punch, Slice, Date, storagebox) %>% droplevels()
-
-## merge the photo and the punch data
-summer2016forRNAseq <- join(summer2016forRNAseq, summer2016photos, by=c("Mouse","Slice"), type = "full", match = "all")
-summer2016forRNAseq$Slice <- as.integer(summer2016forRNAseq$Slice) # first make both integers
-#str(summer2016forRNAseq)
-rm(summer2016photos) #don't need this anymore
-
-# reset the Groups to be Yoked, Same, and Conflict
-summer2016forRNAseq <- rename(summer2016forRNAseq, c("Group"="APA"))
-summer2016forRNAseq$APA <- ifelse(grepl("NoConflict Trained", summer2016forRNAseq$APA), "Same", 
-                                  ifelse(grepl("Yoked", summer2016forRNAseq$APA), "Yoked", "Conflict"))
-#summer2016forRNAseq$APA
-
-
-## create a T/F column to say if the the same is from the optimal slice or not. 
-summer2016forRNAseq$isbest <- ifelse(summer2016forRNAseq$Slice == summer2016forRNAseq$sliceforRNAseq, T,F) 
-
-## filter data to only the BEST slices and CA1, CA3, and DG Samples
-summer2016forRNAseq <- summer2016forRNAseq %>%
-  filter(isbest == "TRUE") %>% filter(Punch %in% c("CA1")) %>% 
-  filter(APA == "Yoked") %>% 
-  arrange(Date) %>% droplevels()
-
-## create an RNAseqID (can't have dashes, must be less than 10 characters)
-#head(summer2016forRNAseq)
-summer2016forRNAseq$idealRNAseqID <- as.factor(paste(summer2016forRNAseq$Mouse,summer2016forRNAseq$Slice,sep="_"))
-summer2016forRNAseq$idealRNAseqID <- gsub("-", "_", summer2016forRNAseq$idealRNAseqID, fixed = TRUE)
-summer2016forRNAseq$RNAseqID <- summer2016forRNAseq$Mouse
-
-### calculate sample sizes
-summer2016forRNAseqtotals <- select(summer2016forRNAseq, Genotype, APA, Punch)
-summer2016forRNAseqtotals <- count(summer2016forRNAseqtotals, c('Genotype','APA', "Punch"))
-summer2016forRNAseqtotals <- dcast(summer2016forRNAseqtotals, Genotype + APA ~ Punch, value.var = "freq")
-rm(summer2016forRNAseqtotals)
-```
-
-## Data Cleaning
-Well, the words I used when collecting might not be exactly what I want plotted on figures and such, so I need to do a little data cleaning. I also need to get the data in order so that row names are informative and contain information
-
-```{r data cleaning}
-## start after 02c_tpmbygene
-Traits <- summer2016forRNAseq
-rownames(Traits) <- Traits$RNAseqID    # set $genoAPAsessionInd as rownames
-#names(Traits)
-
-#keeping informative volumns
-Traits <- Traits[c(2,3,4,5,9,14)] 
-str(Traits)
-```
-
-
-## RNAseq basic statistics
-These 17 samples were processed according to the workflow descibed in: https://github.com/raynamharris/SingleNeuronSeq_bin
-
-Here, I provide a brief overview of the number of reads that survived after trimming and filters, the number of reads that were pseduoaligned, and the average read length. This particiular anlysis is sample agnostic. 
-
-You can see that all reads are between 223- 238 bp long. A samples had 2.8 -4.7 million reads, but only 0.25-3.2 million reads mapped to the mouse transciptome. Mapping efficiency has 57-77 percent for most samples, but one only had 6% mapping efficiency. THis sample will likely need to be removed. 
-
-```{r basic read info}
-readsprocessed <- read.table("../data/rnaseq/JA17009readsprocessed.txt", sep="\t", header=TRUE, stringsAs = FALSE)
-readsprocessed$percentaligned <- readsprocessed$pseudoaligned / readsprocessed$trimmedreads *100
-summary(readsprocessed)
-```
-
-## Kallisto Gather
-
-The kallisto output gives you read counts for sample in an abundance file for every single sample. This portion of the code goes through and finds each samples' abundance.tsv file, extracts the data, and combines it all into a dataframe. The "counts" file is unnormalized, but the "tpm" is the data after being normalized by transcripts per million. I also use some string splitting to take the very long transcript identifying and create a "geneids" file that has all the database identifiers for each transcript. 
-
-(P.S. Unfortunately, I have no idea how to do this next part without changing directories.)
-
-```{r kallisto gather}
-setwd("../TACC-copy/JA17009/04_kallistoquant/")
-## this will create lists of all the samples
-kallistoDirs = dir(".")
-kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
-        kallistoDirs, ignore.case=TRUE)]
-
-kallistoFiles = paste0(kallistoDirs, "/abundance.tsv")
-names(kallistoFiles) = kallistoDirs
-if(file.exists(kallistoFiles))
-  kallistoData = lapply(
-    kallistoFiles,
-    read.table,
-    sep = "\t",
-    row.names = 1,
-    header = TRUE
-)
-
-## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
-ids = Reduce(f=union, x=lapply(kallistoData, rownames))
-if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
-    count = data.frame(
-        id = ids,
-        sapply(kallistoData, function(x) {x$est_counts}),
-        check.names = FALSE,
-        stringsAsFactors = FALSE
-    )
-    tpm = data.frame(
-        id = ids,
-        sapply(kallistoData, function(x) {x$tpm}),
-        check.names = FALSE,
-        stringsAsFactors = FALSE
-    )
-}
-
-## make a dataframe with the parts of the gene id as columns
-geneids <- count[c(1)] 
-geneids$ENSMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 1)
-geneids$ENSMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 2)
-geneids$OTTMUSG <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 3)
-geneids$OTTMUST <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 4)
-geneids$transcript <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 5)
-geneids$gene <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 6)
-geneids$length <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 7)
-geneids$structure1 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 8)
-geneids$structure2 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 9)
-geneids$structure3 <- sapply(strsplit(as.character(geneids$id),'\\|'), "[", 10)
-geneids$transcript_lenght <- as.factor(paste(geneids$transcript, geneids$length, sep="_"))
-
-## prep data for wgcna
-countswgcna <- count
-row.names(countswgcna) <- geneids$transcript_lenght
-countswgcna[1] <- NULL
-countswgcna <- round(countswgcna)
-summary(countswgcna)
-
-## prep data for wgcna
-tpmswgcna <- tpm
-row.names(tpmswgcna) <- geneids$transcript_lenght
-tpmswgcna[1] <- NULL
-tpmswgcna <- round(tpmswgcna)
-summary(tpmswgcna)
-```
-
-## Merge transcipts counts to gene counts
-
-Kallisto is cool because it does give you transcript level stuff, but right now I think I have more power if I just look at gene level stuff. I'll go back and look at transcripts if I want to.
-
-```{r tpmbygene}
-# merge tpm and gene id dataframe
-tpmbygene <-  full_join(geneids, tpm)
-str(tpmbygene)
-head(tpmbygene)
-
-countbygene <- full_join(geneids, count)
-str(countbygene)
-
-
-## remove unnecesary columns (aka, keep gene name and counts for samples)
-tpmbygene <- tpmbygene[-c(1:6,8:12)]  
-countbygene <- countbygene[-c(1:6,8:12)]  
-
-## lenghten 
-tpmbygene <- melt(tpmbygene, id=c("gene"))
-head(tpmbygene)
-
-countbygene <- melt(countbygene, id=c("gene"))
-head(countbygene)
-
-#then widen by sum
-tpmbygene <- dcast(tpmbygene, gene ~ variable, value.var= "value", fun.aggregate=mean)
-countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggregate=mean)
-
-## make gene the row name then round all value to nearest 1s place
-row.names(tpmbygene) <- tpmbygene$gene
-tpmbygene[1] <- NULL
-tpmbygene <- round(tpmbygene)
-summary(tpmbygene)
-head(tpmbygene)
-
-row.names(countbygene) <- countbygene$gene
-countbygene[1] <- NULL
-countbygene <- round(countbygene)
-summary(countbygene)
+# set output file for figures 
+knitr::opts_chunk$set(fig.path = '../results/fmr1/')
 
 ```
 
-
-## fmr1
-```{r fmr1}
-fmr1 <-  full_join(geneids, tpm)
-fmr1 <- fmr1[-c(1:5,7:12)] 
-head(fmr1)
-fmr1 <- melt(fmr1, id=c("transcript"))
-fmr1 <- fmr1 %>%
-  dplyr::filter(grepl("Prkcz", transcript)) %>%
-  dplyr::filter(!grepl("Fmr1nb", transcript))
-fmr1 <- rename(fmr1, c("variable"="RNAseqID"))
-fmr1 <- join(fmr1, Traits, by = "RNAseqID", type = "full", match = "all")
-
-#ggplot(fmr1, aes(RNAseqID, value, colour = Genotype)) +
-#  geom_point() + 
-#  facet_wrap(~ transcript, scales = "free", ncol=3)
-
-ggplot(fmr1, aes(Genotype, value, colour = Genotype)) +
-  geom_boxplot() + 
-  facet_wrap(~ transcript, scales = "free", ncol=3)
+Read the data
 
 
 
-
-
-
-## plotting some favorite genes
-favoritegenes <-  full_join(geneids, tpm)
-favoritegenes <- favoritegenes[-c(1:6,8:12)]  
-favoritegenes <- melt(favoritegenes, id=c("gene"))
-head(favoritegenes)
-favoritegenes <- favoritegenes %>%
-  dplyr::filter(grepl("Fmr1|Prkcz", gene)) %>%
-  dplyr::filter(!grepl("Fmr1nb", gene))
-favoritegenes <- rename(favoritegenes, c("variable"="RNAseqID"))
-favoritegenes <- join(favoritegenes, Traits, by = "RNAseqID", type = "full", match = "all")
-
-ggplot(favoritegenes, aes(RNAseqID, value, colour = Genotype)) + 
-  geom_point() + 
-  facet_wrap(~ gene, scales = "free", ncol=3)
-
-ggplot(favoritegenes, aes(Genotype, value, colour = Genotype)) + 
-  geom_boxplot() + 
-  facet_wrap(~ gene, scales = "free", ncol=3)
-
+```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+# this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd
+colData <- read.csv('../data/rnaseq/fmr1ColData.csv')
+rownames(colData) <- colData$RNAseqID
+countData <-  read.csv('../data/rnaseq/fmr1CountData.csv', check.names = F, row.names = 1)
 ```
+
+
 
 ## DESeq Analysis
 
 Now, I'll look for differential gene expression between the FMR1-KO and WT mice. This analysis was developed by reading the DESEq manual. In many place, I try to provide the chapter where these steps are described in more details.
 
 ```{r DESeq}
-# 1.3.3 Count matrix input ----
-countData <- countbygene 
-colData <- Traits %>%
-  arrange(RNAseqID) # needs to be in same order a countData
-head(countData)
-head(colData)
-
-## removing outliers. if the colDatat dataframe has fewer samples than the colData, then this will remove that sample from the analysis
-
-colData <- colData %>%
-  dplyr::filter(!grepl("16-125B|16-116D|16-123B", RNAseqID)) 
-
-savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
-savecols <- as.vector(savecols) # make it a vector
-countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
 
 ## remove genes with total counts across all samples < 2
 countData[countData < 2] <- 0
