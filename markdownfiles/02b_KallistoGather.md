@@ -138,7 +138,7 @@ have an abundance tsv file or were deemed outliers.
 
     summary(kallistosamples)
 
-    ##       RNAseqID      Mouse      year    Genotype    jobnumber  Punch   
+    ##       RNAseqID      Mouse      year    Genotype    jobnumber  Region  
     ##  100-CA1-1: 1   15-100 :14   2015:68   FMR1: 8   JA16268: 4   CA1:41  
     ##  100-CA1-2: 1   15-143C: 3   2016:16   WT  :76   JA16444:64   CA3:19  
     ##  100-CA1-3: 1   15-144A: 3                       JA17009:16   DG :24  
@@ -146,10 +146,10 @@ have an abundance tsv file or were deemed outliers.
     ##  100-CA3-4: 1   15-145A: 3                                            
     ##  100-DG-2 : 1   15-146A: 3                                            
     ##  (Other)  :78   (Other):55                                            
-    ##         Group          Conflict       APA             method  
-    ##  conflict  :14   Conflict  :34   Trained:27   dissociated: 7  
-    ##  consistent:13   NoConflict:30   Yoked  :37   homogenized:77  
-    ##  control   :37   NA's      :20   NA's   :20                   
+    ##         Group          Conflict       APA             Method  
+    ##  conflict  :14   Conflict  :34   Trained:27   control    : 7  
+    ##  consistent:13   NoConflict:30   Yoked  :37   dissociated: 7  
+    ##  control   :37   NA's      :20   NA's   :20   homogenized:70  
     ##  homecage  :20                                                
     ##                                                               
     ##                                                               
@@ -192,8 +192,8 @@ Session Info
     ## [1] reshape2_1.4.2 plyr_1.8.4     dplyr_0.5.0   
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_0.12.7     digest_0.6.11   rprojroot_1.2   assertthat_0.1 
-    ##  [5] R6_2.2.0        DBI_0.5-1       backports_1.0.5 magrittr_1.5   
+    ##  [1] Rcpp_0.12.9     digest_0.6.12   rprojroot_1.2   assertthat_0.1 
+    ##  [5] R6_2.2.0        DBI_0.6         backports_1.0.5 magrittr_1.5   
     ##  [9] evaluate_0.10   stringi_1.1.2   lazyeval_0.2.0  rmarkdown_1.3  
-    ## [13] tools_3.3.1     stringr_1.1.0   yaml_2.1.14     htmltools_0.3.5
+    ## [13] tools_3.3.1     stringr_1.2.0   yaml_2.1.14     htmltools_0.3.5
     ## [17] knitr_1.15.1    tibble_1.2

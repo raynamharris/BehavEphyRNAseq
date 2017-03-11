@@ -46,63 +46,36 @@ countData <-  read.csv('../data/rnaseq/fmr1CountData.csv', check.names = F, row.
 
 Now, I'll look for differential gene expression between the FMR1-KO and WT mice. This analysis was developed by reading the DESEq manual. In many place, I try to provide the chapter where these steps are described in more details.
 
-```{r DESeq}
-
-## remove genes with total counts across all samples < 2
-countData[countData < 2] <- 0
-
-## differential gene expression
+```{r DESeq, echo=F}
 dds <- DESeqDataSetFromMatrix(countData = countData,
                               colData = colData,
                               design = ~ Genotype)
-dds
+dds <- dds[ rowSums(counts(dds)) > 1, ] ## Pre-filtering
+dds$Genotype <- factor(dds$Genotype, levels=c("WT","FMR1")) #factor level
+dds <- DESeq(dds) ## 1.4  Differential expression analysi
 
+res <- results(dds, independentFiltering = F) #results
+resOrdered <- res[order(res$padj),] # orderd by smallest pval
 
-## 1.3.6 Pre-filtering
-dds <- dds[ rowSums(counts(dds)) > 1, ]
-
-## 1.3.7 Note on factor levels
-dds$Genotype <- factor(dds$Genotype, levels=c("WT","FMR1"))
-
-## 1.4  Differential expression analysi
-dds <- DESeq(dds)
-
-# general deseq
-res <- results(dds, independentFiltering = F)
-resOrdered <- res[order(res$padj),]
-summary(res)
+summary(resOrdered)
 head(resOrdered,10)
-sum(res$padj < 0.1, na.rm = TRUE) 
-res05 <- results(dds, alpha=0.05)
-summary(res05) 
-table(res05$padj < .05)
-sum(res05$padj < 0.05, na.rm=TRUE)
+
+rld <- rlog(dds, blind=FALSE)
+vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
+vsd.fast <- vst(dds, blind=FALSE)
+head(assay(rld), 3)
+```
 
 
-## 1.5 exploring and reporting results
 
-plotMA(res, main="plotMA")
-
-plotMA(res, ylim=c(-2,2))
-
-resMLE <- results(dds)
-head(resMLE, 4)
+```{r plots, echo=F}
+plotMA(res, ylim=c(-1.5,1))
 
 hist(res$pvalue[res$baseMean > 1], breaks=0:20/20, col="grey50", border="white")
 
 plotCounts(dds, gene=which.min(res$padj), intgroup="Genotype")
 
-respadj <- as.data.frame(res$padj)
-head(respadj)
-
-## 1.5 more info
-mcols(res)$description
-
 ## for variance stablized gene expression and log transformed data
-rld <- rlog(dds, blind=FALSE)
-vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
-vsd.fast <- vst(dds, blind=FALSE)
-head(assay(rld), 3)
 
 ```
 
@@ -129,112 +102,6 @@ mat <- mat - rowMeans(mat)
 df <- as.data.frame(colData(rld)[,c("Genotype")])
 pheatmap(mat)
 ```
-
-
-## DESeq2 with transcripts, not genes!!!
-
-```{r DESeqTranscriptsNotGenes}
-# 1.3.3 Count matrix input ----
-countData <- count 
-countData <- countData %>% 
-  mutate_each(funs(round(.,0)), -id) 
-str(countData)
-colData <- Traits %>%
-  arrange(RNAseqID) # needs to be in same order a countData
-head(countData)
-head(colData)
-
-
-
-## removing outliers. if the colDatat dataframe has fewer samples than the colData, then this will remove that sample from the analysis
-
-colData <- colData %>%
-  dplyr::filter(!grepl("16-125B|16-116D|16-123B", RNAseqID)) 
-
-savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
-savecols <- as.vector(savecols) # make it a vector
-countData <- countData %>% select(one_of(savecols)) # select just the columns that match the samples in colData
-
-## remove genes with total counts across all samples < 2
-countData[countData < 2] <- 0
-
-## differential gene expression
-dds <- DESeqDataSetFromMatrix(countData = countData,
-                              colData = colData,
-                              design = ~ Genotype)
-dds
-
-
-## 1.3.6 Pre-filtering
-dds <- dds[ rowSums(counts(dds)) > 1, ]
-
-## 1.3.7 Note on factor levels
-dds$Genotype <- factor(dds$Genotype, levels=c("WT","FMR1"))
-
-## 1.4  Differential expression analysi
-dds <- DESeq(dds)
-
-# general deseq
-res <- results(dds, independentFiltering = F)
-resOrdered <- res[order(res$padj),]
-summary(res)
-head(resOrdered,10)
-sum(res$padj < 0.1, na.rm = TRUE) 
-res05 <- results(dds, alpha=0.05)
-summary(res05) 
-table(res05$padj < .05)
-sum(res05$padj < 0.05, na.rm=TRUE)
-
-
-## 1.5 exploring and reporting results
-
-plotMA(res, main="plotMA")
-
-plotMA(res, ylim=c(-2,2))
-
-resMLE <- results(dds)
-head(resMLE, 4)
-
-hist(res$pvalue[res$baseMean > 1], breaks=0:20/20, col="grey50", border="white")
-
-plotCounts(dds, gene=which.min(res$padj), intgroup="Genotype")
-
-respadj <- as.data.frame(res$padj)
-head(respadj)
-
-## 1.5 more info
-mcols(res)$description
-
-## for variance stablized gene expression and log transformed data
-rld <- rlog(dds, blind=FALSE)
-vsd <- varianceStabilizingTransformation(dds, blind=FALSE)
-vsd.fast <- vst(dds, blind=FALSE)
-head(assay(rld), 3)
-
-pcaData <- plotPCA(rld, intgroup = c( "Genotype"), returnData=TRUE)
-pcaData
-percentVar <- round(100 * attr(pcaData, "percentVar"))
-
-ggplot(pcaData, aes(PC1, PC2, color=Genotype)) + geom_point(size=3) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  coord_fixed()
-
-library("genefilter")
-library("pheatmap")
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
-mat <- assay(rld)[ topVarGenes, ]
-mat <- mat - rowMeans(mat)
-df <- as.data.frame(colData(rld)[,c("Genotype")])
-pheatmap(mat)
-```
-
-
-
-
-
-
-
 
 
 ## Session Info

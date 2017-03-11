@@ -183,7 +183,7 @@ tidysamples <- tidysamples[c(22,1,23,3,21,13,8,4:7,9:12,14:20,24)]
 tidysamples$Group <- as.character(tidysamples$Group)
 tidysamples$notes <- as.character(tidysamples$notes)
 tidysamples$Group <- as.character(tidysamples$Group)
-tidysamples$method <- ifelse(grepl("maddy punch", tidysamples$notes), "homogenized", 
+tidysamples$method <- ifelse(grepl("maddy punch", tidysamples$notes), "control", 
                     ifelse(grepl("maddy FACS", tidysamples$notes), "dissociated", "homogenized"))
 
 tidysamples$Group <- ifelse(grepl("maddy punch", tidysamples$notes), "homecage", 
@@ -228,6 +228,11 @@ tidysamples$Mouse <- ifelse(grepl("15-101", tidysamples$Mouse), "15-100", tidysa
              
 ## final drop columns
 tidysamples <- tidysamples[c(1:7,10:11,24:26,15:16)] 
+
+
+## rename "Punch" to "Region"
+tidysamples <- rename(tidysamples, c("Punch"="Region"))
+tidysamples <- rename(tidysamples, c("method"="Method"))
 
 
 ## write out clearn data file will all samples

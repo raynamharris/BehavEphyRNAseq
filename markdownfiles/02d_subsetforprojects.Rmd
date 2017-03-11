@@ -9,6 +9,7 @@ Not all of my samples need to be processed together. This script will make the a
 
 ```{r install packages load data, warning=FALSE, message=FALSE}
 library("dplyr") ## for filtering and selecting rows
+library("plyr") ## for renaming factors
 ```
 
 
