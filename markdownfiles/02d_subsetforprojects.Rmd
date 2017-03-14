@@ -47,6 +47,24 @@ fmr1CountData <- fmr1CountData %>% select(one_of(savecols)) # keep good samples
 ```
 
 
+```{r dissociation}
+BehaviorSlimCountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
+BehaviorSlimColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+
+BehaviorSlimColData <- BehaviorSlimColData %>%
+  filter(Group %in% c("consistent", "control")) %>%
+  filter(Genotype != "FMR1") %>%
+  filter(!grepl("16-", Mouse)) %>%
+  filter(Conflict != "Conflict")
+savecols <- as.character(BehaviorSlimColData$RNAseqID) #selects all good samples
+savecols <- as.vector(savecols) # make it a vector
+BehaviorSlimCountData <- BehaviorSlimCountData %>% select(one_of(savecols)) # keep good samples
+
+# save files to dissociation project directory
+write.csv(BehaviorSlimColData, "~/Github/DissociationTest/data/BehaviorSlimColData.csv", row.names=F)
+write.csv(BehaviorSlimCountData, "~/Github/DissociationTest/data/BehaviorSlimCountData.csv", row.names=T)
+```
+
 ## Session Info
 ```{r SessionInfo}
 sessionInfo()
