@@ -140,6 +140,17 @@ behav <- behav[c(2,1,3:13,56:63,14:55)]
 names(behav)
 
 
+## Making the data long then wide----
+behavbysession <- melt(behav, id = c(1:21))
+behavbysession$bysession <- as.factor(paste(behavbysession$TrainSessionCombo, behavbysession$variable, sep="_"))
+behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainProtocol + TrainSequence + TrainGroup + 
+                          PairedPartner + Experimenter + Housing + TestLocation + genoYear + APA + 
+                          genoAPA + pair1 + pair2 ~ bysession, value.var= "value", fun.aggregate = mean)
+summary(behavbysession) 
+tail(behavbysession)
+
+
+
 ## subset the data -----
 # by experimenter
 #maddy <- behav %>% filter(Experimenter == "Maddy")  
@@ -172,7 +183,7 @@ names(y2015)
 y2015 <- y2015[c(1:17,59,18:58)]  
 names(y2015)
 
-write.csv(y2015, '/Users/raynamharris/Github/IntegrativeProjectWT2015/data/01_behaviordata.csv', row.names = F)
+#write.csv(y2015, '/Users/raynamharris/Github/IntegrativeProjectWT2015/data/01_behaviordata.csv', row.names = F)
 
 
 # by experiement by genotype experimenter training
@@ -180,19 +191,18 @@ write.csv(y2015, '/Users/raynamharris/Github/IntegrativeProjectWT2015/data/01_be
 #maddyWTtrained <- behav %>%  filter(Experimenter == "Maddy", Genotype == "WT",  TrainGroup == "trained") 
 
 
-## Create novel dataframes
+## Actual shocks to yoked animals
 ## make a df to look at number of shock actually received by the yoked animals
-names(behav)
 yoked <- behav %>% 
   filter(Experimenter == "Maddy") %>%
-  filter(grepl("yoked", APA) ) %>%
+  filter(grepl("Yoked", APA)) %>%
   select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence,TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Speed1, Speed2, EntrShockDiff) %>% 
   droplevels()
 trainedpair <- behav %>% 
   filter(Experimenter == "Maddy") %>%
   select(pair1, pair2, ID, Genotype, APA, Year, TrainGroup, TrainSequence, TrainSessionCombo, NumShock, NumEntrances, TimeTarget, Time1stEntr, Speed1, Speed2, EntrShockDiff) %>% 
   droplevels()
-## rename columns 
+# rename columns 
 names(yoked)[1] <- "yoked"
 names(yoked)[2] <- "trained"
 names(trainedpair)[1] <- "trained"
@@ -201,15 +211,36 @@ yokedtrainedpair <- left_join(yoked, trainedpair, by = "yoked") ## join an caluc
 rm(yoked)  # only need to keep yokedtrainedpair
 rm(trainedpair) # only need to keep yokedtrainedpair
 
-#write.csv(yokedtrainedpair, "yokedtrainedpair.csv", row.names = FALSE)
+## now subset to look at values for the stress test papers
+unavoidableshock <- yokedtrainedpair %>%
+  select(ID.x, APA.x, TrainSequence.x, TrainSessionCombo.x, NumShock.y) %>%
+  filter(TrainSessionCombo.x != "Hab", TrainSessionCombo.x != "Retest", TrainSessionCombo.x != "Retention") %>%
+  filter(TrainSequence.x == "train-conflict") %>%
+  filter(grepl("143|145|146|148B", ID.x))
+str(unavoidableshock)
+#write.csv(unavoidableshock, "../../DissociationTest/data/unavoidableshock.csv", row.names = FALSE)
 
 
-### Making the data long then wide----
-behavbysession <- melt(behav, id = c(1:21))
-behavbysession$bysession <- as.factor(paste(behavbysession$TrainSessionCombo, behavbysession$variable, sep="_"))
-behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainProtocol + TrainSequence + TrainGroup + 
-                          PairedPartner + Experimenter + Housing + TestLocation + genoYear + APA + 
-                          genoAPA + pair1 + pair2 ~ bysession, value.var= "value", fun.aggregate = mean)
-summary(behavbysession) 
-tail(behavbysession)
 
+## now subset to look at values for the dissociation test papers
+avoidableshock <- yokedtrainedpair %>%
+  select(ID.x, APA.x, ID.y, APA.y, TrainSequence.y, TrainSessionCombo.y, TimeTarget.x, TimeTarget.y, NumShock.y) %>%
+  filter( TrainSessionCombo.y != "Retest", TrainSessionCombo.y != "Retention") %>%
+  filter(TrainSequence.y == "train-train") %>%
+  filter(grepl("143|144|146|147", ID.y))
+str(avoidableshock)
+unavoidable <- avoidableshock %>% 
+  select(ID.x, APA.x, TrainSequence.y, TrainSessionCombo.y, TimeTarget.x, NumShock.y)
+avoidable <- avoidableshock %>% 
+  select(ID.y, APA.y, TrainSequence.y, TrainSessionCombo.y, TimeTarget.y, NumShock.y)
+unavoidable <- rename(unavoidable, c("ID.x"="ID"))
+avoidable <- rename(avoidable, c("ID.y"="ID"))
+unavoidable <- rename(unavoidable, c("APA.x"="Treatment"))
+avoidable <- rename(avoidable, c("APA.y"="Treatment"))
+unavoidable <- rename(unavoidable, c("TimeTarget.x"="TimeTarget"))
+avoidable <- rename(avoidable, c("TimeTarget.y"="TimeTarget"))
+avoidableshock <- rbind(unavoidable, avoidable)
+avoidableshock$Treatment <- plyr::revalue(avoidableshock$Treatment, c("Yoked"="unavoidable", "Same"="avoidable"))
+avoidableshock$pTimeTarget <- avoidableshock$TimeTarget / 600
+
+write.csv(avoidableshock, "../../DissociationTest/data/avoidableshock.csv", row.names = FALSE)
