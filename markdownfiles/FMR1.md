@@ -49,7 +49,7 @@ in more details.
 
     ## fitting model and testing
 
-    ## -- replacing outliers and refitting for 382 genes
+    ## -- replacing outliers and refitting for 80 genes
     ## -- DESeq argument 'minReplicatesForReplace' = 7 
     ## -- original counts are preserved in counts(dds)
 
@@ -58,11 +58,11 @@ in more details.
     ## fitting model and testing
 
     ## 
-    ## out of 16459 with nonzero total read count
+    ## out of 16380 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 7, 0.043% 
-    ## LFC < 0 (down)   : 6, 0.036% 
-    ## outliers [1]     : 0, 0% 
+    ## LFC > 0 (up)     : 3, 0.018% 
+    ## LFC < 0 (down)   : 5, 0.031% 
+    ## outliers [1]     : 28, 0.17% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
@@ -71,75 +71,92 @@ in more details.
     ## log2 fold change (MAP): Genotype FMR1 vs WT 
     ## Wald test p-value: Genotype FMR1 vs WT 
     ## DataFrame with 10 rows and 6 columns
-    ##             baseMean log2FoldChange      lfcSE      stat       pvalue
-    ##            <numeric>      <numeric>  <numeric> <numeric>    <numeric>
-    ## Ccnd2       10.85343     -1.4827506 0.17605271 -8.422197 3.694896e-17
-    ## Fmr1        12.77543     -0.9664496 0.17413586 -5.549975 2.857109e-08
-    ## Plat        53.23260     -0.5818065 0.13571868 -4.286856 1.812194e-05
-    ## Serpina3n  109.13053     -0.5047329 0.11633198 -4.338729 1.433091e-05
-    ## Sstr3       27.06837     -0.7432042 0.17612022 -4.219869 2.444444e-05
-    ## Fibcd1    1488.94106      0.1993996 0.04789683  4.163106 3.139474e-05
-    ## Slc29a4      9.30304     -0.7303960 0.17725974 -4.120484 3.780769e-05
-    ## Arel1      102.52960      0.3638634 0.09086933  4.004249 6.221477e-05
-    ## Brf1       100.62905      0.4792209 0.11845912  4.045454 5.222181e-05
-    ## Kcnk12      42.13084      0.6257118 0.15711279  3.982565 6.817560e-05
+    ##            baseMean log2FoldChange      lfcSE      stat       pvalue
+    ##           <numeric>      <numeric>  <numeric> <numeric>    <numeric>
+    ## Ccnd2      11.66235     -1.1975723 0.14904374 -8.035039 9.354902e-16
+    ## Fmr1       15.58919     -0.8661023 0.14931025 -5.800689 6.604318e-09
+    ## Serpina3n 133.52220     -0.5191172 0.11018764 -4.711211 2.462497e-06
+    ## Cry2      254.44599      0.4323550 0.09332056  4.633009 3.603892e-06
+    ## Nbas       88.60162      0.5175007 0.12293482  4.209554 2.558758e-05
+    ## Plat       59.90495     -0.4908623 0.11734811 -4.182959 2.877398e-05
+    ## Arel1     126.65032      0.3714523 0.09034269  4.111592 3.929398e-05
+    ## Sstr3      30.90215     -0.6107696 0.14920745 -4.093425 4.250469e-05
+    ## Faim2     883.56201     -0.2065500 0.05182845 -3.985263 6.740555e-05
+    ## Kcnk12     55.66709      0.5341542 0.13491043  3.959325 7.516190e-05
     ##                   padj
     ##              <numeric>
-    ## Ccnd2     6.103598e-13
-    ## Fmr1      2.359830e-04
-    ## Plat      7.483907e-02
-    ## Serpina3n 7.483907e-02
-    ## Sstr3     8.075953e-02
-    ## Fibcd1    8.643496e-02
-    ## Slc29a4   8.922075e-02
-    ## Arel1     9.231881e-02
-    ## Brf1      9.231881e-02
-    ## Kcnk12    9.231881e-02
+    ## Ccnd2     1.531210e-11
+    ## Fmr1      5.404974e-05
+    ## Serpina3n 1.343538e-02
+    ## Cry2      1.474713e-02
+    ## Nbas      7.849541e-02
+    ## Plat      7.849541e-02
+    ## Arel1     8.696460e-02
+    ## Sstr3     8.696460e-02
+    ## Faim2     1.225882e-01
+    ## Kcnk12    1.230250e-01
 
     ##                16-116B  16-117D  16-118B  16-118D  16-119B  16-119D
-    ## 0610007P14Rik 4.068423 4.204738 3.854378 4.070828 4.071665 3.988067
-    ## 0610009B22Rik 2.901136 2.927268 2.763573 2.921891 2.848639 2.816860
-    ## 0610009L18Rik 1.632183 1.511160 1.539506 1.727763 1.542862 1.522577
-    ##                16-120B  16-120D  16-122B  16-122D  16-123B  16-123D
-    ## 0610007P14Rik 3.906550 4.045650 4.086413 4.119604 3.926136 4.039506
-    ## 0610009B22Rik 2.801091 2.704569 3.064235 2.901013 2.705841 2.837086
-    ## 0610009L18Rik 1.559535 1.502811 1.651536 1.601224 1.525801 1.608172
-    ##                16-124D  16-125B  16-125D  16-126B
-    ## 0610007P14Rik 4.007577 3.987277 3.985166 4.040431
-    ## 0610009B22Rik 2.893386 2.757617 2.784464 2.858201
-    ## 0610009L18Rik 1.566660 1.549843 1.503737 1.819678
+    ## 0610007P14Rik 4.388280 4.513514 4.184672 4.389387 4.389488 4.312060
+    ## 0610009B22Rik 3.302984 3.326054 3.170059 3.322201 3.251287 3.221896
+    ## 0610009L18Rik 2.044863 1.935253 1.956248 2.135956 1.959529 1.940810
+    ##                16-120B  16-120D  16-122B  16-122D  16-123D  16-124D
+    ## 0610007P14Rik 4.234390 4.365729 4.403172 4.435806 4.359560 4.330584
+    ## 0610009B22Rik 3.206200 3.117724 3.461597 3.301693 3.240686 3.295584
+    ## 0610009L18Rik 1.975462 1.923624 2.063331 2.014827 2.021874 1.982635
+    ##                16-125D  16-126B
+    ## 0610007P14Rik 4.309708 4.357363
+    ## 0610009B22Rik 3.192598 3.259101
+    ## 0610009L18Rik 1.924992 2.225786
+
+Data viz
+--------
 
 ![](../results/fmr1/plots-1.png)![](../results/fmr1/plots-2.png)![](../results/fmr1/plots-3.png)
 
 pca plot
 --------
 
-    pcaData <- plotPCA(rld, intgroup = c( "Genotype"), returnData=TRUE)
+    pcaData <- plotPCA(rld, intgroup = c( "Genotype", "Conflict"), returnData=TRUE)
     pcaData
 
-    ##                 PC1         PC2 group Genotype    name
-    ## 16-116B  -1.1381716   1.2850290  FMR1     FMR1 16-116B
-    ## 16-117D  -2.4521409   1.6081866  FMR1     FMR1 16-117D
-    ## 16-118B   3.8190388   2.3619803  FMR1     FMR1 16-118B
-    ## 16-118D   3.8506329   0.5213476  FMR1     FMR1 16-118D
-    ## 16-119B   5.4000132  -0.6952164  FMR1     FMR1 16-119B
-    ## 16-119D   2.7478273   2.0576151  FMR1     FMR1 16-119D
-    ## 16-120B   1.8822957   2.6681103  FMR1     FMR1 16-120B
-    ## 16-120D   0.3610175   0.1898823  FMR1     FMR1 16-120D
-    ## 16-122B   3.8487269  -2.0844619    WT       WT 16-122B
-    ## 16-122D   5.1774179  -1.5750727    WT       WT 16-122D
-    ## 16-123B -12.3938133 -11.2857782    WT       WT 16-123B
-    ## 16-123D   2.3505595   0.4809099    WT       WT 16-123D
-    ## 16-124D   0.1112135   0.6893515    WT       WT 16-124D
-    ## 16-125B -19.3001986   6.4529301    WT       WT 16-125B
-    ## 16-125D   1.3434176   0.4017920    WT       WT 16-125D
-    ## 16-126B   4.3921635  -3.0766055    WT       WT 16-126B
+    ##               PC1         PC2             group Genotype   Conflict
+    ## 16-116B -3.888337  4.48353839 FMR1 : NoConflict     FMR1 NoConflict
+    ## 16-117D -3.808958  2.07726422   FMR1 : Conflict     FMR1   Conflict
+    ## 16-118B -3.033380 -3.97051064 FMR1 : NoConflict     FMR1 NoConflict
+    ## 16-118D  1.465589 -2.10830797   FMR1 : Conflict     FMR1   Conflict
+    ## 16-119B  6.248326 -1.76716206 FMR1 : NoConflict     FMR1 NoConflict
+    ## 16-119D -3.222917 -1.70704169   FMR1 : Conflict     FMR1   Conflict
+    ## 16-120B -3.867287 -2.33568853 FMR1 : NoConflict     FMR1 NoConflict
+    ## 16-120D -1.027550  2.44706581   FMR1 : Conflict     FMR1   Conflict
+    ## 16-122B  5.328264  0.72280554   WT : NoConflict       WT NoConflict
+    ## 16-122D  4.614738  0.06105386     WT : Conflict       WT   Conflict
+    ## 16-123D -1.958825 -3.37363467     WT : Conflict       WT   Conflict
+    ## 16-124D -2.591858  2.84251258     WT : Conflict       WT   Conflict
+    ## 16-125D -0.936705  0.72396712     WT : Conflict       WT   Conflict
+    ## 16-126B  6.678900  1.90413803   WT : NoConflict       WT NoConflict
+    ##            name
+    ## 16-116B 16-116B
+    ## 16-117D 16-117D
+    ## 16-118B 16-118B
+    ## 16-118D 16-118D
+    ## 16-119B 16-119B
+    ## 16-119D 16-119D
+    ## 16-120B 16-120B
+    ## 16-120D 16-120D
+    ## 16-122B 16-122B
+    ## 16-122D 16-122D
+    ## 16-123D 16-123D
+    ## 16-124D 16-124D
+    ## 16-125D 16-125D
+    ## 16-126B 16-126B
 
     percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-    ggplot(pcaData, aes(PC1, PC2, color=Genotype)) + geom_point(size=3) +
+    ggplot(pcaData, aes(PC1, PC2, color=Genotype, label = name)) + geom_point(size=3) +
       xlab(paste0("PC1: ",percentVar[1],"% variance")) +
       ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+      geom_text() +
       coord_fixed()
 
 ![](../results/fmr1/pca-1.png)
@@ -153,6 +170,74 @@ pca plot
     pheatmap(mat)
 
 ![](../results/fmr1/heatmap-1.png)
+
+    ## differntiall expressed heatmap
+    source("resvalsfunction.R")
+    DEGes <- assay(rld)
+    contrast1 <- resvals(contrastvector = c("Genotype", "FMR1", "WT"), mypadj = 0.1)
+
+    ## [1] 8
+
+    DEGes <- cbind(DEGes, contrast1)
+    DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+    DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+    DEGes$pvaljmin <- with(DEGes, pmin(pvalGenotypeFMR1WT)) # create new col with min pval
+    DEGes <- DEGes %>% filter(pvaljmin < 0.0001)
+    rownames(DEGes) <- DEGes$rownames
+    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+    DEGes <- DEGes %>% dplyr::select(-one_of(drop.cols))
+    DEGes <- as.matrix(DEGes)
+    DEGes <- DEGes - rowMeans(DEGes)
+    head(DEGes)
+
+    ##             16-116B     16-117D    16-118B     16-118D      16-119B
+    ## Arel1   0.163176523  0.08195309  0.2100104  0.04227007  0.008253932
+    ## Ccnd2  -0.141955224 -0.12812897 -0.1999729 -0.17686706 -0.194054091
+    ## Cry2   -0.014136755  0.17321617  0.3371802 -0.07559586  0.166244568
+    ## Faim2  -0.003135448  0.10763085 -0.1079995 -0.15378407 -0.073451944
+    ## Fmr1   -0.236092987 -0.10155784 -0.1429344 -0.13628943 -0.149186946
+    ## Kcnk12  0.213711133  0.28934734  0.1431860 -0.01032818  0.004947916
+    ##            16-119D    16-120B     16-120D     16-122B    16-122D
+    ## Arel1   0.04336689  0.1578817  0.12429450 -0.09577767 -0.2409772
+    ## Ccnd2  -0.10661091 -0.1596643 -0.12651317  0.22076803  0.1987041
+    ## Cry2    0.27737065  0.2452212  0.04526756 -0.14969466 -0.1623408
+    ## Faim2  -0.08909158 -0.1251541 -0.13934828  0.13475049  0.1631355
+    ## Fmr1   -0.03190648 -0.1071710 -0.15242478  0.15772913  0.2127494
+    ## Kcnk12  0.23960606  0.2601163 -0.06843478 -0.27882525 -0.2192953
+    ##            16-123D     16-124D     16-125D     16-126B
+    ## Arel1  -0.06628602 -0.07457958 -0.07983211 -0.27375455
+    ## Ccnd2   0.11041278  0.24963281  0.30868546  0.14556338
+    ## Cry2   -0.01666378 -0.24636005 -0.25748767 -0.32222076
+    ## Faim2   0.09678859  0.05098114  0.04447851  0.09419984
+    ## Fmr1    0.17277205  0.10098414  0.34375606  0.06957313
+    ## Kcnk12 -0.30988144  0.02475998 -0.02395756 -0.26495223
+
+    ## set anntation variables
+    df <- as.data.frame(colData(dds)[,c("Genotype","Conflict")]) ## matrix to df
+
+    # set color breaks
+    paletteLength <- 30
+    myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+    colorpalette <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
+
+
+    pheatmap(DEGes, show_colnames=F, show_rownames = T,
+             annotation_col=df, 
+             #annotation_colors = ann_colors,
+             treeheight_row = 0, treeheight_col = 25,
+             #fontsize = 11, 
+             #width=4.5, height=3,
+             border_color = "grey60" ,
+             color = colorpalette,
+             #cellwidth = 12, 
+             clustering_method="average",
+             breaks=myBreaks,
+             clustering_distance_cols="correlation" 
+             )
+
+![](../results/fmr1/heatmap-2.png)
 
 Session Info
 ------------

@@ -31,8 +31,6 @@ knitr::opts_chunk$set(fig.path = '../results/fmr1/')
 
 Read the data
 
-
-
 ```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
 # this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd
 colData <- read.csv('../data/rnaseq/fmr1ColData.csv')
@@ -40,7 +38,16 @@ rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/rnaseq/fmr1CountData.csv', check.names = F, row.names = 1)
 ```
 
+```{r removeoutliers, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+## remove outliers
+colData <- colData %>% filter(RNAseqID != "16-125B", RNAseqID != "16-123B") #set the coldata to be the countbygene df
 
+## colData and countData must contain the exact same sample. I'll use the next three lines to make that happen
+savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+savecols <- as.vector(savecols) # make it a vector
+countData <- countData %>% dplyr::select(one_of(savecols)) # select just the columns that match the samples in colData
+
+```
 
 ## DESeq Analysis
 
@@ -66,8 +73,7 @@ vsd.fast <- vst(dds, blind=FALSE)
 head(assay(rld), 3)
 ```
 
-
-
+## Data viz
 ```{r plots, echo=F}
 plotMA(res, ylim=c(-1.5,1))
 
@@ -83,13 +89,14 @@ plotCounts(dds, gene=which.min(res$padj), intgroup="Genotype")
 ## pca plot
 
 ```{r pca}
-pcaData <- plotPCA(rld, intgroup = c( "Genotype"), returnData=TRUE)
+pcaData <- plotPCA(rld, intgroup = c( "Genotype", "Conflict"), returnData=TRUE)
 pcaData
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=Genotype)) + geom_point(size=3) +
+ggplot(pcaData, aes(PC1, PC2, color=Genotype, label = name)) + geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  geom_text() +
   coord_fixed()
 ```
 
@@ -101,7 +108,52 @@ mat <- assay(rld)[ topVarGenes, ]
 mat <- mat - rowMeans(mat)
 df <- as.data.frame(colData(rld)[,c("Genotype")])
 pheatmap(mat)
+
+
+
+## differntiall expressed heatmap
+source("resvalsfunction.R")
+DEGes <- assay(rld)
+contrast1 <- resvals(contrastvector = c("Genotype", "FMR1", "WT"), mypadj = 0.1)
+DEGes <- cbind(DEGes, contrast1)
+DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
+DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
+DEGes$pvaljmin <- with(DEGes, pmin(pvalGenotypeFMR1WT)) # create new col with min pval
+DEGes <- DEGes %>% filter(pvaljmin < 0.0001)
+rownames(DEGes) <- DEGes$rownames
+drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
+DEGes <- DEGes %>% dplyr::select(-one_of(drop.cols))
+DEGes <- as.matrix(DEGes)
+DEGes <- DEGes - rowMeans(DEGes)
+head(DEGes)
+
+## set anntation variables
+df <- as.data.frame(colData(dds)[,c("Genotype","Conflict")]) ## matrix to df
+
+# set color breaks
+paletteLength <- 30
+myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
+
+colorpalette <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
+
+
+pheatmap(DEGes, show_colnames=F, show_rownames = T,
+         annotation_col=df, 
+         #annotation_colors = ann_colors,
+         treeheight_row = 0, treeheight_col = 25,
+         #fontsize = 11, 
+         #width=4.5, height=3,
+         border_color = "grey60" ,
+         color = colorpalette,
+         #cellwidth = 12, 
+         clustering_method="average",
+         breaks=myBreaks,
+         clustering_distance_cols="correlation" 
+         )
 ```
+
+
 
 
 ## Session Info

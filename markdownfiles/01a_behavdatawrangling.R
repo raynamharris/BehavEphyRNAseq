@@ -18,7 +18,7 @@ str(behav)
 ## drop columns that are not behaviorally relevant
 ## see apameasurementnotes.doc from maddy
 behav <- behav %>%
-  select(-p.miss, -TotalTime.s., -filename, -TotalPath.m., -Time1stShock, 
+  dplyr::select(-p.miss, -TotalTime.s., -filename, -TotalPath.m., -Time1stShock, 
          -Path1stShock, -Speed..cm.s., -SdSpeed, -Linearity,- MaxPathAvoid)
 names(behav)
 
@@ -46,29 +46,10 @@ str(behav)
 names(behav)
 summary(behav)
 
-## remove bad data
-## some aniamls have a 0 for path to 1st entrance because they were dropped into the schock zone. THose are replaced with NA. 
-## all values of -1 are removed because they really mean, couldnt be calculated.
-
-#behav$Path1stEntr <-ifelse((behav$Path1stEntr != 0), behav$Path1stEntr, NA)
-#behav$Speed1stEntr.cm.s. <-ifelse((behav$Speed1stEntr.cm.s. != -1), behav$Speed1stEntr.cm.s., NA)
-#behav$Speed2ndEntr <-ifelse((behav$Speed2ndEntr != -1), behav$Speed2ndEntr, NA)
-#behav$Path2ndEntr <-ifelse((behav$Path2ndEntr != -1), behav$Path2ndEntr, NA)
-#behav$Time1stEntr <- ifelse((behav$Time1stEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time1stEntr < 599.97), behav$Time1stEntr, NA)
-#behav$Dist1stEntr.m. <- ifelse((behav$Dist1stEntr.m. < 0.01 & behav$NumEntrances == 0) | (behav$Dist1stEntr.m. > 0.1), behav$Dist1stEntr.m., NA)
-#behav$Time2ndEntr <- ifelse((behav$Time2ndEntr == 599.97 & behav$NumEntrances == 0) | (behav$Time2ndEntr < 599.97), behav$Time2ndEntr, NA)
-#behav$MaxTimeAvoid <- ifelse((behav$MaxTimeAvoid == 599 & behav$NumEntrances == 0) | (behav$MaxTimeAvoid < 599), behav$MaxTimeAvoid, NA)
-#behav$Path1stEntr <- ifelse((behav$Time1stEntr != "NA"), behav$Path1stEntr, NA)
-#behav$Path2ndEntr <- ifelse((behav$Time2ndEntr != "NA"), behav$Path2ndEntr, NA)
-
-
-# badyoked
-#badyoked <- behav %>% filter(grepl("16-357A|16-357B|16-357D", ID))
 
 ## recalculate speed 1 and speed 2
 behav <- behav %>% mutate(Speed1 = Path1stEntr / Time1stEntr)
 behav <- behav %>% mutate(Speed2 = Path2ndEntr / Time2ndEntr)
-select(behav, Speed1, Speed2, Speed1stEntr.cm.s., Speed2ndEntr) ## shows definately not the same thign!!!
 
 ## create a entra shock diff
 behav <- behav %>% mutate(EntrShockDiff = NumShock - NumEntrances)
@@ -94,7 +75,6 @@ levels(behav$genoYear)
 
 behav$APA <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
 levels(behav$APA)
-
 behav$APA <- revalue(behav$APA, c("train_trained" = "trained")) 
 behav$APA <- revalue(behav$APA, c("train_untrained" = "untrained")) 
 behav$APA <- revalue(behav$APA, c("train-conflict_trained" = "Conflict")) 
@@ -114,6 +94,20 @@ behav$genoAPA <- factor(behav$genoAPA,
                                    "FMR1KO_untrained", "FMR1KO_trained",
                                    "FMR1KO_Yoked", "FMR1KO_Same", "FMR1KO_Conflict"))
 levels(behav$genoAPA)
+
+
+behav$APA2 <- as.factor(paste(behav$TrainSequence,behav$TrainGroup,sep="_"))
+behav$APA2 <- revalue(behav$APA2, c("train_trained" = "trained")) 
+behav$APA2 <- revalue(behav$APA2, c("train_untrained" = "untrained")) 
+behav$APA2 <- revalue(behav$APA2, c("train-conflict_trained" = "Conflict")) 
+behav$APA2 <- revalue(behav$APA2, c("train-conflict_yoked" = "YokedConflict")) 
+behav$APA2 <- revalue(behav$APA2, c("train-train_trained" = "Same")) 
+behav$APA2 <- revalue(behav$APA2, c("train-train_yoked" = "YokedSame")) 
+behav$APA2 <- factor(behav$APA2, 
+                    levels = c("untrained", "trained", 
+                               "YokedSame",  "YokedConflict", "Same", "Conflict"))
+levels(behav$APA2)
+
 
 behav$TrainSessionCombo <- behav$TrainSession
 levels(behav$TrainSessionCombo)
@@ -136,15 +130,15 @@ behav$pair2 <- as.factor(paste(behav$PairedPartner,behav$TrainSessionCombo, sep=
 
 ## reorders dataframe 
 names(behav)
-behav <- behav[c(2,1,3:13,56:63,14:55)]  
+behav <- behav[c(2,1,3:13,56:64,16:55)]  
 names(behav)
 
 
 ## Making the data long then wide----
-behavbysession <- melt(behav, id = c(1:21))
+behavbysession <- melt(behav, id = c(1:22))
 behavbysession$bysession <- as.factor(paste(behavbysession$TrainSessionCombo, behavbysession$variable, sep="_"))
-behavbysession <- dcast(behavbysession, ID + APA + Genotype + TrainProtocol + TrainSequence + TrainGroup + 
-                          PairedPartner + Experimenter + Housing + TestLocation + genoYear + APA + 
+behavbysession <- dcast(behavbysession, ID + APA + APA2 + Genotype + TrainProtocol + TrainSequence + TrainGroup + 
+                          PairedPartner + Experimenter + Housing + TestLocation + genoYear +  
                           genoAPA + pair1 + pair2 ~ bysession, value.var= "value", fun.aggregate = mean)
 summary(behavbysession) 
 tail(behavbysession)
@@ -163,7 +157,7 @@ tail(behavbysession)
 # by year
 y2015 <- behav %>%  filter(Year == "2015")
 y2015 <- y2015 %>%
-  select(-genoYear, -genoAPA, -genoAPATrainSessionCombo, 
+  dplyr::select(-genoYear, -genoAPA, -genoAPATrainSessionCombo, 
          -genoAPATrainSessionComboInd, -EntrShockDiff)
 names(y2015)
 
@@ -180,7 +174,7 @@ y2015$TrainSessionComboNum <- as.numeric(as.character(y2015$TrainSessionComboNum
 summary(y2015$TrainSessionComboNum) 
 head(y2015)
 names(y2015)
-y2015 <- y2015[c(1:17,59,18:58)]  
+y2015 <- y2015[c(1:18,58,19:57)]  
 names(y2015)
 
 #write.csv(y2015, '/Users/raynamharris/Github/IntegrativeProjectWT2015/data/01_behaviordata.csv', row.names = F)
