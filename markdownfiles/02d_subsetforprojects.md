@@ -2,6 +2,7 @@ Not all of my samples need to be processed together. This script will
 make the appropriate subset files. First, read in the new data
 
     library("dplyr") ## for filtering and selecting rows
+    library("plyr") ## for renaming factors
 
     DissociationCountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
     DissociationColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
@@ -15,8 +16,22 @@ make the appropriate subset files. First, read in the new data
     DissociationCountData <- DissociationCountData %>% select(one_of(savecols)) # keep good samples
 
     # save files to dissociation project directory
-    #write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
-    #write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
+    write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
+    write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
+
+    # For GEO database
+    DissociationMetaData <- DissociationColData %>% 
+      select(RNAseqID, Mouse, Region, Method)  %>% 
+      filter(Mouse == "15-100")
+    DissociationMetaData$title <- as.factor(paste(DissociationMetaData$Mouse, DissociationMetaData$Region, DissociationMetaData$Method,sep=" "))
+    DissociationMetaData$Organism <- "Mus musculus"
+    DissociationMetaData$molecule <- "RNA"
+    DissociationMetaData$file <- "/abuntance.txt"
+    DissociationMetaData$alignment <- as.factor(paste(DissociationMetaData$RNAseqID,DissociationMetaData$file, sep=""))
+    DissociationMetaData$strain <- "C57BL/6"
+
+
+    write.csv(DissociationMetaData, "~/Github/DissociationTest/data/DissociationMetaData.csv", row.names=T)
 
     fmr1CountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
     fmr1ColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
@@ -30,6 +45,22 @@ make the appropriate subset files. First, read in the new data
     # save files to dissociation project directory
     write.csv(fmr1ColData, "../data/rnaseq/fmr1ColData.csv", row.names=F)
     write.csv(fmr1CountData, "../data/rnaseq/fmr1CountData.csv", row.names=T)
+
+    BehaviorSlimCountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
+    BehaviorSlimColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+
+    BehaviorSlimColData <- BehaviorSlimColData %>%
+      filter(Group %in% c("consistent", "control")) %>%
+      filter(Genotype != "FMR1") %>%
+      filter(!grepl("16-", Mouse)) %>%
+      filter(Conflict != "Conflict")
+    savecols <- as.character(BehaviorSlimColData$RNAseqID) #selects all good samples
+    savecols <- as.vector(savecols) # make it a vector
+    BehaviorSlimCountData <- BehaviorSlimCountData %>% select(one_of(savecols)) # keep good samples
+
+    # save files to dissociation project directory
+    write.csv(BehaviorSlimColData, "~/Github/DissociationTest/data/BehaviorSlimColData.csv", row.names=F)
+    write.csv(BehaviorSlimCountData, "~/Github/DissociationTest/data/BehaviorSlimCountData.csv", row.names=T)
 
 Session Info
 ------------
@@ -47,7 +78,7 @@ Session Info
     ## [1] stats     graphics  grDevices utils     datasets  methods   base     
     ## 
     ## other attached packages:
-    ## [1] dplyr_0.5.0
+    ## [1] plyr_1.8.4  dplyr_0.5.0
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] Rcpp_0.12.9     digest_0.6.12   rprojroot_1.2   assertthat_0.1 

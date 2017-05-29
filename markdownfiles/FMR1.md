@@ -243,7 +243,8 @@ Volcano plot
 ------------
 
     with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot"))
-    with(subset(res, padj<.05 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+    with(subset(res, padj<.1 ), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
+    with(subset(res, padj<.01 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
 
 ![](../results/fmr1/volcanoplot-1.png)
 

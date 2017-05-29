@@ -26,8 +26,24 @@ savecols <- as.vector(savecols) # make it a vector
 DissociationCountData <- DissociationCountData %>% select(one_of(savecols)) # keep good samples
 
 # save files to dissociation project directory
-#write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
-#write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
+write.csv(DissociationColData, "~/Github/DissociationTest/data/DissociationColData.csv", row.names=F)
+write.csv(DissociationCountData, "~/Github/DissociationTest/data/DissociationCountData.csv", row.names=T)
+
+# For GEO database
+DissociationMetaData <- DissociationColData %>% 
+  select(RNAseqID, Mouse, Region, Method)  %>% 
+  filter(Mouse == "15-100")
+DissociationMetaData$title <- as.factor(paste(DissociationMetaData$Mouse, DissociationMetaData$Region, DissociationMetaData$Method,sep=" "))
+DissociationMetaData$Organism <- "Mus musculus"
+DissociationMetaData$molecule <- "RNA"
+DissociationMetaData$file <- "/abuntance.txt"
+DissociationMetaData$alignment <- as.factor(paste(DissociationMetaData$RNAseqID,DissociationMetaData$file, sep=""))
+DissociationMetaData$strain <- "C57BL/6"
+
+
+write.csv(DissociationMetaData, "~/Github/DissociationTest/data/DissociationMetaData.csv", row.names=T)
+
+
 ```
 
 
@@ -42,12 +58,12 @@ savecols <- as.vector(savecols) # make it a vector
 fmr1CountData <- fmr1CountData %>% select(one_of(savecols)) # keep good samples
 
 # save files to dissociation project directory
-#write.csv(fmr1ColData, "../data/rnaseq/fmr1ColData.csv", row.names=F)
-#write.csv(fmr1CountData, "../data/rnaseq/fmr1CountData.csv", row.names=T)
+write.csv(fmr1ColData, "../data/rnaseq/fmr1ColData.csv", row.names=F)
+write.csv(fmr1CountData, "../data/rnaseq/fmr1CountData.csv", row.names=T)
 ```
 
 
-```{r dissociation}
+```{r BehaviorSlim}
 BehaviorSlimCountData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
 BehaviorSlimColData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
 

@@ -109,7 +109,7 @@ transcript.
 
     countbygene <- countbygene[-c(1:6,8:12)]   ## rkeep gene name and counts for samples)
     countbygene <- melt(countbygene, id=c("gene")) ## lenghten 
-    countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggregate=mean) #then widen by sum
+    countbygene  <- dcast(countbygene, gene ~ variable, value.var= "value", fun.aggregate=sum) #then widen by sum
     row.names(countbygene) <- countbygene$gene ## make gene the row name
     countbygene[1] <- NULL ## make gene the row name
     countbygene <- round(countbygene) #round all value to nearest 1s place

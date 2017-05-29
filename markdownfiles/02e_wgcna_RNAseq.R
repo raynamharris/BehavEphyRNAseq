@@ -169,14 +169,7 @@ MEDiss= 1-cor(MEs, use = 'pairwise.complete.obs')
 METree= flashClust(as.dist(MEDiss), method= "average")
 
 #quartz()
-plot(METree, main= "Clustering of module eigengenes", xlab= "", sub= "")
-MEDissThres = 0.4
-abline(h=MEDissThres, col="red")
-merge= mergeCloseModules(datExpr0, dynamicColors, cutHeight= MEDissThres, verbose =3)
-
-mergedColors= merge$colors
-mergedMEs= merge$newMEs
-
+ 
 #quartz()
 plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors), c("Dynamic Tree Cut", "Merged dynamic"), dendroLabels= FALSE, hang=0.03, addGuide= TRUE, guideHang=0.05)
 
@@ -214,7 +207,7 @@ textMatrix = paste(signif(moduleTraitCor, 2), "\n(",
 dim(textMatrix) = dim(moduleTraitCor)
 
 # Display the correlation values within a heatmap plot
-dev.off()
+#dev.off()
 par(mar = c(6, 8.5, 3, 3));
 labeledHeatmap(Matrix = moduleTraitCor,
                xLabels = names(datTraits),
