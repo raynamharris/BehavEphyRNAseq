@@ -79,14 +79,6 @@ DissociationTest2 <- DissociationTest2[c(10,13,6,5,1:4,7:9)]
 str(DissociationTest2)
 #write.csv(DissociationTest2, "../data/rnaseq/JA16444/sampleinfo2.csv", row.names=FALSE)
 
-## for WT with mutliple jobs
-WT2015samples <- full %>%
-  filter(jobnumber %in% c("JA16268", "JA16444")) %>%
-  distinct(RNAseqID, Tube, Mouse, Genotype, Conflict, APA, Group, Behavior, E.phy, Punch, Slice, Date, jobnumber) %>% droplevels()
-str(WT2015samples)
-tail(WT2015samples)
-#write.csv(WT2015samples, "../data/rnaseq/JA16444/WT2015samples.csv", row.names=FALSE)
-
 
 
 ## for homecage animals
@@ -234,8 +226,11 @@ tidysamples <- tidysamples[c(1:7,10:11,24:26,15:16)]
 tidysamples <- rename(tidysamples, c("Punch"="Region"))
 tidysamples <- rename(tidysamples, c("method"="Method"))
 
-
 ## write out clearn data file will all samples
 #write.csv(tidysamples, "../data/rnaseq/tidysamples.csv", row.names=FALSE)
 
+#---------------------------------------------
+## subset for only integrative wild type samples
+WT2015samples <- tidysamples %>%
+  filter(!grepl("100|101", RNAseqID))
 

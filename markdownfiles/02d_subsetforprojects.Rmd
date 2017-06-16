@@ -81,6 +81,40 @@ write.csv(BehaviorSlimColData, "~/Github/DissociationTest/data/BehaviorSlimColDa
 write.csv(BehaviorSlimCountData, "~/Github/DissociationTest/data/BehaviorSlimCountData.csv", row.names=T)
 ```
 
+```{r WT2015}
+WT2015countData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
+WT2015colData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+
+WT2015colData <- WT2015colData %>%
+  filter(!grepl("16-", Mouse)) %>%
+  filter(!grepl("100", Mouse)) %>%
+  filter(!grepl("homecage", Group))
+  
+savecols <- as.character(WT2015colData$RNAseqID) #selects all good samples
+savecols <- as.vector(savecols) # make it a vector
+WT2015countData <- WT2015countData %>% select(one_of(savecols)) # keep good samples
+
+# save files to dissociation project directory
+write.csv(WT2015colData, "~/Github/IntegrativeProjectWT2015/data/WT2015ColData.csv", row.names=F)
+write.csv(WT2015countData, "~/Github/IntegrativeProjectWT2015/data/WT2015CountData.csv", row.names=T)
+
+
+## WithHomecage
+IntegrativeWT2015countData <- read.csv("../data/rnaseq/countbygene.csv", header=T, check.names = F, row.names = 1)
+IntegrativeWT2015colData <- read.csv("../data/rnaseq/kallistosamples.csv", header=T)
+IntegrativeWT2015colData <- IntegrativeWT2015colData %>%
+  filter(!grepl("16-", Mouse)) %>%
+  filter(!grepl("100", Mouse)) 
+  
+savecols <- as.character(IntegrativeWT2015colData$RNAseqID) #selects all good samples
+savecols <- as.vector(savecols) # make it a vector
+IntegrativeWT2015countData <- IntegrativeWT2015countData %>% select(one_of(savecols)) # keep good samples
+
+# save files to dissociation project directory
+write.csv(IntegrativeWT2015colData, "~/Github/IntegrativeProjectWT2015/data/IntegrativeWT2015ColData.csv", row.names=F)
+write.csv(IntegrativeWT2015countData, "~/Github/IntegrativeProjectWT2015/data/IntegrativeWT2015CountData.csv", row.names=T)
+```
+
 ## Session Info
 ```{r SessionInfo}
 sessionInfo()
