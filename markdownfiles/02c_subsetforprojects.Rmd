@@ -68,9 +68,26 @@ savecols <- as.character(fmr1ColData$RNAseqID) #selects all good samples
 savecols <- as.vector(savecols) # make it a vector
 fmr1CountData <- fmr1CountData %>% select(one_of(savecols)) # keep good samples
 
+#save informative columns
+fmr1ColData <- fmr1ColData %>%
+  select(RNAseqID, Mouse, Genotype, Region, APA, Date, daytime)
+
+# make meta data
+fmr1MetaData <- fmr1ColData %>%
+  select(RNAseqID, Mouse, Region, Genotype) 
+fmr1MetaData$title <- as.factor(paste(fmr1MetaData$Mouse, fmr1MetaData$Region, fmr1MetaData$Genotype,sep=" "))
+fmr1MetaData$Organism <- "Mus musculus"
+fmr1MetaData$molecule <- "RNA"
+fmr1MetaData$file <- "/abuntance.txt"
+fmr1MetaData$alignment <- as.factor(paste(fmr1MetaData$RNAseqID,fmr1MetaData$file, sep=""))
+names(fmr1MetaData)[4] <- "strain"
+fmr1MetaData$strain <- ifelse(grepl("WT", fmr1MetaData$strain), "C57BL/6", "Fmr1-KO")
+
 # save files to dissociation project directory
 write.csv(fmr1ColData, "../data/rnaseq/fmr1ColData.csv", row.names=F)
 write.csv(fmr1CountData, "../data/rnaseq/fmr1CountData.csv", row.names=T)
+write.csv(fmr1MetaData, "../data/rnaseq/fmr1MetaData", row.names=F)
+
 ```
 
 
