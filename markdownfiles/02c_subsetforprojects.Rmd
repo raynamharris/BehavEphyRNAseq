@@ -86,7 +86,7 @@ fmr1MetaData$strain <- ifelse(grepl("WT", fmr1MetaData$strain), "C57BL/6", "Fmr1
 # save files to dissociation project directory
 write.csv(fmr1ColData, "../data/rnaseq/fmr1ColData.csv", row.names=F)
 write.csv(fmr1CountData, "../data/rnaseq/fmr1CountData.csv", row.names=T)
-write.csv(fmr1MetaData, "../data/rnaseq/fmr1MetaData", row.names=F)
+write.csv(fmr1MetaData, "../data/rnaseq/fmr1MetaData.csv", row.names=F)
 
 ```
 
