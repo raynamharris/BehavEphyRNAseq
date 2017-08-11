@@ -23,22 +23,70 @@ library("magrittr") ## to use the weird pipe
 library("gplots") ##for making awesome plots
 library("cowplot") ## for some easy to use themes
 library("DESeq2") ## for differnetial gene expression profiling
+library("ggrepel") ## for labeling volcano plot
 
 # set output file for figures 
 knitr::opts_chunk$set(fig.path = '../results/fmr1/')
 
+source("functions_behavior.R")
+source("figureoptions.R")
 ```
 
 Read the data
 
-```{r ImportData, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
-# this starts with data genearated from code described in ../../BehavEphysRNAseq/markdownfiles/02a_tidysamples.R and ../../BehavEphysRNAseq/markdownfiles/02b_KallistoGather.Rmd
+```{r ImportData}
+# this starts with data genearated from code described in 01a_behavdatawrangling.R 
+behavior <- read.csv('../data/behavior/fmr1.csv' , header = T)
+
+# this starts with data genearated from code described in 02a_tidysamples.R and 02b_KallistoGather.Rmd
 colData <- read.csv('../data/rnaseq/fmr1ColData.csv')
 rownames(colData) <- colData$RNAseqID
 countData <-  read.csv('../data/rnaseq/fmr1CountData.csv', check.names = F, row.names = 1)
+
 ```
 
-```{r removeoutliers, echo=FALSE, message=FALSE, comment=FALSE, warning=FALSE}
+
+## Behavior analysis
+
+```{r behaviordatawrangle}
+## sert and revalue factors
+behavior$APA <- factor(behavior$APA, levels = c("control", "consistent", "conflict"))
+behavior$Genotype <- factor(behavior$Genotype, levels = c("WT", "FMR1KO"))
+behavior$Time1stEntrLog <- log(behavior$Time1stEntr) 
+summary(behavior)
+behavior <- na.omit(behavior)
+
+## behavior summary time
+behaviorsummaryNum <- summarise(group_by(behavior, APA, Genotype, TrainSessionComboNum), m = mean(NumEntrances), se = sd(NumEntrances)/sqrt(length(NumEntrances)))
+behaviorsummaryNum
+
+firstentrance <- ggplot(behaviorsummaryNum, aes(x=, TrainSessionComboNum, y=m, color=APA, shape=Genotype)) + 
+    geom_errorbar(aes(ymin=m-se, ymax=m+se, color=APA), width=.1) +
+    geom_point(size = 4) +
+   geom_line() +
+    scale_y_continuous(name="Number of entrances") +
+    scale_x_continuous(name = NULL, 
+                       breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                       labels=c("1" = "Hab.", "2" = "T1", "3" = "T2", 
+                                "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                                "7" = "T5/C2", "8" = "T6/C3", "9"= "Reten.")) +
+  theme_cowplot(font_size = 14, line_size = 1) +
+  background_grid(major = "none", minor = "none") +
+  scale_color_manual(values = colorvalAPA) + 
+  theme(legend.position="top") 
+
+firstentrance
+
+
+```
+
+
+
+
+
+## RNAsequencing analysis
+
+```{r removeoutliers}
 ## remove outliers
 colData <- colData %>% filter(RNAseqID != "16-125B", RNAseqID != "16-123B") #set the coldata to be the countbygene df
 
@@ -157,11 +205,52 @@ pheatmap(DEGes, show_colnames=F, show_rownames = T,
 ## Volcano plot
 
 ```{r volcanoplot}
+res <- results(dds, contrast =c("Genotype", "FMR1", "WT"), independentFiltering = F)
 with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot"))
-with(subset(res, padj<.1 ), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
-with(subset(res, padj<.01 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
-#with(subset(res, abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
-#with(subset(res, padj<.05 & abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="green"))
+with(subset(res, log2FoldChange>0), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
+with(subset(res, log2FoldChange<0), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+with(subset(res, padj>.05 ), points(log2FoldChange, -log10(pvalue), pch=20, col="grey"))
+
+
+resOrdered <- res[order(res$padj),]
+head(resOrdered)
+
+
+
+data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+data <- na.omit(data)
+head(data)
+
+data <- data %>%
+  mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                        yes = "WT", 
+                        no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                    yes = "FMR1", 
+                                    no = "none")))
+top_labelled <- top_n(data, n = 9, wt = pvalue)
+
+# Color corresponds to fold change directionality
+colored <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+  geom_point(aes(color = factor(color)), size = 1.75, alpha = 0.8, na.rm = T) + # add gene points
+  theme_bw(base_size = 16) + # clean up theme
+  theme(legend.position = "none") + # remove legend 
+  scale_color_manual(values = c("FMR1" = "#7570b3",
+                                "WT" = "#d95f02", 
+                                "none" = "#bdbdbd")) + theme(panel.grid.minor=element_blank(),
+           panel.grid.major=element_blank()) + 
+  theme(axis.title.x = element_blank())+ 
+  theme(axis.title.y = element_blank()) + 
+  geom_text_repel(data = top_labelled, 
+                          mapping = aes(label = gene), 
+                          size = 3,
+                          fontface = 'bold', 
+                          color = 'black',
+                          box.padding = unit(0.5, "lines"),
+                          point.padding = unit(0.5, "lines"))
+
+colored
+
+
 
 ```
 

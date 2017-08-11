@@ -150,9 +150,6 @@ tail(behavbysession)
 #maddy <- behav %>% filter(Experimenter == "Maddy")  
 #jma <- behav %>% filter(Experimenter != "Maddy") 
 
-# by genotype
-#wt <- behav %>% filter(Genotype == "WT")
-#frmr1 <- behav %>% filter(Genotype != "WT")  
 
 # by year
 y2015 <- behav %>%  filter(Year == "2015")
@@ -237,4 +234,40 @@ avoidableshock <- rbind(unavoidable, avoidable)
 avoidableshock$Treatment <- plyr::revalue(avoidableshock$Treatment, c("Yoked"="unavoidable", "Same"="avoidable"))
 avoidableshock$pTimeTarget <- avoidableshock$TimeTarget / 600
 
-write.csv(avoidableshock, "../../DissociationTest/data/avoidableshock.csv", row.names = FALSE)
+#write.csv(avoidableshock, "../../DissociationTest/data/avoidableshock.csv", row.names = FALSE)
+
+
+
+# by genotype
+# wt <- behav %>% filter(Genotype == "WT")
+# frmr1 <- behav %>% filter(Genotype != "WT")  
+fmr1 <- behav %>%  filter(Year == "2016")
+fmr1 <- fmr1 %>%
+  dplyr::select(-genoYear, -genoAPA, -genoAPATrainSessionCombo, 
+                -genoAPATrainSessionComboInd, -EntrShockDiff)
+names(fmr1)
+
+fmr1$TrainSessionComboNum <- ifelse(grepl("Hab", fmr1$TrainSessionCombo), "1", 
+                                     ifelse(grepl("T1", fmr1$TrainSessionCombo), "2",
+                                            ifelse(grepl("T2", fmr1$TrainSessionCombo), "3",
+                                                   ifelse(grepl("T3", fmr1$TrainSessionCombo), "4", 
+                                                          ifelse(grepl("Retest", fmr1$TrainSessionCombo), "5",
+                                                                 ifelse(grepl("T4_C1", fmr1$TrainSessionCombo), "6",
+                                                                        ifelse(grepl("T5_C2", fmr1$TrainSessionCombo), "7",
+                                                                               ifelse(grepl("T6_C3", fmr1$TrainSessionCombo), "8",
+                                                                                      ifelse(grepl("Retention", fmr1$TrainSessionCombo), "9",NA)))))))))
+fmr1$TrainSessionComboNum <- as.numeric(as.character(fmr1$TrainSessionComboNum))
+fmr1 <- fmr1[c(1:18,58,19:57)]  
+fmr1 <- fmr1 %>% droplevels()
+
+fmr1$APA <- revalue(fmr1$APA, c("Conflict" = "conflict")) 
+fmr1$APA <- revalue(fmr1$APA, c("Yoked" = "control")) 
+fmr1$APA <- revalue(fmr1$APA, c("Same" = "consistent")) 
+
+fmr1$APA2 <- revalue(fmr1$APA2, c("Conflict" = "conflict")) 
+fmr1$APA2 <- revalue(fmr1$APA2, c("YokedConflict" = "controlconflict")) 
+fmr1$APA2 <- revalue(fmr1$APA2, c("Same" = "consistent")) 
+fmr1$APA2 <- revalue(fmr1$APA2, c("YokedSame" = "controlconsistent"))
+
+write.csv(fmr1, '../data/behavior/fmr1.csv', row.names = F)
+
