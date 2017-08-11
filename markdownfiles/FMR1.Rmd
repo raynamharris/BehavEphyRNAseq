@@ -74,8 +74,8 @@ firstentrance <- ggplot(behaviorsummaryNum, aes(x=, TrainSessionComboNum, y=m, c
   background_grid(major = "none", minor = "none") +
   scale_color_manual(values = colorvalAPA) + 
   theme(legend.position="top") 
-
 firstentrance
+
 
 
 ```
