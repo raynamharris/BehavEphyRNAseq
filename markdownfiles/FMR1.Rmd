@@ -53,33 +53,35 @@ countData <-  read.csv('../data/rnaseq/fmr1CountData.csv', check.names = F, row.
 behavior$APA <- factor(behavior$APA, levels = c("control", "consistent", "conflict"))
 behavior$Genotype <- factor(behavior$Genotype, levels = c("WT", "FMR1KO"))
 behavior$Time1stEntrLog <- log(behavior$Time1stEntr) 
-summary(behavior)
-behavior <- na.omit(behavior)
 
 ## behavior summary time
-behaviorsummaryNum <- summarise(group_by(behavior, APA, Genotype, TrainSessionComboNum), m = mean(NumEntrances), se = sd(NumEntrances)/sqrt(length(NumEntrances)))
+behavior <- na.omit(behavior)
+behaviorsummaryNum <- dplyr::summarise(group_by(behavior, APA, Genotype, TrainSessionComboNum), m = mean(NumEntrances), se = sd(NumEntrances)/sqrt(length(NumEntrances)))
 behaviorsummaryNum
 
-firstentrance <- ggplot(behaviorsummaryNum, aes(x=, TrainSessionComboNum, y=m, color=APA, shape=Genotype)) + 
-    geom_errorbar(aes(ymin=m-se, ymax=m+se, color=APA), width=.1) +
-    geom_point(size = 4) +
-   geom_line() +
+numentrance <- ggplot(behaviorsummaryNum, aes(x=, TrainSessionComboNum, y=m, color=Genotype)) + 
+    geom_errorbar(aes(ymin=m-se, ymax=m+se, color=Genotype), width=.1) +
+    geom_point(size = 2) +
+    geom_line() +
+    facet_wrap(~APA) +
     scale_y_continuous(name="Number of entrances") +
     scale_x_continuous(name = NULL, 
                        breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
                        labels=c("1" = "Hab.", "2" = "T1", "3" = "T2", 
                                 "4" = "T3", "5" = "Retest", "6" = "T4/C1",
                                 "7" = "T5/C2", "8" = "T6/C3", "9"= "Reten.")) +
-  theme_cowplot(font_size = 14, line_size = 1) +
-  background_grid(major = "none", minor = "none") +
-  scale_color_manual(values = colorvalAPA) + 
-  theme(legend.position="top") 
-firstentrance
+  #theme_cowplot(font_size = 14, line_size = 1) +
+  background_grid(major = "y", minor = "y") +
+  #scale_color_manual(values = colorvalAPA) + 
+  theme(legend.position="top") + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+numentrance
 
-
+pdf(file="../results/fmr1/behaviordatawrangle-1.pdf", width=7.5, height=3)
+plot(numentrance)
+dev.off()
 
 ```
-
 
 
 
@@ -133,73 +135,6 @@ plotCounts(dds, gene=which.min(res$padj), intgroup="Genotype")
 
 ```
 
-
-## pca plot
-
-```{r pca}
-pcaData <- plotPCA(rld, intgroup = c( "Genotype", "Conflict"), returnData=TRUE)
-pcaData
-percentVar <- round(100 * attr(pcaData, "percentVar"))
-
-ggplot(pcaData, aes(PC1, PC2, color=Genotype, label = name)) + geom_point(size=3) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-  geom_text() +
-  coord_fixed()
-```
-
-```{r heatmap}
-library("genefilter")
-library("pheatmap")
-topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
-mat <- assay(rld)[ topVarGenes, ]
-mat <- mat - rowMeans(mat)
-df <- as.data.frame(colData(rld)[,c("Genotype")])
-pheatmap(mat)
-
-
-
-## differntiall expressed heatmap
-source("resvalsfunction.R")
-DEGes <- assay(rld)
-contrast1 <- resvals(contrastvector = c("Genotype", "FMR1", "WT"), mypadj = 0.1)
-DEGes <- cbind(DEGes, contrast1)
-DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-DEGes$pvaljmin <- with(DEGes, pmin(pvalGenotypeFMR1WT)) # create new col with min pval
-DEGes <- DEGes %>% filter(pvaljmin < 0.0001)
-rownames(DEGes) <- DEGes$rownames
-drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-DEGes <- DEGes %>% dplyr::select(-one_of(drop.cols))
-DEGes <- as.matrix(DEGes)
-DEGes <- DEGes - rowMeans(DEGes)
-head(DEGes)
-
-## set anntation variables
-df <- as.data.frame(colData(dds)[,c("Genotype","Conflict")]) ## matrix to df
-
-# set color breaks
-paletteLength <- 30
-myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-              seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-colorpalette <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
-
-
-pheatmap(DEGes, show_colnames=F, show_rownames = T,
-         annotation_col=df, 
-         #annotation_colors = ann_colors,
-         treeheight_row = 0, treeheight_col = 25,
-         #fontsize = 11, 
-         #width=4.5, height=3,
-         border_color = "grey60" ,
-         color = colorpalette,
-         #cellwidth = 12, 
-         clustering_method="average",
-         breaks=myBreaks,
-         clustering_distance_cols="correlation" 
-         )
-```
 
 
 ## Volcano plot

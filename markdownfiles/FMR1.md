@@ -23,11 +23,91 @@ prepared for RNAseq sample submision.
     library("gplots") ##for making awesome plots
     library("cowplot") ## for some easy to use themes
     library("DESeq2") ## for differnetial gene expression profiling
+    library("ggrepel") ## for labeling volcano plot
 
     # set output file for figures 
     knitr::opts_chunk$set(fig.path = '../results/fmr1/')
 
+    source("functions_behavior.R")
+    source("figureoptions.R")
+
 Read the data
+
+    # this starts with data genearated from code described in 01a_behavdatawrangling.R 
+    behavior <- read.csv('../data/behavior/fmr1.csv' , header = T)
+
+    # this starts with data genearated from code described in 02a_tidysamples.R and 02b_KallistoGather.Rmd
+    colData <- read.csv('../data/rnaseq/fmr1ColData.csv')
+    rownames(colData) <- colData$RNAseqID
+    countData <-  read.csv('../data/rnaseq/fmr1CountData.csv', check.names = F, row.names = 1)
+
+Behavior analysis
+-----------------
+
+    ## sert and revalue factors
+    behavior$APA <- factor(behavior$APA, levels = c("control", "consistent", "conflict"))
+    behavior$Genotype <- factor(behavior$Genotype, levels = c("WT", "FMR1KO"))
+    behavior$Time1stEntrLog <- log(behavior$Time1stEntr) 
+
+    ## behavior summary time
+    behavior <- na.omit(behavior)
+    behaviorsummaryNum <- dplyr::summarise(group_by(behavior, APA, Genotype, TrainSessionComboNum), m = mean(NumEntrances), se = sd(NumEntrances)/sqrt(length(NumEntrances)))
+    behaviorsummaryNum
+
+    ## Source: local data frame [54 x 5]
+    ## Groups: APA, Genotype [?]
+    ## 
+    ##        APA Genotype TrainSessionComboNum        m        se
+    ##     <fctr>   <fctr>                <int>    <dbl>     <dbl>
+    ## 1  control       WT                    1 26.37500 2.0610114
+    ## 2  control       WT                    2 12.00000 1.5118579
+    ## 3  control       WT                    3 13.44444 0.8012336
+    ## 4  control       WT                    4 17.57143 1.2883571
+    ## 5  control       WT                    5 17.83333 2.8333333
+    ## 6  control       WT                    6 17.22222 1.4979410
+    ## 7  control       WT                    7 15.77778 1.4021588
+    ## 8  control       WT                    8 13.75000 1.5323884
+    ## 9  control       WT                    9 20.58333 1.9087452
+    ## 10 control   FMR1KO                    1 28.57143 2.8440175
+    ## # ... with 44 more rows
+
+    numentrance <- ggplot(behaviorsummaryNum, aes(x=, TrainSessionComboNum, y=m, color=Genotype)) + 
+        geom_errorbar(aes(ymin=m-se, ymax=m+se, color=Genotype), width=.1) +
+        geom_point(size = 2) +
+        geom_line() +
+        facet_wrap(~APA) +
+        scale_y_continuous(name="Number of entrances") +
+        scale_x_continuous(name = NULL, 
+                           breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                           labels=c("1" = "Hab.", "2" = "T1", "3" = "T2", 
+                                    "4" = "T3", "5" = "Retest", "6" = "T4/C1",
+                                    "7" = "T5/C2", "8" = "T6/C3", "9"= "Reten.")) +
+      #theme_cowplot(font_size = 14, line_size = 1) +
+      background_grid(major = "y", minor = "y") +
+      #scale_color_manual(values = colorvalAPA) + 
+      theme(legend.position="top") + 
+      theme(axis.text.x = element_text(angle = 60, hjust = 1))
+    numentrance
+
+![](../results/fmr1/behaviordatawrangle-1.png)
+
+    pdf(file="../results/fmr1/behaviordatawrangle-1.pdf", width=7.5, height=3)
+    plot(numentrance)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+RNAsequencing analysis
+----------------------
+
+    ## remove outliers
+    colData <- colData %>% filter(RNAseqID != "16-125B", RNAseqID != "16-123B") #set the coldata to be the countbygene df
+
+    ## colData and countData must contain the exact same sample. I'll use the next three lines to make that happen
+    savecols <- as.character(colData$RNAseqID) #select the sample name column that corresponds to row names
+    savecols <- as.vector(savecols) # make it a vector
+    countData <- countData %>% dplyr::select(one_of(savecols)) # select just the columns that match the samples in colData
 
 DESeq Analysis
 --------------
@@ -49,7 +129,7 @@ in more details.
 
     ## fitting model and testing
 
-    ## -- replacing outliers and refitting for 80 genes
+    ## -- replacing outliers and refitting for 134 genes
     ## -- DESeq argument 'minReplicatesForReplace' = 7 
     ## -- original counts are preserved in counts(dds)
 
@@ -58,11 +138,11 @@ in more details.
     ## fitting model and testing
 
     ## 
-    ## out of 16380 with nonzero total read count
+    ## out of 16871 with nonzero total read count
     ## adjusted p-value < 0.1
-    ## LFC > 0 (up)     : 3, 0.018% 
-    ## LFC < 0 (down)   : 5, 0.031% 
-    ## outliers [1]     : 28, 0.17% 
+    ## LFC > 0 (up)     : 2, 0.012% 
+    ## LFC < 0 (down)   : 9, 0.053% 
+    ## outliers [1]     : 45, 0.27% 
     ## low counts [2]   : 0, 0% 
     ## (mean count < 0)
     ## [1] see 'cooksCutoff' argument of ?results
@@ -71,185 +151,125 @@ in more details.
     ## log2 fold change (MAP): Genotype FMR1 vs WT 
     ## Wald test p-value: Genotype FMR1 vs WT 
     ## DataFrame with 10 rows and 6 columns
-    ##            baseMean log2FoldChange      lfcSE      stat       pvalue
-    ##           <numeric>      <numeric>  <numeric> <numeric>    <numeric>
-    ## Ccnd2      11.66235     -1.1975723 0.14904374 -8.035039 9.354902e-16
-    ## Fmr1       15.58919     -0.8661023 0.14931025 -5.800689 6.604318e-09
-    ## Serpina3n 133.52220     -0.5191172 0.11018764 -4.711211 2.462497e-06
-    ## Cry2      254.44599      0.4323550 0.09332056  4.633009 3.603892e-06
-    ## Nbas       88.60162      0.5175007 0.12293482  4.209554 2.558758e-05
-    ## Plat       59.90495     -0.4908623 0.11734811 -4.182959 2.877398e-05
-    ## Arel1     126.65032      0.3714523 0.09034269  4.111592 3.929398e-05
-    ## Sstr3      30.90215     -0.6107696 0.14920745 -4.093425 4.250469e-05
-    ## Faim2     883.56201     -0.2065500 0.05182845 -3.985263 6.740555e-05
-    ## Kcnk12     55.66709      0.5341542 0.13491043  3.959325 7.516190e-05
+    ##            baseMean log2FoldChange      lfcSE       stat       pvalue
+    ##           <numeric>      <numeric>  <numeric>  <numeric>    <numeric>
+    ## Ccnd2      46.67797     -1.5818867 0.14281653 -11.076356 1.633885e-28
+    ## Fmr1       93.47210     -1.0773829 0.13916618  -7.741701 9.809573e-15
+    ## Arel1     886.18923      0.3785902 0.07530677   5.027306 4.974185e-07
+    ## Cry2      508.25058      0.4323033 0.09101104   4.750010 2.034066e-06
+    ## Kcnt1      72.55067     -0.6511921 0.14092433  -4.620864 3.821461e-06
+    ## Cacna1g   189.89551     -0.5805430 0.13527607  -4.291543 1.774361e-05
+    ## Mtus1      18.57150     -0.5788129 0.13638252  -4.244040 2.195308e-05
+    ## Serpina3n 133.33547     -0.4908262 0.11598815  -4.231693 2.319392e-05
+    ## Car4       51.78762     -0.5900355 0.14407291  -4.095395 4.214490e-05
+    ## Ephx1      39.42961     -0.5889576 0.14354308  -4.103002 4.078234e-05
     ##                   padj
     ##              <numeric>
-    ## Ccnd2     1.531210e-11
-    ## Fmr1      5.404974e-05
-    ## Serpina3n 1.343538e-02
-    ## Cry2      1.474713e-02
-    ## Nbas      7.849541e-02
-    ## Plat      7.849541e-02
-    ## Arel1     8.696460e-02
-    ## Sstr3     8.696460e-02
-    ## Faim2     1.225882e-01
-    ## Kcnk12    1.230250e-01
+    ## Ccnd2     2.752932e-24
+    ## Fmr1      8.264075e-11
+    ## Arel1     2.793668e-03
+    ## Cry2      8.567995e-03
+    ## Kcnt1     1.287756e-02
+    ## Cacna1g   4.884930e-02
+    ## Mtus1     4.884930e-02
+    ## Serpina3n 4.884930e-02
+    ## Car4      7.100994e-02
+    ## Ephx1     7.100994e-02
 
     ##                16-116B  16-117D  16-118B  16-118D  16-119B  16-119D
-    ## 0610007P14Rik 4.388280 4.513514 4.184672 4.389387 4.389488 4.312060
-    ## 0610009B22Rik 3.302984 3.326054 3.170059 3.322201 3.251287 3.221896
-    ## 0610009L18Rik 2.044863 1.935253 1.956248 2.135956 1.959529 1.940810
+    ## 0610007P14Rik 5.386474 5.537126 5.120084 5.377359 5.387834 5.288434
+    ## 0610009B22Rik 4.292298 4.325869 4.097429 4.305376 4.210168 4.168866
+    ## 0610009L18Rik 2.038900 1.956492 1.974084 2.106994 1.976300 1.962694
     ##                16-120B  16-120D  16-122B  16-122D  16-123D  16-124D
-    ## 0610007P14Rik 4.234390 4.365729 4.403172 4.435806 4.359560 4.330584
-    ## 0610009B22Rik 3.206200 3.117724 3.461597 3.301693 3.240686 3.295584
-    ## 0610009L18Rik 1.975462 1.923624 2.063331 2.014827 2.021874 1.982635
+    ## 0610007P14Rik 5.176035 5.357994 5.412306 5.444757 5.349111 5.301910
+    ## 0610009B22Rik 4.172616 4.014141 4.495170 4.280107 4.219794 4.293576
+    ## 0610009L18Rik 1.987914 1.949666 2.051807 2.016388 2.021595 1.992984
     ##                16-125D  16-126B
-    ## 0610007P14Rik 4.309708 4.357363
-    ## 0610009B22Rik 3.192598 3.259101
-    ## 0610009L18Rik 1.924992 2.225786
+    ## 0610007P14Rik 5.284383 5.336251
+    ## 0610009B22Rik 4.139385 4.231975
+    ## 0610009L18Rik 1.950443 2.173058
 
 Data viz
 --------
 
 ![](../results/fmr1/plots-1.png)![](../results/fmr1/plots-2.png)![](../results/fmr1/plots-3.png)
 
-pca plot
---------
-
-    pcaData <- plotPCA(rld, intgroup = c( "Genotype", "Conflict"), returnData=TRUE)
-    pcaData
-
-    ##               PC1         PC2             group Genotype   Conflict
-    ## 16-116B -3.888337  4.48353839 FMR1 : NoConflict     FMR1 NoConflict
-    ## 16-117D -3.808958  2.07726422   FMR1 : Conflict     FMR1   Conflict
-    ## 16-118B -3.033380 -3.97051064 FMR1 : NoConflict     FMR1 NoConflict
-    ## 16-118D  1.465589 -2.10830797   FMR1 : Conflict     FMR1   Conflict
-    ## 16-119B  6.248326 -1.76716206 FMR1 : NoConflict     FMR1 NoConflict
-    ## 16-119D -3.222917 -1.70704169   FMR1 : Conflict     FMR1   Conflict
-    ## 16-120B -3.867287 -2.33568853 FMR1 : NoConflict     FMR1 NoConflict
-    ## 16-120D -1.027550  2.44706581   FMR1 : Conflict     FMR1   Conflict
-    ## 16-122B  5.328264  0.72280554   WT : NoConflict       WT NoConflict
-    ## 16-122D  4.614738  0.06105386     WT : Conflict       WT   Conflict
-    ## 16-123D -1.958825 -3.37363467     WT : Conflict       WT   Conflict
-    ## 16-124D -2.591858  2.84251258     WT : Conflict       WT   Conflict
-    ## 16-125D -0.936705  0.72396712     WT : Conflict       WT   Conflict
-    ## 16-126B  6.678900  1.90413803   WT : NoConflict       WT NoConflict
-    ##            name
-    ## 16-116B 16-116B
-    ## 16-117D 16-117D
-    ## 16-118B 16-118B
-    ## 16-118D 16-118D
-    ## 16-119B 16-119B
-    ## 16-119D 16-119D
-    ## 16-120B 16-120B
-    ## 16-120D 16-120D
-    ## 16-122B 16-122B
-    ## 16-122D 16-122D
-    ## 16-123D 16-123D
-    ## 16-124D 16-124D
-    ## 16-125D 16-125D
-    ## 16-126B 16-126B
-
-    percentVar <- round(100 * attr(pcaData, "percentVar"))
-
-    ggplot(pcaData, aes(PC1, PC2, color=Genotype, label = name)) + geom_point(size=3) +
-      xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-      ylab(paste0("PC2: ",percentVar[2],"% variance")) +
-      geom_text() +
-      coord_fixed()
-
-![](../results/fmr1/pca-1.png)
-
-    library("genefilter")
-    library("pheatmap")
-    topVarGenes <- head(order(rowVars(assay(rld)),decreasing=TRUE),25)
-    mat <- assay(rld)[ topVarGenes, ]
-    mat <- mat - rowMeans(mat)
-    df <- as.data.frame(colData(rld)[,c("Genotype")])
-    pheatmap(mat)
-
-![](../results/fmr1/heatmap-1.png)
-
-    ## differntiall expressed heatmap
-    source("resvalsfunction.R")
-    DEGes <- assay(rld)
-    contrast1 <- resvals(contrastvector = c("Genotype", "FMR1", "WT"), mypadj = 0.1)
-
-    ## [1] 8
-
-    DEGes <- cbind(DEGes, contrast1)
-    DEGes <- as.data.frame(DEGes) # convert matrix to dataframe
-    DEGes$rownames <- rownames(DEGes)  # add the rownames to the dataframe
-    DEGes$pvaljmin <- with(DEGes, pmin(pvalGenotypeFMR1WT)) # create new col with min pval
-    DEGes <- DEGes %>% filter(pvaljmin < 0.0001)
-    rownames(DEGes) <- DEGes$rownames
-    drop.cols <-colnames(DEGes[,grep("padj|pval|rownames", colnames(DEGes))])
-    DEGes <- DEGes %>% dplyr::select(-one_of(drop.cols))
-    DEGes <- as.matrix(DEGes)
-    DEGes <- DEGes - rowMeans(DEGes)
-    head(DEGes)
-
-    ##             16-116B     16-117D    16-118B     16-118D      16-119B
-    ## Arel1   0.163176523  0.08195309  0.2100104  0.04227007  0.008253932
-    ## Ccnd2  -0.141955224 -0.12812897 -0.1999729 -0.17686706 -0.194054091
-    ## Cry2   -0.014136755  0.17321617  0.3371802 -0.07559586  0.166244568
-    ## Faim2  -0.003135448  0.10763085 -0.1079995 -0.15378407 -0.073451944
-    ## Fmr1   -0.236092987 -0.10155784 -0.1429344 -0.13628943 -0.149186946
-    ## Kcnk12  0.213711133  0.28934734  0.1431860 -0.01032818  0.004947916
-    ##            16-119D    16-120B     16-120D     16-122B    16-122D
-    ## Arel1   0.04336689  0.1578817  0.12429450 -0.09577767 -0.2409772
-    ## Ccnd2  -0.10661091 -0.1596643 -0.12651317  0.22076803  0.1987041
-    ## Cry2    0.27737065  0.2452212  0.04526756 -0.14969466 -0.1623408
-    ## Faim2  -0.08909158 -0.1251541 -0.13934828  0.13475049  0.1631355
-    ## Fmr1   -0.03190648 -0.1071710 -0.15242478  0.15772913  0.2127494
-    ## Kcnk12  0.23960606  0.2601163 -0.06843478 -0.27882525 -0.2192953
-    ##            16-123D     16-124D     16-125D     16-126B
-    ## Arel1  -0.06628602 -0.07457958 -0.07983211 -0.27375455
-    ## Ccnd2   0.11041278  0.24963281  0.30868546  0.14556338
-    ## Cry2   -0.01666378 -0.24636005 -0.25748767 -0.32222076
-    ## Faim2   0.09678859  0.05098114  0.04447851  0.09419984
-    ## Fmr1    0.17277205  0.10098414  0.34375606  0.06957313
-    ## Kcnk12 -0.30988144  0.02475998 -0.02395756 -0.26495223
-
-    ## set anntation variables
-    df <- as.data.frame(colData(dds)[,c("Genotype","Conflict")]) ## matrix to df
-
-    # set color breaks
-    paletteLength <- 30
-    myBreaks <- c(seq(min(DEGes), 0, length.out=ceiling(paletteLength/2) + 1), 
-                  seq(max(DEGes)/paletteLength, max(DEGes), length.out=floor(paletteLength/2)))
-
-    colorpalette <-  colorRampPalette(c("Deep Sky Blue 3", "white", "red"))( 30 )
-
-
-    pheatmap(DEGes, show_colnames=F, show_rownames = T,
-             annotation_col=df, 
-             #annotation_colors = ann_colors,
-             treeheight_row = 0, treeheight_col = 25,
-             #fontsize = 11, 
-             #width=4.5, height=3,
-             border_color = "grey60" ,
-             color = colorpalette,
-             #cellwidth = 12, 
-             clustering_method="average",
-             breaks=myBreaks,
-             clustering_distance_cols="correlation" 
-             )
-
-![](../results/fmr1/heatmap-2.png)
-
 Volcano plot
 ------------
 
+    res <- results(dds, contrast =c("Genotype", "FMR1", "WT"), independentFiltering = F)
     with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot"))
-    with(subset(res, padj<.1 ), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
-    with(subset(res, padj<.01 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+    with(subset(res, log2FoldChange>0), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
+    with(subset(res, log2FoldChange<0), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+    with(subset(res, padj>.05 ), points(log2FoldChange, -log10(pvalue), pch=20, col="grey"))
 
 ![](../results/fmr1/volcanoplot-1.png)
 
-    #with(subset(res, abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
-    #with(subset(res, padj<.05 & abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="green"))
+    resOrdered <- res[order(res$padj),]
+    head(resOrdered)
+
+    ## log2 fold change (MAP): Genotype FMR1 vs WT 
+    ## Wald test p-value: Genotype FMR1 vs WT 
+    ## DataFrame with 6 rows and 6 columns
+    ##          baseMean log2FoldChange      lfcSE       stat       pvalue
+    ##         <numeric>      <numeric>  <numeric>  <numeric>    <numeric>
+    ## Ccnd2    46.67797     -1.5818867 0.14281653 -11.076356 1.633885e-28
+    ## Fmr1     93.47210     -1.0773829 0.13916618  -7.741701 9.809573e-15
+    ## Arel1   886.18923      0.3785902 0.07530677   5.027306 4.974185e-07
+    ## Cry2    508.25058      0.4323033 0.09101104   4.750010 2.034066e-06
+    ## Kcnt1    72.55067     -0.6511921 0.14092433  -4.620864 3.821461e-06
+    ## Cacna1g 189.89551     -0.5805430 0.13527607  -4.291543 1.774361e-05
+    ##                 padj
+    ##            <numeric>
+    ## Ccnd2   2.752932e-24
+    ## Fmr1    8.264075e-11
+    ## Arel1   2.793668e-03
+    ## Cry2    8.567995e-03
+    ## Kcnt1   1.287756e-02
+    ## Cacna1g 4.884930e-02
+
+    data <- data.frame(gene = row.names(res), pvalue = -log10(res$padj), lfc = res$log2FoldChange)
+    data <- na.omit(data)
+    head(data)
+
+    ##            gene       pvalue         lfc
+    ## 1 0610007P14Rik 0.0012632616 -0.04815661
+    ## 2 0610009B22Rik 0.0012632616 -0.16802970
+    ## 3 0610009L18Rik 0.0012632616 -0.10012651
+    ## 4 0610009O20Rik 0.0008721801  0.02837217
+    ## 5 0610010F05Rik 0.0012632616  0.08569528
+    ## 6 0610010K14Rik 0.0012632616 -0.10993716
+
+    data <- data %>%
+      mutate(color = ifelse(data$lfc > 0 & data$pvalue > 1.3, 
+                            yes = "WT", 
+                            no = ifelse(data$lfc < 0 & data$pvalue > 1.3, 
+                                        yes = "FMR1", 
+                                        no = "none")))
+    top_labelled <- top_n(data, n = 9, wt = pvalue)
+
+    # Color corresponds to fold change directionality
+    colored <- ggplot(data, aes(x = lfc, y = pvalue)) + 
+      geom_point(aes(color = factor(color)), size = 1.75, alpha = 0.8, na.rm = T) + # add gene points
+      theme_bw(base_size = 16) + # clean up theme
+      theme(legend.position = "none") + # remove legend 
+      scale_color_manual(values = c("FMR1" = "#7570b3",
+                                    "WT" = "#d95f02", 
+                                    "none" = "#bdbdbd")) + theme(panel.grid.minor=element_blank(),
+               panel.grid.major=element_blank()) + 
+      theme(axis.title.x = element_blank())+ 
+      theme(axis.title.y = element_blank()) + 
+      geom_text_repel(data = top_labelled, 
+                              mapping = aes(label = gene), 
+                              size = 3,
+                              fontface = 'bold', 
+                              color = 'black',
+                              box.padding = unit(0.5, "lines"),
+                              point.padding = unit(0.5, "lines"))
+
+    colored
+
+![](../results/fmr1/volcanoplot-2.png)
 
 Session Info
 ------------
@@ -268,15 +288,15 @@ Session Info
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] pheatmap_1.0.8             genefilter_1.56.0         
-    ##  [3] DESeq2_1.14.1              SummarizedExperiment_1.4.0
-    ##  [5] Biobase_2.34.0             GenomicRanges_1.26.3      
-    ##  [7] GenomeInfoDb_1.10.3        IRanges_2.8.1             
-    ##  [9] S4Vectors_0.12.1           BiocGenerics_0.20.0       
-    ## [11] cowplot_0.7.0              gplots_3.0.1              
-    ## [13] magrittr_1.5               ggplot2_2.2.1             
-    ## [15] reshape2_1.4.2             plyr_1.8.4                
-    ## [17] dplyr_0.5.0                tidyr_0.6.1               
+    ##  [1] ggrepel_0.6.5              DESeq2_1.14.1             
+    ##  [3] SummarizedExperiment_1.4.0 Biobase_2.34.0            
+    ##  [5] GenomicRanges_1.26.3       GenomeInfoDb_1.10.3       
+    ##  [7] IRanges_2.8.1              S4Vectors_0.12.1          
+    ##  [9] BiocGenerics_0.20.0        cowplot_0.7.0             
+    ## [11] gplots_3.0.1               magrittr_1.5              
+    ## [13] ggplot2_2.2.1              reshape2_1.4.2            
+    ## [15] plyr_1.8.4                 dplyr_0.5.0               
+    ## [17] tidyr_0.6.1               
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] splines_3.3.1        gtools_3.5.0         Formula_1.2-1       
@@ -284,18 +304,18 @@ Session Info
     ##  [7] RSQLite_1.1-2        backports_1.0.5      lattice_0.20-34     
     ## [10] digest_0.6.12        RColorBrewer_1.1-2   XVector_0.14.0      
     ## [13] checkmate_1.8.2      colorspace_1.3-2     htmltools_0.3.5     
-    ## [16] Matrix_1.2-8         XML_3.98-1.5         zlibbioc_1.20.0     
-    ## [19] xtable_1.8-2         scales_0.4.1         gdata_2.17.0        
-    ## [22] BiocParallel_1.8.1   htmlTable_1.9        tibble_1.2          
-    ## [25] annotate_1.52.1      nnet_7.3-12          lazyeval_0.2.0      
-    ## [28] survival_2.40-1      memoise_1.0.0        evaluate_0.10       
-    ## [31] foreign_0.8-67       tools_3.3.1          data.table_1.10.0   
-    ## [34] stringr_1.2.0        munsell_0.4.3        locfit_1.5-9.1      
-    ## [37] cluster_2.0.5        AnnotationDbi_1.36.2 caTools_1.17.1      
-    ## [40] grid_3.3.1           RCurl_1.95-4.8       htmlwidgets_0.8     
-    ## [43] bitops_1.0-6         base64enc_0.1-3      labeling_0.3        
-    ## [46] rmarkdown_1.3        gtable_0.2.0         DBI_0.6             
-    ## [49] R6_2.2.0             gridExtra_2.2.1      knitr_1.15.1        
-    ## [52] Hmisc_4.0-2          rprojroot_1.2        KernSmooth_2.23-15  
-    ## [55] stringi_1.1.2        Rcpp_0.12.9          geneplotter_1.52.0  
-    ## [58] rpart_4.1-10         acepack_1.4.1
+    ## [16] Matrix_1.2-8         XML_3.98-1.5         genefilter_1.56.0   
+    ## [19] zlibbioc_1.20.0      xtable_1.8-2         scales_0.4.1        
+    ## [22] gdata_2.17.0         BiocParallel_1.8.1   htmlTable_1.9       
+    ## [25] tibble_1.2           annotate_1.52.1      nnet_7.3-12         
+    ## [28] lazyeval_0.2.0       survival_2.40-1      memoise_1.0.0       
+    ## [31] evaluate_0.10        foreign_0.8-67       tools_3.3.1         
+    ## [34] data.table_1.10.0    stringr_1.2.0        munsell_0.4.3       
+    ## [37] locfit_1.5-9.1       cluster_2.0.5        AnnotationDbi_1.36.2
+    ## [40] caTools_1.17.1       grid_3.3.1           RCurl_1.95-4.8      
+    ## [43] htmlwidgets_0.8      bitops_1.0-6         base64enc_0.1-3     
+    ## [46] labeling_0.3         rmarkdown_1.3        gtable_0.2.0        
+    ## [49] DBI_0.6              R6_2.2.0             gridExtra_2.2.1     
+    ## [52] knitr_1.15.1         Hmisc_4.0-2          rprojroot_1.2       
+    ## [55] KernSmooth_2.23-15   stringi_1.1.2        Rcpp_0.12.9         
+    ## [58] geneplotter_1.52.0   rpart_4.1-10         acepack_1.4.1
