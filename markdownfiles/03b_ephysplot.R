@@ -1,31 +1,100 @@
 source("figureoptions.R")
+levels(ephys2$APA2) <- c("yoked-consistent","yoked-conflict","consistent", "conflict")
+levels(ephys2_long$APA2) <- c("yoked-consistent","yoked-conflict","consistent", "conflict")
 
+head(ephys2)
+ephys2summaryNum <- dplyr::summarise(group_by(ephys2, Genotype, APA2, genoAPA), m = mean(min), se = sd(min)/sqrt(length(min)), len = length(min))
+ephys2summaryNum <- as.data.frame(ephys2summaryNum)
+levels(ephys2summaryNum$Genotype) <- c("WT","FMR1KO")
+levels(ephys2summaryNum$APA2) <- c("yoked-consistent","yoked-conflict", "consistent", "conflict")
+
+
+ephys2$APA2 <- factor(ephys2$APA2, levels = c("yoked-consistent",  "consistent", "yoked-conflict", "conflict"))
 
 ## Stimulus strength on x fepsp slope on y
 ephys2_long %>% 
-  ggplot(aes(x=variablenumeric, y=value, color=APA )) + 
+  ggplot(aes(x=variablenumeric, y=value, color=APA2 )) + 
   stat_smooth(alpha=0.2, size=2) +
   geom_jitter(size=2, width = 0.5) +
   background_grid(major = "xy", minor = "none") + 
   theme_cowplot(font_size = 20, line_size = 1) + 
   facet_grid(~Genotype) +   
-  scale_y_continuous(trans = "reverse") + 
+  scale_y_continuous(trans = "reverse",
+                     limits = c(0.005, -0.010)) + 
   scale_x_continuous(breaks=c(1,2,3,4,5,6,7),
                      labels=c("0", "10", "15", "20", "30", "40", "50")) +
-  scale_color_manual(values = colorvalAPA) + 
+  scale_color_manual(values = colorvalAPA2) + 
   labs(x = "Stimulus Strenght (V)", y = "fEPSP Slope") + 
   theme(legend.position="none")
 
+ephys2_long %>% 
+  ggplot(aes(x=variablenumeric, y=value, color=Genotype )) + 
+  stat_smooth(alpha=0.2, size=2) +
+  geom_jitter(size=2, width = 0.5) +
+  background_grid(major = "xy", minor = "none") + 
+  theme_cowplot(font_size = 20, line_size = 1) + 
+  facet_wrap(~APA2,nrow=2) +   
+  scale_y_continuous(trans = "reverse") + 
+  scale_x_continuous(breaks=c(1,2,3,4,5,6,7),
+                     labels=c("0", "10", "15", "20", "30", "40", "50")) +
+  scale_color_manual(values = colorvalGenotype) + 
+  labs(x = "Stimulus Strenght (V)", y = "fEPSP Slope") + 
+  theme(legend.position="none")
 
 ephys2 %>% 
-  ggplot(aes(x=APA, y=min, fill=APA)) +
+  ggplot(aes(x=APA2, y=min, fill=APA2)) +
   geom_boxplot() +
   scale_y_continuous(trans = "reverse") + 
   background_grid(major = "xy", minor = "none") + 
   theme_cowplot(font_size = 20, line_size = 1) + 
-  scale_fill_manual(values = colorvalAPA) +
+  scale_fill_manual(values = colorvalAPA2) +
   labs(y = "Maximum fEPSP Slope", x = NULL) +
-  facet_grid(~Genotype) 
+  facet_grid(~Genotype)
+
+myggplot <- ephys2 %>% 
+  ggplot(aes(x=Genotype, y=min, fill=Genotype)) +
+  geom_boxplot() +
+  scale_y_continuous(trans = "reverse") + 
+  background_grid(major = "xy", minor = "none") + 
+  theme_cowplot(font_size = 8, line_size = 1) + 
+  scale_fill_manual(values = colorvalGenotype) +
+  labs(y = "Maximum fEPSP Slope", x = NULL) +
+  facet_grid(~APA2)  +
+  theme(legend.position="none")
+myggplot
+
+pdf(file="~/Github/FMR1rnaseqCA1/figures/04_ephys/ephys1.pdf", width=3.8, height=2.5)
+plot(myggplot)
+dev.off()
+
+
+myggplot <- ephys2 %>% 
+  ggplot(aes(x=Genotype, y=min, fill=Genotype)) +
+  geom_boxplot() +
+  scale_y_continuous(trans = "reverse") + 
+  background_grid(major = "xy", minor = "none") + 
+  theme_cowplot(font_size = 8, line_size = 0.5) + 
+  scale_fill_manual(values = colorvalGenotype) +
+  labs(y = "Maximum fEPSP Slope", x = NULL) +
+  facet_wrap(~APA2, nrow=2) +
+  theme(legend.position="none")
+
+pdf(file="~/Github/FMR1rnaseqCA1/figures/04_ephys/ephys2.pdf", width=2.5, height=2.5)
+plot(myggplot)
+dev.off()
+
+
+aov1 <- aov(min ~ Genotype, data=ephys2)
+summary(aov1) 
+aov1 <- aov(min ~ Genotype * APA2, data=ephys2)
+summary(aov1) 
+
+aov1 <- aov(max ~ Genotype, data=ephys2)
+summary(aov1) 
+aov1 <- aov(max ~ Genotype * APA2, data=ephys2)
+summary(aov1)
+
+summary(ephys2$min)
   
 
 #### pca ----
