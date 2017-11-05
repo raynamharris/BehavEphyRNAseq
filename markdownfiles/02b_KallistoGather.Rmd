@@ -29,7 +29,7 @@ The kallisto output gives you read counts for sample in an abundance file for ev
 (P.S. Unfortunately, I have no idea how to do this next part without changing directories. This script was developed with assistance from Anna Batthenhouse and Dennis Whylie.)
 
 ```{r kallisto gather, warning=FALSE}
-setwd("../data/rnaseq/04_kallistoquant/")
+setwd("../data/rnaseq/02_kallistoquant/")
 ## this will create lists of all the samples
 kallistoDirs = dir(".")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
@@ -47,6 +47,7 @@ if(file.exists(kallistoFiles))
 )
 
 ## this for loop uses the reduce function to make two data frame with counts or tpm from all the samples
+
 ids = Reduce(f=union, x=lapply(kallistoData, rownames))
 if (all(sapply(kallistoData, function(x) {all(rownames(x)==ids)}))) {
   count = data.frame(
