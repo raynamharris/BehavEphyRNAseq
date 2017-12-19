@@ -234,3 +234,14 @@ tidysamples <- rename(tidysamples, c("method"="Method"))
 WT2015samples <- tidysamples %>%
   filter(!grepl("100|101", RNAseqID))
 
+
+## This is so hans can have a dataframe of all samples collected
+FutureNSB <- full
+FutureNSB <- filter(FutureNSB, year == "2016", Purpose != "students", 
+                    Punch != "hippocampus", Punch != "slice", Punch != "?", 
+                    Punch != "CA1?", Punch != "CA3?", Punch != "CA")
+names(FutureNSB)
+summary(FutureNSB$Punch)
+FutureNSB <- FutureNSB[-c(4:6,17,24:32,34:37)]
+write.csv(FutureNSB, "../data/rnaseq/futureNSBprojects.csv", row.names = F)
+
